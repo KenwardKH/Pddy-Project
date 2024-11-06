@@ -7,6 +7,25 @@
 
         <title>{{ config('app.name', 'Laravel') }}</title>
 
+        <style>
+            body .background {
+                background-image: url('images/login_bg.jpg');
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                align-items:center;
+            }
+            .form {
+                background-color: #D0FFFE;
+                padding: 25px 50px;
+                width: 500px;
+                height:500px;
+                border-radius: 20px;
+                box-shadow: 0 5px 20px 34px rgba(0, 0, 0, 0.25);
+                text-align:center;
+            }
+        </style>
+
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
@@ -15,14 +34,9 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 dark:bg-gray-900">
-            <div>
-                <a href="/">
-                    <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-                </a>
-            </div>
-
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white dark:bg-gray-800 shadow-md overflow-hidden sm:rounded-lg">
+        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 background">
+            
+            <div class="form">
                 {{ $slot }}
             </div>
         </div>
