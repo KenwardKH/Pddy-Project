@@ -7,7 +7,7 @@
         flex-direction: column;
     }
     .login h1{
-        font-size: 32px;
+        font-size: 28px;
         margin-bottom:20px
     }
     .form label {
