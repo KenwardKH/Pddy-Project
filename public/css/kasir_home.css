@@ -1,0 +1,140 @@
+body { 
+    font-family: 'Roboto', sans-serif; 
+    background-color: white; 
+}
+
+.container { 
+    margin: auto; 
+    text-align: center; 
+}
+        
+.header { 
+    display: flex; 
+    flex-direction: column;
+    padding: 10px; 
+    border-bottom: orange solid 2px;
+}
+.header img {
+    width: 400px;
+}
+        
+.header h1 { 
+    font-size: 24px; 
+    color: #333; 
+}
+        
+.nav { 
+    display: flex;
+    width: 100%;
+    justify-content: space-between;  
+}
+.nav a{
+    display: inline-flex;
+    align-items: center;
+    font-size: 16px; /* Adjust the size as needed */
+}
+
+.nav i {
+    font-size: 18px; /* Adjust this to match the text size */
+    line-height: 1; /* Ensures the icon height aligns properly */
+    margin-left: 4px;
+}
+
+.nav a:hover {
+    color: green;
+}
+
+.nav .left {
+    display: flex;
+    justify-content: space-around;
+    width: 10%;
+}
+
+.nav .right {
+    display: flex;
+    justify-content: space-around;
+    width: 50%;
+}
+        
+.nav a { 
+    text-decoration: none; 
+    color: #333; 
+    font-weight: bold; 
+}
+        
+.dashboard { 
+    display: grid; 
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 110px; 
+    margin: 40px; 
+    background-color: #f5f5f5;
+    padding: 40px;
+}
+
+.dashboard a {
+    color: black;
+    text-decoration: none;
+}
+
+.card { 
+    border-radius: 8px; 
+    padding: 20px; 
+    font-size: 20px; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: space-around; 
+    align-items: center; 
+    cursor: pointer; 
+}
+        
+.card-green { 
+    background-color: #4CAF50; 
+}
+        
+.card-yellow { 
+    background-color: #FFEB3B; 
+    color: #333; 
+}
+        
+.card-blue { 
+    background-color: #2196F3; 
+}
+        
+.card-red { 
+    background-color: #f44336; 
+}
+        
+.card-gray { 
+    background-color: #9E9E9E; 
+}
+        
+.card .count { 
+    font-size: 30px; 
+    font-weight: bold; 
+}
+
+.card:hover {
+    transform: scale(1.05); /* Slightly enlarges the card on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adds a shadow effect */
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* Smooth transition */
+}
+
+.card-green:hover {
+    background-color: #45a049; /* Darkens green on hover */
+}
+
+.card-yellow:hover {
+    background-color: #fdd835; /* Darkens yellow on hover */
+}
+
+.card-blue:hover {
+    background-color: #1976d2; /* Darkens blue on hover */
+}
+
+.card-red:hover {
+    background-color: #e53935; /* Darkens red on hover */
+}
+
+.card-gray:hover {
+    background-color: #757575; /* Darkens gray on hover */
+}

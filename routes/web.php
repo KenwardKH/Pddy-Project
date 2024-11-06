@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\KasirController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -23,5 +24,8 @@ Route::middleware('auth')->group(function () {
 
 Route::get('auth/google', [GoogleAuthController::class, 'redirect'])->name('google-auth');
 Route::get('auth/google/call-back', [GoogleAuthController::class, 'callbackGoogle']);
+
+//Kasir
+Route::get('/kasir/home', [KasirController::class, 'home'])->name('kasir.home');
 
 require __DIR__.'/auth.php';
