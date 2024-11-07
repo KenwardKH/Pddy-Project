@@ -19,7 +19,7 @@
                 <a href="#">Profil</a>   
             </div>
             <div class="right">
-                <a href="#">Buat Pesanan <i class="bi bi-cart"></i></a>
+                <a href="buat-pesanan">Buat Pesanan <i class="bi bi-cart"></i></a>
                 <a href="#">Stock Barang <i class="bi bi-box-seam"></i></a>
                 <a href="#">Konfirmasi Pesanan <i class="bi bi-clipboard-check"></i></a>
                 <a href="#">Status Pesanan <i class="bi bi-journal-text"></i></a>

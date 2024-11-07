@@ -1,0 +1,210 @@
+body { 
+    font-family: 'Roboto', sans-serif; 
+    background-color: white; 
+}
+
+.header {
+    display: flex; 
+    flex-direction: column;
+    padding: 10px; 
+    border-bottom: orange solid 2px;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background-color: white;
+    z-index: 1000; /* Ensures the header stays on top */
+}
+
+.container {
+    margin-top: 160px; /* Offset content for the fixed header height */
+}
+        
+.header { 
+    display: flex; 
+    flex-direction: column;
+    padding: 10px; 
+    border-bottom: orange solid 2px;
+}
+.header img {
+    width: 400px;
+}
+        
+.header h1 { 
+    font-size: 24px; 
+    color: #333; 
+}
+        
+.nav { 
+    display: flex;
+    width: 100%;
+    justify-content: space-between;  
+}
+.nav a{
+    display: inline-flex;
+    align-items: center;
+    font-size: 16px; /* Adjust the size as needed */
+}
+
+.nav i {
+    font-size: 18px; /* Adjust this to match the text size */
+    line-height: 1; /* Ensures the icon height aligns properly */
+    margin-left: 4px;
+}
+
+.nav a:hover {
+    color: green;
+}
+
+.nav .left {
+    display: flex;
+    justify-content: space-around;
+    width: 10%;
+}
+
+.nav .right {
+    display: flex;
+    justify-content: space-around;
+    width: 50%;
+}
+        
+.nav a { 
+    text-decoration: none; 
+    color: #333; 
+    font-weight: bold; 
+}
+
+/* Search container styling */
+.search-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    position: fixed;
+    width: 100%;
+    top: 116px; /* Adjust this to position it below the header */
+    background-color: white; /* Optional: add a background to match the header */
+    padding: 10px 0; /* Optional: add padding for spacing */
+    z-index: 999; /* Ensure it stays on top */
+}
+
+.search-bar {
+    width: 250px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.category-dropdown {
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.search-button {
+    padding: 8px 12px;
+    background-color: #28a745; /* Customize the color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.search-button i {
+    font-size: 18px;
+}
+
+.search-button:hover {
+    background-color: #218838; /* Darker green for hover */
+}
+
+.product-list {
+    padding-bottom: 60px;
+}
+
+.product-item {
+    display: flex;
+    flex-direction: row;
+    padding: 20px;
+    border-top: 2px solid gray;
+    justify-content: space-between;
+}
+
+.product-item:nth-child(1){
+    border: 0;
+    margin-top: 70px;
+}
+
+.product-item .kiri {
+    width: 20%;
+}
+.product-item .tengah {
+    width: 60%;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.product-item h2, h3 {
+    margin: 0;
+}
+
+.product-item .kanan {
+    width: 20%;
+    display: flex;
+    align-items: center;
+}
+
+.product-item .kanan .quantity-selector {
+    display: flex;
+    gap: 10px;
+}
+
+.product-item .kanan .quantity-selector i{
+    font-size: 34px;
+    cursor: pointer;
+}
+
+.product-item .kanan .quantity-selector i:hover{
+    color: green;
+}
+
+.product-item .kanan .quantity-selector input{
+    width: 50px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    font-size: 22px;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.product-item img{
+    width: 150px;
+}
+
+.product-list button.order-button {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    height: 50px;
+    font-size: 18px;
+    background-color: #adf542;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold;
+}
