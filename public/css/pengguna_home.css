@@ -1,0 +1,170 @@
+/* * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+} */
+
+body { 
+    font-family: 'Roboto', sans-serif; 
+    background-color: white; 
+}
+
+.container { 
+    margin: auto; 
+    text-align: center; 
+}
+        
+.header { 
+    display: flex; 
+    flex-direction: column;
+    padding: 8px; 
+    border-bottom: rgb(136, 243, 193) solid 2px;
+}
+.header img {
+    width: 350px;
+}
+        
+.header h1 { 
+    font-size: 24px; 
+    color: #333; 
+}
+        
+.nav { 
+    display: flex;
+    width: 100%;
+    justify-content: space-between;  
+}
+.nav a{
+    display: inline-flex;
+    align-items: center;
+    font-size: 16px; /* Adjust the size as needed */
+}
+
+.nav i {
+    font-size: 18px; /* Adjust this to match the text size */
+    line-height: 1; /* Ensures the icon height aligns properly */
+    margin-left: 4px;
+}
+
+.nav a:hover {
+    color: #80F4AC;
+}
+
+.nav .left {
+    display: flex;
+    justify-content: space-around;
+    width: 10%;
+}
+
+.nav .right {
+    display: flex;
+    justify-content: space-around;
+    width: 43%;
+}
+        
+.nav a { 
+    text-decoration: none; 
+    color: #333; 
+    font-weight: bold; 
+}
+
+/* ---------- */
+        
+/* Adjust the hero section to avoid overlap with navbar */
+.hero-section {
+    position: relative; /* Mengatur posisi hero section relatif terhadap elemen sekitarnya */
+    min-height: 100vh; /* Memastikan gambar latar mengisi seluruh layar */
+    overflow: hidden; /* Menyembunyikan bagian gambar yang keluar dari batas hero section */
+    display: flex; /* Menggunakan Flexbox untuk menata konten dalam hero section */
+    align-items: center; /* Menyelaraskan konten secara vertikal di tengah */
+    justify-content: center; /* Menyelaraskan konten secara horizontal di tengah */
+    text-align: left; /* Mengatur teks agar berada di kiri */
+    margin-top: 60px; /* Memberi jarak dari atas untuk menghindari tumpang tindih dengan navbar */
+    background-image: url('hero-background.png'); /* Menetapkan gambar latar belakang (ganti dengan path gambar yang sesuai) */
+    background-size: cover; /* Menyusun ulang gambar agar mengisi seluruh hero section tanpa terpotong */
+    background-position: right center;
+    background-repeat: no-repeat; /* Mencegah gambar latar diulang jika ukurannya lebih kecil dari hero section */
+}
+
+.hero-section .hero-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 110%;
+    height: 85%;
+    object-fit: contain; /* Memastikan gambar menyesuaikan proporsi */
+    z-index: -1;
+}
+
+/* Categories Section */
+.categories {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 kolom untuk layar besar */
+    grid-template-rows: repeat(2, 1fr); /* 2 baris */
+    gap: 10px; /* Mengatur jarak antar elemen grid */
+    justify-content: center;
+    padding: 25px 300px; /* Mengurangi padding atas dan bawah, menjaga jarak yang lebih dekat */
+}
+
+.category {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin: 0 20px; /* Menambahkan margin kiri dan kanan untuk kategori */
+    transition: transform 0.3s ease; /* Menambahkan transisi untuk smooth efek hover */
+}
+
+/* Mengubah teks saat hover pada kategori */
+.category:hover p {
+    font-weight: bold; 
+    color: #80F4AC;/* Menebalkan teks saat hover */
+}
+
+/* Mengatur link (a) agar warna tetap hitam */
+.category a {
+    color: #000; /* Menetapkan warna teks hitam */
+    text-decoration: none; /* Menghapus underline */
+    font-weight: normal; /* Menetapkan font weight normal */
+}
+
+/* Menambahkan transisi pada gambar dan teks */
+.category img {
+    width: 170px;
+    height: 150px;
+    transition: transform 0.3s ease; /* Efek transisi untuk memperbesar gambar */
+}
+
+/* Efek hover pada gambar */
+.category:hover img {
+    transform: scale(1.1); /* Memperbesar gambar saat hover */
+}
+
+.category p {
+    margin-top: 10px;
+    font-size: 20px;
+    color: #000; /* Menetapkan warna teks hitam */
+}
+
+
+/* Media query untuk layar lebih kecil */
+@media (max-width: 768px) {
+    .categories {
+        grid-template-columns: repeat(2, 1fr); /* Menjadi 2 kolom di layar lebih kecil */
+    }
+}
+
+@media (max-width: 480px) {
+    .categories {
+        grid-template-columns: 1fr; /* Menjadi 1 kolom di layar sangat kecil */
+    }
+}
+
+/* Contact Section */
+.contact {
+    background-color: #9382C1;
+    color: white;
+    padding: 10px 0;
+    text-align: left;
+    font-size: 15px;
+}
