@@ -3,6 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\KasirController;
 use App\Http\Controllers\PesananController;
+use App\Http\Controllers\PenggunaController;
+use App\Http\Controllers\InformasiPenggunaController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -25,6 +27,11 @@ Route::middleware('auth')->group(function () {
 
 Route::get('auth/google', [GoogleAuthController::class, 'redirect'])->name('google-auth');
 Route::get('auth/google/call-back', [GoogleAuthController::class, 'callbackGoogle']);
+
+
+//pengguna
+Route::get('/pengguna/home', [PenggunaController::class, 'home'])->name('pengguna.home');
+Route::get('/pengguna/profile', [InformasiPenggunaController::class, 'show'])->name('profile.show');
 
 //Kasir
 Route::get('/kasir/home', [KasirController::class, 'home'])->name('kasir.home');
