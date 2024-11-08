@@ -9,6 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body>
+
     <div class="container">
         <div class="header">
             <img src="{{asset('images/logo.png')}}" alt="logo">
@@ -148,21 +149,118 @@
             </div>
             <button type="submit" class="order-button" style="display: none;">Pesan</button>
         </form>
+
+            <!-- Modal structure -->
+    <div id="orderModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Produk yang Dipilih</h2>
+            <div class="selected-products"></div>
+            <h3>Total Harga: <span id="totalPrice">Rp0</span></h3>
+
+            <h2>Informasi Pemesan</h2>
+            <label for="customerType">Pilih Tipe Pelanggan:</label>
+            <select id="customerType" style="margin-bottom:15px">
+                <option value="new">Pelanggan Baru</option>
+                <option value="existing">Pelanggan Terdaftar</option>
+            </select>
+
+            <!-- Search field for existing customers -->
+            <div id="existingCustomerSearch" style="display: none;">
+                <div class="form-group">
+                    <label for="customerSearch">Cari Akun Pelanggan:</label>
+                    <input type="text" id="customerSearch" placeholder="Cari nama atau ID pelanggan...">
+                    <ul id="searchResults" style="display: none;"></ul>
+                </div>
+            </div>
+
+            <!-- Form for customer information -->
+            <form id="orderForm" class="check-out">
+                <div class="form-group">
+                    <label for="customerName">Nama:</label>
+                    <input type="text" id="customerName" name="customerName" required>
+                </div>
+                <div class="form-group">
+                    <label for="customerPhone">Nomor HP:</label>
+                    <input type="tel" id="customerPhone" name="customerPhone" required>
+                </div>
+                <div class="form-group">
+                    <label for="customerAddress">Opsi Pengiriman:</label>
+                    <select id="customerAddress">
+                        <option value="ambil_sendiri">Ambil Sendiri</option>
+                        <option value="diantar">Diantar</option>
+                    </select>
+                </div>
+                <div id="pengambilan" class="form-group" style="display: none;">
+                    <label for="alamat">Alamat Pengiriman:</label>
+                    <input type="text" id="alamat" name="alamat" required>
+                </div>
+                <button type="button" class="checkout-button">Checkout</button>
+            </form>
+        </div>
+    </div>
+
+
     </div>
 
     <script>
         $(document).ready(function() {
+            const customers = [
+                { id: 1, name: "John Doe", address: "Jl. Merdeka No. 1", phone: "08123456789",email : "john@gmail.com" },
+                { id: 2, name: "Jane Smith", address: "Jl. Proklamasi No. 2", phone: "08123456788", email: "jane@gmail.com" }
+            ];
+
+            // Toggle customer type (new or existing)
+            $('#customerType').change(function() {
+                if ($(this).val() === 'existing') {
+                    $('#existingCustomerSearch').show();
+                } else {
+                    $('#existingCustomerSearch').hide();
+                    $('#orderForm').find("input[type=text], textarea").val("");
+                }
+            });
+
+            // Toggle customer type (new or existing)
+            $('#customerAddress').change(function() {
+                if ($(this).val() === 'diantar') {
+                    $('#pengambilan').show();
+                } else {
+                    $('#pengambilan').hide();
+                    $('#orderForm').find("input[type=text], textarea").val("");
+                }
+            });
+
+            // Search and display results for existing customer
+            $('#customerSearch').on('input', function() {
+                let query = $(this).val().toLowerCase();
+                let results = customers.filter(c => c.name.toLowerCase().includes(query));
+
+                let resultsList = $('#searchResults').empty().show();
+                results.forEach(customer => {
+                    resultsList.append(`<li data-id="${customer.id}" class="customer-result">${customer.name}</li>`);
+                });
+            });
+
+            // Autofill form when selecting a customer
+            $(document).on('click', '.customer-result', function() {
+                let customerId = $(this).data('id');
+                let customer = customers.find(c => c.id === customerId);
+                
+                $('#customerName').val(customer.name);
+                $('#customerPhone').val(customer.phone);
+                $('#searchResults').hide();
+            });
+
+            // Toggle "Pesan" button visibility
             function togglePesanButton() {
-                // Check if any quantity is greater than 0
                 let anyQuantitySelected = false;
                 $('.quantity-input').each(function() {
                     if (parseInt($(this).val()) > 0) {
                         anyQuantitySelected = true;
-                        return false; // Exit loop early
+                        return false;
                     }
                 });
 
-                // Show or hide the Pesan button based on the quantity check
                 if (anyQuantitySelected) {
                     $('.order-button').show();
                 } else {
@@ -170,15 +268,13 @@
                 }
             }
 
-            // Increment button functionality
+            // Increment and decrement button functionality
             $('.increment').click(function() {
                 let input = $(this).siblings('.quantity-input');
                 let decrementButton = $(this).siblings('.decrement');
 
-                // Show input field and decrement button if value is 0
                 if (input.val() == 0) {
-                    input.val(1);
-                    input.show();
+                    input.val(1).show();
                     decrementButton.show();
                 } else {
                     let currentValue = parseInt(input.val());
@@ -187,11 +283,9 @@
                         input.val(currentValue + 1);
                     }
                 }
-
-                togglePesanButton(); // Check if we need to show/hide the Pesan button
+                togglePesanButton();
             });
 
-            // Decrement button functionality
             $('.decrement').click(function() {
                 let input = $(this).siblings('.quantity-input');
                 let currentValue = parseInt(input.val());
@@ -199,15 +293,53 @@
                 if (currentValue > 1) {
                     input.val(currentValue - 1);
                 } else if (currentValue == 1) {
-                    // If the value is 1, set to 0 and hide the input and decrement button
-                    input.val(0);
-                    input.hide();
+                    input.val(0).hide();
                     $(this).hide();
                 }
+                togglePesanButton();
+            });
 
-                togglePesanButton(); // Check if we need to show/hide the Pesan button
+            // Update selected products and total price in the modal
+            function updateModal() {
+                const selectedProductsContainer = $('.selected-products');
+                selectedProductsContainer.empty();
+                let totalPrice = 0;
+
+                $('.quantity-input').each(function() {
+                    let quantity = parseInt($(this).val());
+                    if (quantity > 0) {
+                        let productName = $(this).closest('.product-item').find('h2').text();
+                        let priceText = $(this).closest('.product-item').find('strong').text().replace('Rp', '').replace('.', '');
+                        let price = parseInt(priceText);
+                        let productTotal = price * quantity;
+                        totalPrice += productTotal;
+
+                        selectedProductsContainer.append(`<p>${productName} - ${quantity} pcs - Rp${productTotal.toLocaleString('id-ID')}</p>`);
+                    }
+                });
+
+                $('#totalPrice').text(`Rp${totalPrice.toLocaleString('id-ID')}`);
+            }
+
+            // Show modal and calculate total
+            $('.order-button').click(function(e) {
+                e.preventDefault();
+                updateModal();
+                $('#orderModal').show();
+            });
+
+            // Close modal on clicking the close button or outside the modal
+            $('.close-button').click(function() {
+                $('#orderModal').hide();
+            });
+
+            $(window).click(function(event) {
+                if ($(event.target).is('#orderModal')) {
+                    $('#orderModal').hide();
+                }
             });
         });
     </script>
+
 </body>
 </html>
