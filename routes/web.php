@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\KasirController;
+use App\Http\Controllers\PesananController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -27,5 +28,8 @@ Route::get('auth/google/call-back', [GoogleAuthController::class, 'callbackGoogl
 
 //Kasir
 Route::get('/kasir/home', [KasirController::class, 'home'])->name('kasir.home');
+Route::get('/kasir/buat-pesanan', [PesananController::class, 'index'])->name('buat-pesanan');
+Route::post('/kasir/tambah-pesanan', [PesananController::class, 'addToOrder'])->name('tambah-pesanan');
+
 
 require __DIR__.'/auth.php';

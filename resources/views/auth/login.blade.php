@@ -54,6 +54,16 @@
     .google img {
         width: 35px;
     }
+    .footer{
+        height:175px;
+        display:flex;
+        flex-direction:column;
+        justify-content:space-between;
+    }
+    .footer .daftar {
+        color: green;
+        text-decoration: underline;
+    }
 </style>
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
@@ -104,14 +114,22 @@
             </x-primary-button>
         </div>
     </form>
-    <div>
-        <p>Atau login dengan</p>
+    <div class="footer">
+        <div>
+            <p>Atau login dengan</p>
+        </div>
+        <!-- Login with Google Button -->
+        <div class="flex items-center justify-center">
+            <a class="google" href="{{ route('google-auth') }}">
+                <img src="images/google.png" alt=""> Google
+            </a>
+        </div>
+
+        <div>
+            <p>Belum punya akun?</p>
+            <a class="daftar" href="register">Daftar</a>
+        </div>
     </div>
-    <!-- Login with Google Button -->
-    <div class="flex items-center justify-center mt-6">
-        <a class="google" href="{{ route('google-auth') }}">
-            <img src="images/google.png" alt=""> Google
-        </a>
-    </div>
+    
 
 </x-guest-layout>

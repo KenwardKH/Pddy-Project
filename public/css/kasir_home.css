@@ -65,8 +65,8 @@ body {
 .dashboard { 
     display: grid; 
     grid-template-columns: repeat(3, 1fr); 
-    gap: 110px; 
-    margin: 40px; 
+    gap: 120px; 
+    margin: 60px; 
     background-color: #f5f5f5;
     padding: 40px;
 }
