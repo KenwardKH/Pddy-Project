@@ -195,7 +195,6 @@ tbody tr:hover {
     cursor: pointer;
     text-align: center;
     outline: none;
-    appearance: none;
     transition: background-color 0.3s;
 }
 
