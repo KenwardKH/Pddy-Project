@@ -37,6 +37,8 @@ Route::get('/pengguna/profile', [InformasiPenggunaController::class, 'show'])->n
 Route::get('/kasir/home', [KasirController::class, 'home'])->name('kasir.home');
 Route::get('/kasir/buat-pesanan', [PesananController::class, 'index'])->name('buat-pesanan');
 Route::post('/kasir/tambah-pesanan', [PesananController::class, 'addToOrder'])->name('tambah-pesanan');
-
+Route::get('/kasir/stock-barang', [KasirController::class, 'stock'])->name('kasir.stock');
+Route::get('/kasir/konfirmasi', [KasirController::class, 'konfirmasi'])->name('kasir.konfirmasi');
+Route::get('/kasir/status', [KasirController::class, 'status'])->name('kasir.status');
 
 require __DIR__.'/auth.php';

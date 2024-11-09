@@ -25,6 +25,23 @@ class KasirController extends Controller
         return view('kasir.kasir_home', compact('data'));
     }
 
+    public function stock()
+    {
+        
+        return view('kasir.kasir_stock_barang');
+    }
+
+    public function konfirmasi()
+    {
+        
+        return view('kasir.kasir_konfirmasi');
+    }
+
+    public function status()
+    {
+        
+        return view('kasir.kasir_status');
+    }
 
     /**
      * Show the form for creating a new resource.
