@@ -224,6 +224,24 @@
     
 
     <script>
+        // JavaScript for hiding and showing the search container on scroll
+    let lastScrollTop = 0;
+    const searchContainer = document.querySelector('.search-container');
+
+    window.addEventListener('scroll', function() {
+        let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+        if (scrollTop > lastScrollTop) {
+            // Scroll down: hide search container
+            searchContainer.classList.add('hidden');
+        } else {
+            // Scroll up: show search container
+            searchContainer.classList.remove('hidden');
+        }
+        
+        lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // For Mobile or negative scrolling
+    });
+
         $(document).ready(function() {
                 // Increment and decrement button functionality
                 $('.increment').click(function() {

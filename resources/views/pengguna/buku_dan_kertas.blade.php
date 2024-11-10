@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>peralatan_kantor</title>
+    <title>Buku dan kertas</title>
     <link rel="stylesheet" href="{{ asset('css/kategori.css') }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -57,7 +57,9 @@
                     </div>
                 </div>
             @endforeach -->
-            
+
+            @csrf
+            @foreach($products as $product)
             <div class="product-item">
                 <div class="kiri">
                     <img src="{{ asset('images/produk/pensil2b.png') }}" alt="{{ $product['name'] }}">
@@ -218,12 +220,31 @@
                     </div>
                 </div>
             </div>
+            @endforeach
             <button type="submit" class="order-button" style="display: none;">Pesan</button>
         </form>
     </div>
     
 
     <script>
+         // JavaScript for hiding and showing the search container on scroll
+    let lastScrollTop = 0;
+    const searchContainer = document.querySelector('.search-container');
+
+    window.addEventListener('scroll', function() {
+        let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+        if (scrollTop > lastScrollTop) {
+            // Scroll down: hide search container
+            searchContainer.classList.add('hidden');
+        } else {
+            // Scroll up: show search container
+            searchContainer.classList.remove('hidden');
+        }
+        
+        lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // For Mobile or negative scrolling
+    });
+
         $(document).ready(function() {
                 // Increment and decrement button functionality
                 $('.increment').click(function() {
