@@ -207,6 +207,22 @@ tbody tr:hover {
     color: #333;
 }
 
+
+.cetak-button {
+    background-color: #4caf50;
+    color: #ffffff;
+    border: none;
+    padding: 8px 12px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.cetak-button:hover {
+    background-color: #388e3c;
+}
+
 .delete-button {
     background: none;
     border: none;

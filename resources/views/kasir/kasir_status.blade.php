@@ -52,6 +52,7 @@
                                 <th>Pembayaran</th>
                                 <th>Jatuh Tempo</th>
                                 <th>Status</th>
+                                <th>Cetak Invoice</th>
                                 <th>Tanggal Pesan</th>
                                 <th>Hapus</th>
                             </tr>
@@ -75,6 +76,7 @@
                                         <option value="Dibatalkan">Dibatalkan</option>
                                     </select>
                                 </td>
+                                <td><button class="cetak-button">Cetak</button></td>
                                 <td>10/07/2024</td>
                                 <td><button class="delete-button"><i class="bi bi-x-square"></i></td>
                             </tr>
@@ -96,6 +98,7 @@
                                         <option value="Dibatalkan">Dibatalkan</option>
                                     </select>
                                 </td>
+                                <td><button class="cetak-button">Cetak</button></td>
                                 <td>21/08/2024</td>
                                 <td><button class="delete-button"><i class="bi bi-x-square"></i></td>
                             </tr>
@@ -117,6 +120,7 @@
                                         <option value="Dibatalkan">Dibatalkan</option>
                                     </select>
                                 </td>
+                                <td><button class="cetak-button">Cetak</button></td>
                                 <td>11/10/2024</td>
                                 <td><button class="delete-button"><i class="bi bi-x-square"></i></td>
                             </tr>
