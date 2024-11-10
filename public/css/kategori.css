@@ -1,0 +1,257 @@
+body { 
+    font-family: 'Roboto', sans-serif; 
+    background-color: white; 
+}
+
+.header {
+    display: flex; 
+    flex-direction: column;
+    padding: 10px; 
+    border-bottom: rgb(136, 243, 193) solid 2px;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background-color: white;
+    z-index: 1000; /* Ensures the header stays on top */
+}
+
+.container {
+    margin-top: 160px; /* Offset content for the fixed header height */
+}
+        
+.header { 
+    display: flex; 
+    flex-direction: column;
+    padding: 10px; 
+    border-bottom: rgb(127, 243, 206) solid 2px;
+}
+.header img {
+    width: 350px;
+}
+        
+.header h1 { 
+    font-size: 24px; 
+    color: #333; 
+}
+        
+.nav { 
+    display: flex;
+    width: 100%;
+    justify-content: space-between;  
+}
+.nav a{
+    display: inline-flex;
+    align-items: center;
+    font-size: 16px; /* Adjust the size as needed */
+}
+
+.nav i {
+    font-size: 18px; /* Adjust this to match the text size */
+    line-height: 1; /* Ensures the icon height aligns properly */
+    margin-left: 4px;
+}
+
+.nav a:hover {
+    color: #80f4AC;
+}
+
+.nav .left {
+    display: flex;
+    justify-content: space-around;
+    width: 10%;
+}
+
+.nav .right {
+    display: flex;
+    justify-content: space-around;
+    width: 45%;
+}
+        
+.nav a { 
+    text-decoration: none; 
+    color: #333; 
+    font-weight: bold; 
+}
+/* Page Title Styling */
+.page-title {
+    text-align: center;
+    font-size: 25px;
+    font-weight: bold;
+    margin-top: 200px; /* Jarak cukup dari header dan search bar */
+    color: #333;
+}
+
+/* Search container styling */
+.search-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    position: fixed;
+    width: calc(100% - 20px);
+    top: 120px;
+    background-color: white;
+    padding: 10px 20px;
+    z-index: 999;
+    box-sizing: border-box;
+    transition: transform 0.3s ease; /* Smooth hide/show transition */
+}
+.search-container.hidden {
+    transform: translateY(-100%); /* Slide out the search container */
+}
+.category-dropdown {
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.search-bar {
+    width: 250px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.search-button {
+    padding: 8px 10px;
+    background-color: #80f4AC; /* Warna tombol */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.search-button:hover {
+    background-color: #64f59c; /* Warna hijau gelap saat hover */
+}
+
+/* Product List Styling */
+.container {
+    margin-top: 160px; /* Offset content for the fixed header height */
+}
+
+
+/* Styling for Product Grid */
+.product-list {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 5 products per row */
+    gap: 20px; /* Space between products */
+    padding: 20px;
+    justify-items: center; /* Centers items horizontally */
+}
+
+.product-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 8px; /* Perkecil padding */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    max-width: 200px; /* Batasi lebar maksimum produk */
+}
+
+/* Hover effect for product item (General hover, will be overwritten by image hover) */
+.product-item:hover {
+    background-color: #e8f5e9; /* Light green background */
+    transform: scale(1.05); /* Slightly enlarge the product */
+}
+
+/* Hover effect for image only */
+.product-item img:hover {
+    transform: scale(1.1); /* Slight zoom effect */
+    cursor: pointer; /* Change cursor to pointer when hovering over image */
+    transition: transform 0.3s ease; /* Smooth transition */
+}
+
+/* Ukuran gambar produk lebih kecil */
+.product-item img {
+    max-width: 100px; /* Batasi lebar maksimum gambar */
+    height: auto;
+    border-radius: 5px;
+}
+
+/* Sesuaikan ukuran teks dan elemen lainnya */
+.product-item h2, h3 {
+    font-size: 14px; /* Ukuran font lebih kecil */
+    margin: 8px 0;
+}
+
+.product-item .kanan {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.product-item .kanan .quantity-selector {
+    display: flex;
+    gap: 10px;
+}
+
+.product-item .kanan .quantity-selector i {
+    font-size: 34px;
+    cursor: pointer;
+}
+
+.product-item .kanan .quantity-selector i:hover {
+    color: green;
+}
+
+.product-item .kanan .quantity-selector input {
+    width: 50px;
+    height: 28px;
+    text-align: center;
+    font-size: 20px;
+}
+
+.product-list button.order-button {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    height: 50px;
+    font-size: 18px;
+    background-color: #adf542;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold;
+}
+
+.product-list {
+    padding-bottom: 60px; /* Additional padding for the fixed button at the bottom */
+}
+
+@media (max-width: 1200px) {
+    .product-list {
+        grid-template-columns: repeat(4, 1fr); /* 4 products per row on medium screens */
+    }
+}
+
+@media (max-width: 900px) {
+    .product-list {
+        grid-template-columns: repeat(3, 1fr); /* 3 products per row on smaller screens */
+    }
+}
+
+@media (max-width: 600px) {
+    .product-list {
+        grid-template-columns: repeat(2, 1fr); /* 2 products per row on small screens */
+    }
+}
+
+@media (max-width: 400px) {
+    .product-list {
+        grid-template-columns: 1fr; /* 1 product per row on very small screens */
+    }
+}
+
