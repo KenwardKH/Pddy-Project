@@ -16,7 +16,7 @@
             <div class="nav">
                 <div class="left">
                     <a href="{{ route('pengguna.home') }}">Home</a>
-                    <a href="#">Profil</a>
+                    <a href="{{ route('profile.show')}}">Profil</a>
                 </div>
                 <div class="right">
                     <a href="#">Keranjang <i class="bi bi-cart"></i></a>
@@ -36,27 +36,27 @@
        <!-- Categories Section -->
     <div class="categories">
         <div class="category">
-        <a href="#">
+            <a href="{{ route('pengguna.peralatan_kantor.index') }}">
             <img src="{{ asset('images/perlengkapan kantor.png') }}" alt="Peralatan Kantor">
             <p>Peralatan Kantor</p>
         </a>
         </div>
         <div class="category">
-        <a href="#">
+            <a href="{{ route('pengguna.peralatan_sekolah.index') }}">
             <img src="{{ asset('images/perlengkapan sekolah.png') }}" alt="Peralatan Sekolah">
             <p>Peralatan Sekolah</p>
         </a>
         </div>
         <div class="category">
-        <a href="#">
+        <a href="{{ route ('pengguna.buku_dan_kertas.index')}}">
             <img src="{{ asset('images/buku dan kertas.png') }}" alt="Buku dan Kertas">
             <p>Buku dan Kertas</p>
         </a>
         </div>
         <div class="category">
-        <a href="#">
+        <a href="{{ route ('pengguna.pulpen_dan_pensil.index')}}">
             <img src="{{ asset('images/pulpen dan pensil.png') }}" alt="Pulpen dan Kertas">
-            <p>Pulpen dan Kertas</p>
+            <p>Pulpen dan Pensil</p>
         </a>
     </div>
 </div>
@@ -67,5 +67,7 @@
     <p>Telepon: +62 811 1010</p>
 </div>
     </div>
+
+    
 </body>
 </html>
