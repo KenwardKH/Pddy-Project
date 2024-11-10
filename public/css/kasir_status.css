@@ -1,0 +1,227 @@
+body { 
+    font-family: 'Roboto', sans-serif; 
+    background-color: white; 
+    background-color: #e8f5e9;
+}
+
+.header {
+    display: flex; 
+    flex-direction: column;
+    padding: 10px; 
+    border-bottom: orange solid 2px;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background-color: white;
+    z-index: 1000; /* Ensures the header stays on top */
+}
+
+.container {
+    margin-top: 160px; /* Offset content for the fixed header height */
+}
+        
+.header { 
+    display: flex; 
+    flex-direction: column;
+    padding: 10px; 
+    border-bottom: orange solid 2px;
+}
+.header img {
+    width: 400px;
+}
+        
+.header h1 { 
+    font-size: 24px; 
+    color: #333; 
+}
+        
+.nav { 
+    display: flex;
+    width: 100%;
+    justify-content: space-between;  
+}
+.nav a{
+    display: inline-flex;
+    align-items: center;
+    font-size: 16px; /* Adjust the size as needed */
+}
+
+.nav i {
+    font-size: 18px; /* Adjust this to match the text size */
+    line-height: 1; /* Ensures the icon height aligns properly */
+    margin-left: 4px;
+}
+
+.nav a:hover {
+    color: green;
+}
+
+.nav .left {
+    display: flex;
+    justify-content: space-around;
+    width: 10%;
+}
+
+.nav .right {
+    display: flex;
+    justify-content: space-around;
+    width: 50%;
+}
+        
+.nav a { 
+    text-decoration: none; 
+    color: #333; 
+    font-weight: bold; 
+}
+
+/* Search container styling */
+.search-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    position: fixed;
+    width: 100%;
+    top: 116px; /* Adjust this to position it below the header */
+    background-color: white; /* Optional: add a background to match the header */
+    padding: 10px 0; /* Optional: add padding for spacing */
+    z-index: 999; /* Ensure it stays on top */
+}
+
+.search-bar {
+    width: 250px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.category-dropdown {
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.search-button {
+    padding: 8px 12px;
+    background-color: #28a745; /* Customize the color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.search-button i {
+    font-size: 18px;
+}
+
+.search-button:hover {
+    background-color: #218838; /* Darker green for hover */
+}
+
+.dashboard{
+    text-align: center;
+}
+
+.dashboard h1 {
+    margin-top: 180px;
+}
+
+.table {
+    display: flex;
+    justify-content: center;
+}
+
+table {
+    width: 90%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    background-color: #ffffff;
+    margin-top: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+caption {
+    font-weight: bold;
+    font-size: 1.5em;
+    margin-bottom: 10px;
+    padding: 10px;
+    color: #4a4a4a;
+}
+
+th, td {
+    padding: 14px;
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid #ddd;
+}
+
+th {
+    background-color: #343a40;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+tbody tr {
+    transition: background-color 0.3s;
+}
+
+tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.detail-link {
+    color: #ff6f00;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.detail-link:hover {
+    color: #e65100;
+}
+
+.status-dropdown {
+    padding: 5px 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #ffeb3b;
+    color: #333;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    outline: none;
+    transition: background-color 0.3s;
+}
+
+.status-dropdown:hover {
+    background-color: #fdd835;
+}
+
+.status-dropdown option {
+    background-color: #ffffff;
+    color: #333;
+}
+
+.delete-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.6em;
+    color: #f44336;
+    transition: color 0.3s;
+}
+
+.delete-button:hover {
+    color: #d32f2f;
+}
+
+td{
+    font-size: 0.9em;
+    color: #555;
+    font-weight: 500;
+}

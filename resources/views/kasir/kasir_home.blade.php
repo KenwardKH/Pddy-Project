@@ -20,9 +20,9 @@
             </div>
             <div class="right">
                 <a href="buat-pesanan">Buat Pesanan <i class="bi bi-cart"></i></a>
-                <a href="#">Stock Barang <i class="bi bi-box-seam"></i></a>
-                <a href="#">Konfirmasi Pesanan <i class="bi bi-clipboard-check"></i></a>
-                <a href="#">Status Pesanan <i class="bi bi-journal-text"></i></a>
+                <a href="stock-barang">Stock Barang <i class="bi bi-box-seam"></i></a>
+                <a href="konfirmasi">Konfirmasi Pesanan <i class="bi bi-clipboard-check"></i></a>
+                <a href="status">Status Pesanan <i class="bi bi-journal-text"></i></a>
                 <a href="#">Keluar <i class="bi bi-box-arrow-right"></i></a>
             </div>
             

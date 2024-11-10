@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="{{asset('css/kasir_buat_pesanan.css')}}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    @livewireStyles
 </head>
 <body>
 
@@ -20,9 +21,9 @@
                 </div>
                 <div class="right">
                     <a href="buat-pesanan">Buat Pesanan <i class="bi bi-cart"></i></a>
-                    <a href="#">Stock Barang <i class="bi bi-box-seam"></i></a>
-                    <a href="#">Konfirmasi Pesanan <i class="bi bi-clipboard-check"></i></a>
-                    <a href="#">Status Pesanan <i class="bi bi-journal-text"></i></a>
+                    <a href="stock-barang">Stock Barang <i class="bi bi-box-seam"></i></a>
+                    <a href="konfirmasi">Konfirmasi Pesanan <i class="bi bi-clipboard-check"></i></a>
+                    <a href="status">Status Pesanan <i class="bi bi-journal-text"></i></a>
                     <a href="#">Keluar <i class="bi bi-box-arrow-right"></i></a>
                 </div>
             </div>
@@ -168,9 +169,8 @@
             <!-- Search field for existing customers -->
             <div id="existingCustomerSearch" style="display: none;">
                 <div class="form-group">
-                    <label for="customerSearch">Cari Akun Pelanggan:</label>
-                    <input type="text" id="customerSearch" placeholder="Cari nama atau ID pelanggan...">
-                    <ul id="searchResults" style="display: none;"></ul>
+                    <!-- Pencarian akun pelanggan dengan Livewire -->
+                    @livewire('search-customer')
                 </div>
             </div>
 
@@ -195,6 +195,12 @@
                     <label for="alamat">Alamat Pengiriman:</label>
                     <input type="text" id="alamat" name="alamat" required>
                 </div>
+                <label for="pembayaran">Pilih Opsi Pembayaran:</label>
+                <select id="pembayaran" style="margin-bottom:15px">
+                    <option value="cash">Cash</option>
+                    <option value="transfer">Transfer</option>
+                    <option value="kredit">Kredit</option>
+                </select>
                 <button type="button" class="checkout-button">Checkout</button>
             </form>
         </div>
@@ -204,142 +210,131 @@
     </div>
 
     <script>
-        $(document).ready(function() {
-            const customers = [
-                { id: 1, name: "John Doe", address: "Jl. Merdeka No. 1", phone: "08123456789",email : "john@gmail.com" },
-                { id: 2, name: "Jane Smith", address: "Jl. Proklamasi No. 2", phone: "08123456788", email: "jane@gmail.com" }
-            ];
+    document.addEventListener('DOMContentLoaded', function() {
+        // Fungsi untuk menampilkan atau menyembunyikan field berdasarkan tipe pelanggan yang dipilih
+        $('#customerType').change(function() {
+            if ($(this).val() === 'existing') {
+                $('#existingCustomerSearch').show();
+            } else {
+                $('#existingCustomerSearch').hide();
+                $('#orderForm').find("input[type=text], textarea").val("");
+            }
+        });
 
-            // Toggle customer type (new or existing)
-            $('#customerType').change(function() {
-                if ($(this).val() === 'existing') {
-                    $('#existingCustomerSearch').show();
-                } else {
-                    $('#existingCustomerSearch').hide();
-                    $('#orderForm').find("input[type=text], textarea").val("");
+        // Fungsi untuk menampilkan atau menyembunyikan input alamat pengiriman berdasarkan opsi pengiriman
+        $('#customerAddress').change(function() {
+            if ($(this).val() === 'diantar') {
+                $('#pengambilan').show();
+            } else {
+                $('#pengambilan').hide();
+                $('#orderForm').find("input[type=text], textarea").val("");
+            }
+        });
+
+        // Fungsi untuk menampilkan tombol "Pesan" hanya jika ada produk dengan kuantitas lebih dari 0
+        function togglePesanButton() {
+            let anyQuantitySelected = false;
+            $('.quantity-input').each(function() {
+                if (parseInt($(this).val()) > 0) {
+                    anyQuantitySelected = true;
+                    return false;
                 }
             });
 
-            // Toggle customer type (new or existing)
-            $('#customerAddress').change(function() {
-                if ($(this).val() === 'diantar') {
-                    $('#pengambilan').show();
-                } else {
-                    $('#pengambilan').hide();
-                    $('#orderForm').find("input[type=text], textarea").val("");
+            if (anyQuantitySelected) {
+                $('.order-button').show();
+            } else {
+                $('.order-button').hide();
+            }
+        }
+
+        // Fungsi untuk menambah kuantitas produk ketika tombol "+" ditekan
+        $('.increment').click(function() {
+            let input = $(this).siblings('.quantity-input');
+            let decrementButton = $(this).siblings('.decrement');
+
+            if (input.val() == 0) {
+                input.val(1).show();
+                decrementButton.show();
+            } else {
+                let currentValue = parseInt(input.val());
+                let max = parseInt(input.attr('max'));
+                if (currentValue < max) {
+                    input.val(currentValue + 1);
+                }
+            }
+            togglePesanButton();
+        });
+
+        // Fungsi untuk mengurangi kuantitas produk ketika tombol "-" ditekan
+        $('.decrement').click(function() {
+            let input = $(this).siblings('.quantity-input');
+            let currentValue = parseInt(input.val());
+
+            if (currentValue > 1) {
+                input.val(currentValue - 1);
+            } else if (currentValue == 1) {
+                input.val(0).hide();
+                $(this).hide();
+            }
+            togglePesanButton();
+        });
+
+        // Fungsi untuk memperbarui informasi produk dan total harga di modal
+        function updateModal() {
+            const selectedProductsContainer = $('.selected-products');
+            selectedProductsContainer.empty();
+            let totalPrice = 0;
+
+            $('.quantity-input').each(function() {
+                let quantity = parseInt($(this).val());
+                if (quantity > 0) {
+                    let productName = $(this).closest('.product-item').find('h2').text();
+                    let priceText = $(this).closest('.product-item').find('strong').text().replace('Rp', '').replace('.', '');
+                    let price = parseInt(priceText);
+                    let productTotal = price * quantity;
+                    totalPrice += productTotal;
+
+                    selectedProductsContainer.append(`<p>${productName} - ${quantity} pcs - Rp${productTotal.toLocaleString('id-ID')}</p>`);
                 }
             });
 
-            // Search and display results for existing customer
-            $('#customerSearch').on('input', function() {
-                let query = $(this).val().toLowerCase();
-                let results = customers.filter(c => c.name.toLowerCase().includes(query));
+            $('#totalPrice').text(`Rp${totalPrice.toLocaleString('id-ID')}`);
+        }
 
-                let resultsList = $('#searchResults').empty().show();
-                results.forEach(customer => {
-                    resultsList.append(`<li data-id="${customer.id}" class="customer-result">${customer.name}</li>`);
-                });
-            });
+        // Fungsi untuk menampilkan modal dan menghitung total
+        $('.order-button').click(function(e) {
+            e.preventDefault();
+            updateModal();
+            $('#orderModal').show();
+        });
 
-            // Autofill form when selecting a customer
-            $(document).on('click', '.customer-result', function() {
-                let customerId = $(this).data('id');
-                let customer = customers.find(c => c.id === customerId);
-                
+        // Fungsi untuk menutup modal saat tombol close diklik atau klik di luar modal
+        $('.close-button').click(function() {
+            $('#orderModal').hide();
+        });
+
+        $(window).click(function(event) {
+            if ($(event.target).is('#orderModal')) {
+                $('#orderModal').hide();
+            }
+        });
+
+        // Mendengarkan event dari Livewire untuk mengisi data pelanggan yang dipilih
+        document.addEventListener('livewire:load', function () {
+            Livewire.on('fillCustomerData', customer => {
                 $('#customerName').val(customer.name);
                 $('#customerPhone').val(customer.phone);
-                $('#searchResults').hide();
-            });
-
-            // Toggle "Pesan" button visibility
-            function togglePesanButton() {
-                let anyQuantitySelected = false;
-                $('.quantity-input').each(function() {
-                    if (parseInt($(this).val()) > 0) {
-                        anyQuantitySelected = true;
-                        return false;
-                    }
-                });
-
-                if (anyQuantitySelected) {
-                    $('.order-button').show();
-                } else {
-                    $('.order-button').hide();
-                }
-            }
-
-            // Increment and decrement button functionality
-            $('.increment').click(function() {
-                let input = $(this).siblings('.quantity-input');
-                let decrementButton = $(this).siblings('.decrement');
-
-                if (input.val() == 0) {
-                    input.val(1).show();
-                    decrementButton.show();
-                } else {
-                    let currentValue = parseInt(input.val());
-                    let max = parseInt(input.attr('max'));
-                    if (currentValue < max) {
-                        input.val(currentValue + 1);
-                    }
-                }
-                togglePesanButton();
-            });
-
-            $('.decrement').click(function() {
-                let input = $(this).siblings('.quantity-input');
-                let currentValue = parseInt(input.val());
-
-                if (currentValue > 1) {
-                    input.val(currentValue - 1);
-                } else if (currentValue == 1) {
-                    input.val(0).hide();
-                    $(this).hide();
-                }
-                togglePesanButton();
-            });
-
-            // Update selected products and total price in the modal
-            function updateModal() {
-                const selectedProductsContainer = $('.selected-products');
-                selectedProductsContainer.empty();
-                let totalPrice = 0;
-
-                $('.quantity-input').each(function() {
-                    let quantity = parseInt($(this).val());
-                    if (quantity > 0) {
-                        let productName = $(this).closest('.product-item').find('h2').text();
-                        let priceText = $(this).closest('.product-item').find('strong').text().replace('Rp', '').replace('.', '');
-                        let price = parseInt(priceText);
-                        let productTotal = price * quantity;
-                        totalPrice += productTotal;
-
-                        selectedProductsContainer.append(`<p>${productName} - ${quantity} pcs - Rp${productTotal.toLocaleString('id-ID')}</p>`);
-                    }
-                });
-
-                $('#totalPrice').text(`Rp${totalPrice.toLocaleString('id-ID')}`);
-            }
-
-            // Show modal and calculate total
-            $('.order-button').click(function(e) {
-                e.preventDefault();
-                updateModal();
-                $('#orderModal').show();
-            });
-
-            // Close modal on clicking the close button or outside the modal
-            $('.close-button').click(function() {
-                $('#orderModal').hide();
-            });
-
-            $(window).click(function(event) {
-                if ($(event.target).is('#orderModal')) {
-                    $('#orderModal').hide();
-                }
+                $('#alamat').val(customer.address);
+    console.log(customer)
             });
         });
-    </script>
+    });
+
+</script>
+
+
+    @livewireScripts
 
 </body>
 </html>
