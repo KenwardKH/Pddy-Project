@@ -58,4 +58,4 @@ Route::get('/kasir/stock-barang', [KasirController::class, 'stock'])->name('kasi
 Route::get('/kasir/konfirmasi', [KasirController::class, 'konfirmasi'])->name('kasir.konfirmasi');
 Route::get('/kasir/status', [KasirController::class, 'status'])->name('kasir.status');
 
-require __DIR__.'/auth.php';
+// require _DIR_.'/auth.php';

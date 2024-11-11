@@ -55,6 +55,14 @@
             <x-input-error :messages="$errors->get('nomor_telepon')" class="mt-2" />
         </div>
 
+        <!-- Alamat -->
+        <div class="alamat">
+            <x-input-label for="alamat" :value="__('Alamat')" />
+            <x-text-input id="alamat" class="block mt-1 w-full" type="text" name="alamat" :value="old('alamat')" required autocomplete="alamat" />
+            <x-input-error :messages="$errors->get('alamat')" class="mt-2" />
+        </div>
+
+
         <!-- Email Address -->
         <div class="email">
             <x-input-label for="email" :value="__('Email')" />
