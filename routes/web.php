@@ -55,6 +55,7 @@ Route::get('/kasir/buat-pesanan', [PesananController::class, 'index'])->name('bu
 Route::post('/kasir/tambah-pesanan', [PesananController::class, 'addToOrder'])->name('tambah-pesanan');
 Route::get('/kasir/stock-barang', [KasirController::class, 'stock'])->name('kasir.stock');
 Route::get('/kasir/konfirmasi', [KasirController::class, 'konfirmasi'])->name('kasir.konfirmasi');
+Route::get('/kasir/profile', [KasirController::class, 'profile'])->name('kasir.profile');
 Route::get('/kasir/status/{type?}', [KasirController::class, 'index'])->name('status');
 Route::get('/kasir/status/update/{id}/{type}', [KasirController::class, 'updateStatus'])->name('status.update');
 
