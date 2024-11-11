@@ -9,8 +9,6 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
         <div class="header">
             <img src="{{ asset('images/logo.png') }}" alt="logo" class="logo">
             <div class="nav">
@@ -29,14 +27,12 @@
     
         <h1>Keranjang Belanja</h1>
         @if(!empty($cart) && count($cart) > 0)
-            <ul>
                 @foreach($cart as $item)
                     <li>
                         {{ $item['name'] ?? 'Produk Tidak Diketahui' }} - 
                         Jumlah: {{ $item['quantity'] ?? 0 }}
                     </li>
                 @endforeach
-            </ul>
         @else
             <p>Keranjang Anda kosong.</p>
         @endif
