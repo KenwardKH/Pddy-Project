@@ -145,12 +145,27 @@ table {
     box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1);
 }
 
-caption {
+
+.toggle-button {
+    padding: 10px 20px;
+    color: #555;
+    text-decoration: none;
     font-weight: bold;
-    font-size: 1.5em;
-    margin-bottom: 10px;
-    padding: 10px;
-    color: #4a4a4a;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Hover effect untuk tombol */
+.toggle-button:hover {
+    background-color: #f0f0f0;
+}
+
+/* Gaya untuk tombol yang aktif */
+.toggle-button.active {
+    background-color: #4CAF50; /* Warna hijau untuk menandakan pilihan aktif */
+    color: white;
+    border-color: #4CAF50;
 }
 
 th, td {
@@ -185,26 +200,18 @@ tbody tr:hover {
     color: #e65100;
 }
 
-.status-dropdown {
-    padding: 5px 8px;
-    border: 1px solid #ddd;
+.btn-status {
+    padding: 5px 10px;
+    margin: 2px;
+    background-color: #3498db;
+    color: #fff;
+    border: none;
     border-radius: 4px;
-    background-color: #ffeb3b;
-    color: #333;
-    font-weight: bold;
-    cursor: pointer;
-    text-align: center;
-    outline: none;
-    transition: background-color 0.3s;
+    text-decoration: none;
 }
 
-.status-dropdown:hover {
-    background-color: #fdd835;
-}
-
-.status-dropdown option {
-    background-color: #ffffff;
-    color: #333;
+.btn-status:hover {
+    background-color: #2980b9;
 }
 
 
@@ -241,3 +248,12 @@ td{
     color: #555;
     font-weight: 500;
 }
+
+.status-complete {
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    background-color: green;
+    text-align: center;
+}
+

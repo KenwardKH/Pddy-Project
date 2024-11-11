@@ -27,8 +27,12 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
+        if(Auth::check() && Auth::user()->role === 'kasir'){
+            return redirect()->intended(route('/pengguna/home', absolute: false));
+        }
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        return redirect()->intended('/pengguna/home');
+
     }
 
     /**
@@ -42,6 +46,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect('/pengguna/home');
     }
 }

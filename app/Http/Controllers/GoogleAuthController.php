@@ -34,7 +34,7 @@ class GoogleAuthController extends Controller
 
                 // Log in the user
                 Auth::login($user);
-                return redirect()->intended('dashboard');
+                return redirect()->intended('/pengguna/home');
             } else {
                 // If the user does not exist, show an error
                 return redirect('/login')->withErrors(['email' => 'This email is not registered with Google login.']);

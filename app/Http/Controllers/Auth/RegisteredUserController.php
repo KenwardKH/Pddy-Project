@@ -28,27 +28,34 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
+        // Validate the incoming request data
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'nomor_telepon' => ['required', 'string', 'max:255'],
-            'alamat' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'name' => 'required|string|max:255',
+            'nomor_telepon' => 'required|string|max:20',
+            'alamat' => 'required|string|max:255', // validation for address
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|confirmed|min:8',
         ]);
 
+        // Create the User
         $user = User::create([
-            'name' => $request->name,
             'email' => $request->email,
-            'nomor_telepon' =>$request->nomor_telepon,
             'password' => Hash::make($request->password),
         ]);
 
-        event(new Registered($user));
+        // Create the associated Customer record with name, nomor_telepon, and address
+        Customer::create([
+            'user_id' => $user->id,
+            'CustomerName' => $request->name,
+            'CustomerContact' => $request->nomor_telepon,
+            'CustomerAddress' => $request->alamat, // store address as CustomerAddress
+        ]);
 
+        // Log the user in and redirect to their intended destination
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        return redirect()->route('pengguna.home');
     }
 }

@@ -11,12 +11,13 @@ use App\Http\Controllers\BukuDanKertasController;
 use App\Http\Controllers\PulpenDanPensilController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
+use App\Http\Controllers\CartController;
 
 
 use App\Http\Controllers\GoogleAuthController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 Route::get('/dashboard', function () {
@@ -44,12 +45,17 @@ Route::get('/kategori/buku_dan_kertas', [BukuDanKertasController::class, 'index'
 Route::get('/addToOrder', [BukuDanKertasController::class, 'addToOrder'])->name('pengguna.addToOrder');
 Route::get('/kategori/pulpen_dan_pensil', [PulpenDanPensilController::class, 'index'])->name('pengguna.pulpen_dan_pensil.index');
 Route::get('/addToOrder', [PulpenDanPensilController::class, 'addToOrder'])->name('pengguna.addToOrder');
+//keranjang
+Route::post('/add-to-cart', [CartController::class, 'addToCart'])->name('pengguna.addToOrder');
+Route::get('/cart', [CartController::class, 'viewCart'])->name('cart.view');
+Route::get('/remove-from-cart/{productName}', [CartController::class, 'removeFromCart'])->name('cart.remove');
 //Kasir
 Route::get('/kasir/home', [KasirController::class, 'home'])->name('kasir.home');
 Route::get('/kasir/buat-pesanan', [PesananController::class, 'index'])->name('buat-pesanan');
 Route::post('/kasir/tambah-pesanan', [PesananController::class, 'addToOrder'])->name('tambah-pesanan');
 Route::get('/kasir/stock-barang', [KasirController::class, 'stock'])->name('kasir.stock');
 Route::get('/kasir/konfirmasi', [KasirController::class, 'konfirmasi'])->name('kasir.konfirmasi');
-Route::get('/kasir/status', [KasirController::class, 'status'])->name('kasir.status');
+Route::get('/kasir/status/{type?}', [KasirController::class, 'index'])->name('status');
+Route::get('/kasir/status/update/{id}/{type}', [KasirController::class, 'updateStatus'])->name('status.update');
 
 require __DIR__.'/auth.php';
