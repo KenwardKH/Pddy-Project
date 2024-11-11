@@ -86,6 +86,12 @@ class KasirController extends Controller
         return view('kasir.kasir_stock_barang');
     }
 
+    public function profile()
+    {
+        
+        return view('kasir.kasir_profile');
+    }
+
     public function konfirmasi()
     {
         
