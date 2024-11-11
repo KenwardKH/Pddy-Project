@@ -43,20 +43,7 @@
         <h2 class="page-title">Buku dan Kertas</h2>
 
         <form action="{{ route('pengguna.addToOrder') }}" method="POST" class="product-list">
-            <!-- @csrf
-            @foreach($products as $product)
-                <div class="product-item">
-                    <img src="{{ asset('images/produk/' . $product['image']) }}" alt="{{ $product['name'] }}">
-                    <h3>{{ $product['name'] }}</h3>
-                    <p><strong>Rp{{ number_format($product['price'], 0, ',', '.') }}</strong></p>
-                    <p>Tersedia: {{ $product['available'] }} lusin</p>
-                    <div class="quantity-selector">
-                        <button type="button" class="decrement" style="display: none;">-</button>
-                        <input type="number" name="quantity[{{ $product['name'] }}]" value="0" min="0" max="{{ $product['available'] }}" class="quantity-input" style="display: none;">
-                        <button type="button" class="increment">+</button>
-                    </div>
-                </div>
-            @endforeach -->
+            
 
             @csrf
             @foreach($products as $product)
@@ -67,6 +54,8 @@
                 <div class="tengah">
                     <h2>Pensil Ajaib 2B</h2>
                     <h3><strong>Rp25.000</strong></h3>
+                    <input type="hidden" name="price[{{ $product['name'] }}]" value="25000"> <!-- Pastikan ini ada -->
+                    <input type="hidden" name="name[{{ $product['name'] }}]" value="{{ $product['name'] }}">
                 </div>
                 <div class="kanan">
                     <div class="quantity-selector">
@@ -75,6 +64,8 @@
                         <i type="button" class="bi bi-plus-square increment"></i>
                     </div>
                 </div>
+                    <!-- Input tersembunyi untuk gambar -->
+        <input type="hidden" name="image[{{ $product['name'] }}]" value="pensil2b.png">
             </div>
             <div class="product-item">
                 <div class="kiri">
@@ -83,6 +74,8 @@
                 <div class="tengah">
                     <h2>Pensil Ajaib 2B</h2>
                     <h3><strong>Rp25.000</strong></h3>
+                    <input type="hidden" name="price[{{ $product['name'] }}]" value="25000"> <!-- Pastikan ini ada -->
+                    <input type="hidden" name="name[{{ $product['name'] }}]" value="{{ $product['name'] }}">
                 </div>
                 <div class="kanan">
                     <div class="quantity-selector">
@@ -91,6 +84,8 @@
                         <i type="button" class="bi bi-plus-square increment"></i>
                     </div>
                 </div>
+                <!-- Input tersembunyi untuk gambar -->
+        <input type="hidden" name="image[{{ $product['name'] }}]" value="pensil2b.png">
             </div>
             <div class="product-item">
                 <div class="kiri">
@@ -99,6 +94,8 @@
                 <div class="tengah">
                     <h2>Pensil Ajaib 2B</h2>
                     <h3><strong>Rp25.000</strong></h3>
+                    <input type="hidden" name="price[{{ $product['name'] }}]" value="25000"> <!-- Pastikan ini ada -->
+                    <input type="hidden" name="name[{{ $product['name'] }}]" value="{{ $product['name'] }}">
                 </div>
                 <div class="kanan">
                     <div class="quantity-selector">
@@ -107,6 +104,8 @@
                         <i type="button" class="bi bi-plus-square increment"></i>
                     </div>
                 </div>
+                <!-- Input tersembunyi untuk gambar -->
+        <input type="hidden" name="image[{{ $product['name'] }}]" value="pensil2b.png">
             </div>
             <div class="product-item">
                 <div class="kiri">
@@ -115,6 +114,8 @@
                 <div class="tengah">
                     <h2>Pensil Ajaib 2B</h2>
                     <h3><strong>Rp25.000</strong></h3>
+                    <input type="hidden" name="price[{{ $product['name'] }}]" value="25000"> <!-- Pastikan ini ada -->
+                    <input type="hidden" name="name[{{ $product['name'] }}]" value="{{ $product['name'] }}">
                 </div>
                 <div class="kanan">
                     <div class="quantity-selector">
@@ -123,6 +124,8 @@
                         <i type="button" class="bi bi-plus-square increment"></i>
                     </div>
                 </div>
+                <!-- Input tersembunyi untuk gambar -->
+        <input type="hidden" name="image[{{ $product['name'] }}]" value="pensil2b.png">
             </div>
             <div class="product-item">
                 <div class="kiri">
@@ -131,6 +134,8 @@
                 <div class="tengah">
                     <h2>Pensil Ajaib 2B</h2>
                     <h3><strong>Rp25.000</strong></h3>
+                    <input type="hidden" name="price[{{ $product['name'] }}]" value="25000"> <!-- Pastikan ini ada -->
+                    <input type="hidden" name="name[{{ $product['name'] }}]" value="{{ $product['name'] }}">
                 </div>
                 <div class="kanan">
                     <div class="quantity-selector">
@@ -139,6 +144,8 @@
                         <i type="button" class="bi bi-plus-square increment"></i>
                     </div>
                 </div>
+                <!-- Input tersembunyi untuk gambar -->
+        <input type="hidden" name="image[{{ $product['name'] }}]" value="pensil2b.png">
             </div>
             <div class="product-item">
                 <div class="kiri">
@@ -147,6 +154,8 @@
                 <div class="tengah">
                     <h2>Pensil Ajaib 2B</h2>
                     <h3><strong>Rp25.000</strong></h3>
+                    <input type="hidden" name="price[{{ $product['name'] }}]" value="25000"> <!-- Pastikan ini ada -->
+                    <input type="hidden" name="name[{{ $product['name'] }}]" value="{{ $product['name'] }}">
                 </div>
                 <div class="kanan">
                     <div class="quantity-selector">
@@ -155,6 +164,8 @@
                         <i type="button" class="bi bi-plus-square increment"></i>
                     </div>
                 </div>
+                <!-- Input tersembunyi untuk gambar -->
+        <input type="hidden" name="image[{{ $product['name'] }}]" value="pensil2b.png">
             </div>
             <div class="product-item">
                 <div class="kiri">
@@ -163,6 +174,8 @@
                 <div class="tengah">
                     <h2>Pensil Ajaib 2B</h2>
                     <h3><strong>Rp25.000</strong></h3>
+                    <input type="hidden" name="price[{{ $product['name'] }}]" value="25000"> <!-- Pastikan ini ada -->
+                    <input type="hidden" name="name[{{ $product['name'] }}]" value="{{ $product['name'] }}">
                 </div>
                 <div class="kanan">
                     <div class="quantity-selector">
@@ -171,6 +184,8 @@
                         <i type="button" class="bi bi-plus-square increment"></i>
                     </div>
                 </div>
+                <!-- Input tersembunyi untuk gambar -->
+        <input type="hidden" name="image[{{ $product['name'] }}]" value="pensil2b.png">
             </div>
             <div class="product-item">
                 <div class="kiri">
@@ -179,6 +194,8 @@
                 <div class="tengah">
                     <h2>Pensil Ajaib 2B</h2>
                     <h3><strong>Rp25.000</strong></h3>
+                    <input type="hidden" name="price[{{ $product['name'] }}]" value="25000"> <!-- Pastikan ini ada -->
+                    <input type="hidden" name="name[{{ $product['name'] }}]" value="{{ $product['name'] }}">
                 </div>
                 <div class="kanan">
                     <div class="quantity-selector">
@@ -187,6 +204,8 @@
                         <i type="button" class="bi bi-plus-square increment"></i>
                     </div>
                 </div>
+                <!-- Input tersembunyi untuk gambar -->
+        <input type="hidden" name="image[{{ $product['name'] }}]" value="pensil2b.png">
             </div>
             <div class="product-item">
                 <div class="kiri">
@@ -195,6 +214,8 @@
                 <div class="tengah">
                     <h2>Pensil Ajaib 2B</h2>
                     <h3><strong>Rp25.000</strong></h3>
+                    <input type="hidden" name="price[{{ $product['name'] }}]" value="25000"> <!-- Pastikan ini ada -->
+                    <input type="hidden" name="name[{{ $product['name'] }}]" value="{{ $product['name'] }}">
                 </div>
                 <div class="kanan">
                     <div class="quantity-selector">
@@ -203,6 +224,8 @@
                         <i type="button" class="bi bi-plus-square increment"></i>
                     </div>
                 </div>
+                <!-- Input tersembunyi untuk gambar -->
+        <input type="hidden" name="image[{{ $product['name'] }}]" value="pensil2b.png">
             </div>
             <div class="product-item">
                 <div class="kiri">
@@ -211,6 +234,8 @@
                 <div class="tengah">
                     <h2>Pensil Ajaib 2B</h2>
                     <h3><strong>Rp25.000</strong></h3>
+                    <input type="hidden" name="price[{{ $product['name'] }}]" value="25000"> <!-- Pastikan ini ada -->
+                    <input type="hidden" name="name[{{ $product['name'] }}]" value="{{ $product['name'] }}">
                 </div>
                 <div class="kanan">
                     <div class="quantity-selector">
@@ -219,6 +244,8 @@
                         <i type="button" class="bi bi-plus-square increment"></i>
                     </div>
                 </div>
+                <!-- Input tersembunyi untuk gambar -->
+        <input type="hidden" name="image[{{ $product['name'] }}]" value="pensil2b.png">
             </div>
             @endforeach
             <button type="submit" class="order-button" style="display: none;">Pesan</button>

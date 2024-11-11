@@ -1,75 +1,278 @@
-body { 
-    font-family: 'Roboto', sans-serif; 
-    background-color: white; 
+/* General Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: white;
+    margin: 0;
 }
 
+/* Container for Header */
 .header {
-    display: flex; 
+    display: flex;
     flex-direction: column;
-    padding: 10px; 
+    padding: 10px;
     border-bottom: rgb(136, 243, 193) solid 2px;
     position: fixed;
     width: 100%;
     top: 0;
     left: 0;
     background-color: white;
-    z-index: 1000; /* Ensures the header stays on top */
+    z-index: 1000;
 }
 
 .container {
     margin-top: 160px; /* Offset content for the fixed header height */
-}
-        
-.header { 
-    display: flex; 
-    flex-direction: column;
-    padding: 10px; 
-    border-bottom: rgb(127, 243, 206) solid 2px;
-}
-.header img {
-    width: 350px;
-}
-        
-.header h1 { 
-    font-size: 24px; 
-    color: #333; 
-}
-        
-.nav { 
-    display: flex;
-    width: 100%;
-    justify-content: space-between;  
-}
-.nav a{
-    display: inline-flex;
-    align-items: center;
-    font-size: 16px; /* Adjust the size as needed */
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-.nav i {
-    font-size: 18px; /* Adjust this to match the text size */
-    line-height: 1; /* Ensures the icon height aligns properly */
-    margin-left: 4px;
+/* Header Logo */
+.header img {
+    width: 350px;
+    margin-bottom: 10px;
+}
+
+/* Navbar */
+.nav {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.nav .left a,
+.nav .right a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    font-size: 16px;
+    margin-right: 20px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.nav .right a {
+    margin-left: 10px;
 }
 
 .nav a:hover {
     color: #80f4AC;
 }
 
-.nav .left {
-    display: flex;
-    justify-content: space-around;
-    width: 10%;
+.nav i {
+    margin-left: 4px;
 }
 
-.nav .right {
+/* Title and underline styling */
+h1.header-title {
+    text-align: center;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+h1.header-title::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: #ccc;
+}
+h1.header-title {
+    font-size: 25px; /* Menurunkan ukuran font */
+}
+
+/* Setiap item keranjang */
+.cart-item {
     display: flex;
-    justify-content: space-around;
-    width: 45%;
+    align-items: center;
+    padding: 20px; /* Memberikan ruang di dalam item keranjang */
+    /* border: 1px solid #ddd; Border yang lebih tipis */
+    /* border-radius: 5px; */
+    background-color: #fff;
+    margin-bottom: 15px; /* Menambah jarak antar item */
+    width: calc(100% - 20px); /* Memungkinkan lebar penuh dikurangi padding kiri dan kanan */
+    max-width: 100%;
+    justify-content: space-between; /* Menjaga jarak antar elemen di dalam item */
+    
 }
-        
-.nav a { 
-    text-decoration: none; 
-    color: #333; 
-    font-weight: bold; 
+.cart-items {
+    margin-bottom: 60px; /* Sesuaikan nilai margin-bottom sesuai kebutuhan */
+    }
+
+
+/* Subtotal dan Delete Button */
+.subtotal {
+    flex: 2; /* Membuat subtotal lebih lebar */
+    font-weight: bold;
+    color: #333;
+    text-align: center;
 }
+
+
+
+
+/* Product Image */
+.item-image {
+    flex: 1;
+}
+
+.item-image img {
+    width: 100px;
+    height: 115px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+/* Product Details */
+.item-details {
+    flex: 2;
+    padding-left: 15px;
+}
+
+.item-details h2 {
+    font-size: 17px;
+    margin-bottom: 5px;
+}
+
+.item-details p {
+    margin-bottom: 5px;
+    font-size: 15px;
+    color: #FFA500;
+}
+
+/* Quantity Control */
+/* .quantity-control {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin: 0 20px;
+    flex: 1;
+    justify-content: center;
+    
+} */
+ /* Kontrol Kuantitas */
+.quantity-control {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Memberikan jarak antara tombol + dan - */
+    justify-content: center; /* Menjaga kontrol tetap berada di tengah */
+    flex: 1; /* Membuat kontrol kuantitas mengambil ruang yang cukup */
+    margin: 0 20px;
+}
+
+.quantity-control button {
+    padding: 5px 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    background-color: #f1f1f1;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.quantity-control input {
+    width: 40px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    padding: 5px;
+}
+
+/* Subtotal and Delete Button */
+.subtotal {
+    flex: 2; /* Membuat subtotal lebih lebar */
+    font-weight: bold;
+    color: #FFA500;
+    text-align: center;
+    font-size: 15px;
+}
+
+
+.delete {
+    flex: 1;
+    text-align: right;
+    color: #dc3545;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.delete i {
+    margin-right: 5px;
+}
+
+/* Footer Styles */
+.footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    }
+    
+    .footer-left {
+    display: flex;
+    flex-direction: column;
+    margin-right: 20px;
+    }
+    
+    .footer-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    }
+    /* Shipping and Payment Sections */
+.shipping-method,
+.payment-method {
+    display: flex;
+    align-items: center; /* Membuat label dan select sejajar horizontal */
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.shipping-method label,
+.payment-method label {
+    font-size: 14px;
+    margin-right: 15px; /* Menambahkan jarak antara label dan select */
+    width: 160px; /* Memberikan lebar pada label */
+}
+
+.shipping-method select,
+.payment-method select {
+    flex-grow: 1; /* Membuat select box memenuhi sisa ruang */
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 100%;
+}
+
+    
+    .total-order {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+    }
+    
+    .total-order .total-price {
+    font-size: 18px;
+    font-weight: bold;
+    margin-right: 10px;
+    }
+    
+    .checkout-btn {
+    display: block;
+    width: 200px;
+    padding: 10px;
+    background-color: #80f4AC;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    transition: background-color 0.3s;
+    }
+    
+    .checkout-btn:hover {
+    background-color: #218838;
+    }
+

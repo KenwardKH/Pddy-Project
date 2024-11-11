@@ -9,6 +9,7 @@ use App\Http\Controllers\PeralatanKantorController;
 use App\Http\Controllers\PeralatanSekolahController;
 use App\Http\Controllers\BukuDanKertasController;
 use App\Http\Controllers\PulpenDanPensilController;
+use App\Http\Controllers\CartController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -44,6 +45,11 @@ Route::get('/kategori/buku_dan_kertas', [BukuDanKertasController::class, 'index'
 Route::get('/addToOrder', [BukuDanKertasController::class, 'addToOrder'])->name('pengguna.addToOrder');
 Route::get('/kategori/pulpen_dan_pensil', [PulpenDanPensilController::class, 'index'])->name('pengguna.pulpen_dan_pensil.index');
 Route::get('/addToOrder', [PulpenDanPensilController::class, 'addToOrder'])->name('pengguna.addToOrder');
+//keranjang
+Route::post('/add-to-cart', [CartController::class, 'addToCart'])->name('pengguna.addToOrder');
+Route::get('/cart', [CartController::class, 'viewCart'])->name('cart.view');
+Route::get('/remove-from-cart/{productName}', [CartController::class, 'removeFromCart'])->name('cart.remove');
+
 //Kasir
 Route::get('/kasir/home', [KasirController::class, 'home'])->name('kasir.home');
 Route::get('/kasir/buat-pesanan', [PesananController::class, 'index'])->name('buat-pesanan');

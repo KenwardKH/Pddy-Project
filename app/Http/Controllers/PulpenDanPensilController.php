@@ -10,7 +10,7 @@ class PulpenDanPensilController extends Controller
     {
         $products = [
             ['id' => 1, 'name' => 'Pensil Ajaib 2B', 'price' => 25000, 'available' => 60, 'image' => 'pensil2b.png'],
-            ['id' => 2, 'name' => 'Penghapus Ajaib', 'price' => 15000, 'available' => 70, 'image' => 'eraser.png']
+            ['id' => 2, 'name' => 'Penghapus Ajaib', 'price' => 15000, 'available' => 70, 'image' => 'penghapus2b.png']
         ];
         return view('pengguna.pulpen_dan_pensil', compact('products'));
     }
@@ -44,4 +44,3 @@ class PulpenDanPensilController extends Controller
         return redirect()->route('pengguna.pulpen_dan_pensil')->with('success', 'Produk berhasil ditambahkan ke pesanan!');
     }
 }
-

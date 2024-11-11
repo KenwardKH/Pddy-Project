@@ -10,7 +10,7 @@ class PeralatanSekolahController extends Controller
     {
         $products = [
             ['id' => 1, 'name' => 'Pensil Ajaib 2B', 'price' => 25000, 'available' => 60, 'image' => 'pensil2b.png'],
-            ['id' => 2, 'name' => 'Penghapus Ajaib', 'price' => 15000, 'available' => 70, 'image' => 'eraser.png']
+            ['id' => 2, 'name' => 'Penghapus Ajaib', 'price' => 15000, 'available' => 70, 'image' => 'penghapus2b.png']
         ];
         return view('pengguna.peralatan_sekolah', compact('products'));
     }
@@ -44,4 +44,3 @@ class PeralatanSekolahController extends Controller
         return redirect()->route('pengguna.peralatan_sekolah')->with('success', 'Produk berhasil ditambahkan ke pesanan!');
     }
 }
-
