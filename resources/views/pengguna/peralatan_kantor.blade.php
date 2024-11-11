@@ -43,181 +43,27 @@
         <h2 class="page-title">Peralatan Kantor</h2>
 
         <form action="{{ route('pengguna.addToOrder') }}" method="POST" class="product-list">
-            <!-- @csrf
+            @csrf
             @foreach($products as $product)
-                <div class="product-item">
-                    <img src="{{ asset('images/produk/' . $product['image']) }}" alt="{{ $product['name'] }}">
-                    <h3>{{ $product['name'] }}</h3>
-                    <p><strong>Rp{{ number_format($product['price'], 0, ',', '.') }}</strong></p>
-                    <p>Tersedia: {{ $product['available'] }} lusin</p>
-                    <div class="quantity-selector">
-                        <button type="button" class="decrement" style="display: none;">-</button>
-                        <input type="number" name="quantity[{{ $product['name'] }}]" value="0" min="0" max="{{ $product['available'] }}" class="quantity-input" style="display: none;">
-                        <button type="button" class="increment">+</button>
-                    </div>
-                </div>
-            @endforeach -->
+    <div class="product-item">
+        <!-- Display product image -->
+        <img src="{{ asset('images/produk/' . $product->image) }}" alt="{{ $product->ProductName }}">
+
+        <!-- Display product name and price -->
+        <h3>{{ $product->ProductName }}</h3>
+        <p><strong>Rp{{ number_format($product->pricing->UnitPrice, 0, ',', '.') }}</strong></p>
+        <p>Tersedia: {{ $product->CurrentStock }}</p>
+
+        <!-- Quantity selector -->
+        <div class="quantity-selector">
+            <button type="button" class="decrement">-</button>
+            <input type="number" name="quantity[{{ $product->name }}]" value="0" min="0" max="{{ $product->CurrentStock }}" class="quantity-input">
+            <button type="button" class="increment">+</button>
+        </div>
+    </div>
+@endforeach
+
             
-            <div class="product-item">
-                <div class="kiri">
-                    <img src="{{ asset('images/produk/pensil2b.png') }}" alt="{{ $product['name'] }}">
-                </div>
-                <div class="tengah">
-                    <h2>Pensil Ajaib 2B</h2>
-                    <h3><strong>Rp25.000</strong></h3>
-                </div>
-                <div class="kanan">
-                    <div class="quantity-selector">
-                        <i class="bi bi-dash-square decrement" style="display: none;"></i>
-                        <input type="number" name="quantity[{{ $product['name'] }}]" value="0" min="0" max="70" class="quantity-input" style="display: none;" required>
-                        <i type="button" class="bi bi-plus-square increment"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="product-item">
-                <div class="kiri">
-                    <img src="{{ asset('images/produk/pensil2b.png') }}" alt="{{ $product['name'] }}">
-                </div>
-                <div class="tengah">
-                    <h2>Pensil Ajaib 2B</h2>
-                    <h3><strong>Rp25.000</strong></h3>
-                </div>
-                <div class="kanan">
-                    <div class="quantity-selector">
-                        <i class="bi bi-dash-square decrement" style="display: none;"></i>
-                        <input type="number" name="quantity[{{ $product['name'] }}]" value="0" min="0" max="70" class="quantity-input" style="display: none;" required>
-                        <i type="button" class="bi bi-plus-square increment"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="product-item">
-                <div class="kiri">
-                    <img src="{{ asset('images/produk/pensil2b.png') }}" alt="{{ $product['name'] }}">
-                </div>
-                <div class="tengah">
-                    <h2>Pensil Ajaib 2B</h2>
-                    <h3><strong>Rp25.000</strong></h3>
-                </div>
-                <div class="kanan">
-                    <div class="quantity-selector">
-                        <i class="bi bi-dash-square decrement" style="display: none;"></i>
-                        <input type="number" name="quantity[{{ $product['name'] }}]" value="0" min="0" max="70" class="quantity-input" style="display: none;" required>
-                        <i type="button" class="bi bi-plus-square increment"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="product-item">
-                <div class="kiri">
-                    <img src="{{ asset('images/produk/pensil2b.png') }}" alt="{{ $product['name'] }}">
-                </div>
-                <div class="tengah">
-                    <h2>Pensil Ajaib 2B</h2>
-                    <h3><strong>Rp25.000</strong></h3>
-                </div>
-                <div class="kanan">
-                    <div class="quantity-selector">
-                        <i class="bi bi-dash-square decrement" style="display: none;"></i>
-                        <input type="number" name="quantity[{{ $product['name'] }}]" value="0" min="0" max="70" class="quantity-input" style="display: none;" required>
-                        <i type="button" class="bi bi-plus-square increment"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="product-item">
-                <div class="kiri">
-                    <img src="{{ asset('images/produk/pensil2b.png') }}" alt="{{ $product['name'] }}">
-                </div>
-                <div class="tengah">
-                    <h2>Pensil Ajaib 2B</h2>
-                    <h3><strong>Rp25.000</strong></h3>
-                </div>
-                <div class="kanan">
-                    <div class="quantity-selector">
-                        <i class="bi bi-dash-square decrement" style="display: none;"></i>
-                        <input type="number" name="quantity[{{ $product['name'] }}]" value="0" min="0" max="70" class="quantity-input" style="display: none;" required>
-                        <i type="button" class="bi bi-plus-square increment"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="product-item">
-                <div class="kiri">
-                    <img src="{{ asset('images/produk/pensil2b.png') }}" alt="{{ $product['name'] }}">
-                </div>
-                <div class="tengah">
-                    <h2>Pensil Ajaib 2B</h2>
-                    <h3><strong>Rp25.000</strong></h3>
-                </div>
-                <div class="kanan">
-                    <div class="quantity-selector">
-                        <i class="bi bi-dash-square decrement" style="display: none;"></i>
-                        <input type="number" name="quantity[{{ $product['name'] }}]" value="0" min="0" max="60" class="quantity-input" style="display: none;" required>
-                        <i type="button" class="bi bi-plus-square increment"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="product-item">
-                <div class="kiri">
-                    <img src="{{ asset('images/produk/pensil2b.png') }}" alt="{{ $product['name'] }}">
-                </div>
-                <div class="tengah">
-                    <h2>Pensil Ajaib 2B</h2>
-                    <h3><strong>Rp25.000</strong></h3>
-                </div>
-                <div class="kanan">
-                    <div class="quantity-selector">
-                        <i class="bi bi-dash-square decrement" style="display: none;"></i>
-                        <input type="number" name="quantity[{{ $product['name'] }}]" value="0" min="0" max="60" class="quantity-input" style="display: none;" required>
-                        <i type="button" class="bi bi-plus-square increment"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="product-item">
-                <div class="kiri">
-                    <img src="{{ asset('images/produk/pensil2b.png') }}" alt="{{ $product['name'] }}">
-                </div>
-                <div class="tengah">
-                    <h2>Pensil Ajaib 2B</h2>
-                    <h3><strong>Rp25.000</strong></h3>
-                </div>
-                <div class="kanan">
-                    <div class="quantity-selector">
-                        <i class="bi bi-dash-square decrement" style="display: none;"></i>
-                        <input type="number" name="quantity[{{ $product['name'] }}]" value="0" min="0" max="60" class="quantity-input" style="display: none;" required>
-                        <i type="button" class="bi bi-plus-square increment"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="product-item">
-                <div class="kiri">
-                    <img src="{{ asset('images/produk/pensil2b.png') }}" alt="{{ $product['name'] }}">
-                </div>
-                <div class="tengah">
-                    <h2>Pensil Ajaib 2B</h2>
-                    <h3><strong>Rp25.000</strong></h3>
-                </div>
-                <div class="kanan">
-                    <div class="quantity-selector">
-                        <i class="bi bi-dash-square decrement" style="display: none;"></i>
-                        <input type="number" name="quantity[{{ $product['name'] }}]" value="0" min="0" max="60" class="quantity-input" style="display: none;" required>
-                        <i type="button" class="bi bi-plus-square increment"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="product-item">
-                <div class="kiri">
-                    <img src="{{ asset('images/produk/pensil2b.png') }}" alt="{{ $product['name'] }}">
-                </div>
-                <div class="tengah">
-                    <h2>Pensil Ajaib 2B</h2>
-                    <h3><strong>Rp25.000</strong></h3>
-                </div>
-                <div class="kanan">
-                    <div class="quantity-selector">
-                        <i class="bi bi-dash-square decrement" style="display: none;"></i>
-                        <input type="number" name="quantity[{{ $product['name'] }}]" value="0" min="0" max="60" class="quantity-input" style="display: none;" required>
-                        <i type="button" class="bi bi-plus-square increment"></i>
-                    </div>
-                </div>
-            </div>
             <button type="submit" class="order-button" style="display: none;">Pesan</button>
         </form>
     </div>
