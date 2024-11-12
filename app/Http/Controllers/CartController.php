@@ -31,12 +31,13 @@ class CartController extends Controller
         ]);
     }
 
-
-    // Menambahkan produk ke keranjang
-    public function addToCart(Request $request)
+    // Mengupdate keranjang
+    public function updateCart(Request $request)
     {
-        $customerId = auth()->user()->customer->CustomerID;
-        $quantities = $request->input('quantity');
+        $customerId = Auth::id();
+
+        // Get quantities from the form input
+        $quantities = $request->input('quantity', []);
 
         foreach ($quantities as $productId => $quantity) {
             if ($quantity > 0) {
@@ -44,17 +45,17 @@ class CartController extends Controller
                 $product = Product::find($productId);
 
                 if ($product) {
-                    // Check if the product already exists in the cart
-                    $existingCartItem = CustomerCart::where('CustomerID', $customerId)
-                        ->where('ProductID', $productId)
-                        ->first();
+                    // Find the cart item associated with the customer and product
+                    $cartItem = CustomerCart::where('CustomerID', $customerId)
+                                            ->where('ProductID', $productId)
+                                            ->first();
 
-                    if ($existingCartItem) {
-                        // If product exists, update quantity
-                        $existingCartItem->Quantity += $quantity;
-                        $existingCartItem->save();
+                    if ($cartItem) {
+                        // Update the quantity if the product exists in the cart
+                        $cartItem->Quantity = $quantity;
+                        $cartItem->save();
                     } else {
-                        // If product doesn't exist, create a new cart item
+                        // If product is not in the cart, create a new cart item
                         CustomerCart::create([
                             'CustomerID' => $customerId,
                             'ProductID' => $productId,
@@ -62,14 +63,17 @@ class CartController extends Controller
                         ]);
                     }
                 }
+            } else {
+                // If quantity is 0, remove the item from the cart
+                CustomerCart::where('CustomerID', $customerId)
+                    ->where('ProductID', $productId)
+                    ->delete();
             }
         }
 
-        return redirect()->route('customer.cart');
+        return redirect()->route('customer.cart')->with('success', 'Keranjang berhasil diperbarui!');
     }
 
-
-    
     // Menghapus item dari keranjang
     public function removeItem($productName)
     {
@@ -87,5 +91,4 @@ class CartController extends Controller
 
         return redirect()->route('customer.cart')->with('success', 'Barang berhasil dihapus dari keranjang!');
     }
-
 }

@@ -39,31 +39,44 @@
         <form action="{{ route('customer.addToCart') }}" method="POST" class="product-list">
             @csrf
             @foreach($products as $product)
-                <div class="product-item">
-                    <img src="{{ asset('images/produk/' . $product->image) }}" alt="{{ $product->ProductName }}">
-                    <h3>{{ $product->ProductName }}</h3>
-                    <p><strong>Rp{{ number_format($product->pricing->UnitPrice, 0, ',', '.') }}</strong></p>
-                    <p>Tersedia: {{ $product->CurrentStock }}</p>
+    <div class="product-item">
+        <img src="{{ asset('images/produk/' . $product->image) }}" alt="{{ $product->ProductName }}">
+        <h3>{{ $product->ProductName }}</h3>
 
-                    <!-- Quantity selector -->
-                    <div class="quantity-selector">
-                        <i class="bi bi-dash-square decrement" style="display: none;"></i>
-                        <input type="number" name="quantity[{{ $product->ProductID }}]" value="0" min="0" max="70" class="quantity-input" style="display: none;" required>
-                        <i type="button" class="bi bi-plus-square increment"></i>
-                    </div>
-                </div>
-            @endforeach
-            <button type="submit" class="order-button" style="display: none;">Pesan</button>
+        <!-- Display product price if available -->
+        <p><strong>Rp{{ number_format($product->pricing->UnitPrice ?? 0, 0, ',', '.') }}</strong></p>
+        <p>Tersedia: {{ $product->CurrentStock }}</p>
+
+        <!-- Check if the product is in the customer's cart and retrieve the quantity if it is -->
+        @php
+            $cartItem = $cartItems->get($product->ProductID); // Get cart item by product ID, or null if it doesn’t exist
+        @endphp
+
+        <!-- Quantity selector -->
+        <div class="quantity-selector">
+            <i class="bi bi-dash-square decrement" style=""></i>
+            <input type="number" name="quantity[{{ $product->ProductID }}]"
+                   value="{{ $cartItem ? $cartItem->Quantity : 0 }}" 
+                   min="0" max="70" class="quantity-input" required>
+            <i type="button" class="bi bi-plus-square increment"></i>
+        </div>
+    </div>
+@endforeach
+            <button type="submit" class="order-button" style="display: none;">Masukkan ke Keranjang</button>
         </form>
     </div>
     
 
     <script>
         $(document).ready(function() {
+            // Function to toggle "Masukkan ke Keranjang" button based on input values
             const togglePesanButton = () => {
                 const anyQuantitySelected = $('.quantity-input').toArray().some(input => parseInt($(input).val()) > 0);
                 $('.order-button').toggle(anyQuantitySelected);
             };
+
+            // Initial check to display button if any input already has a value
+            togglePesanButton();
 
             $('.increment').click(function() {
                 const input = $(this).siblings('.quantity-input');

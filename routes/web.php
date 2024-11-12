@@ -43,6 +43,8 @@ Route::get('/addToOrder', [PeralatanKantorController::class, 'addToOrder'])->nam
 Route::get('/keranjang', [CartController::class, 'index'])->name('customer.cart');
 Route::post('/keranjang/add', [CartController::class, 'addToCart'])->name('customer.addToCart');
 Route::get('/keranjang/remove/{productName}', [CartController::class, 'removeItem'])->name('cart.remove');
+Route::post('/keranjang/update', [CartController::class, 'updateCart'])->name('cart.update');
+
 
 //Kasir
 Route::get('/kasir/home', [KasirController::class, 'home'])->name('kasir.home');

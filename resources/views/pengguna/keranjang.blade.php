@@ -32,37 +32,40 @@
         <div class="header-line"></div>
 
         @if(!empty($cart) && count($cart) > 0)
-            <div class="cart-items">
-                @foreach($cart as $item)
-                    <div class="cart-item">
-                        <div class="item-image">
-                            <img src="{{ asset('images/produk/' . $item->product->image) }}" alt="{{ $item->product->ProductName }}">
+            <form action="{{ route('cart.update') }}" method="POST">
+                @csrf
+                <div class="cart-items">
+                    @foreach($cart as $item)
+                        <div class="cart-item">
+                            <div class="item-image">
+                                <img src="{{ asset('images/produk/' . $item->product->image) }}" alt="{{ $item->product->ProductName }}">
+                            </div>
+                            <div class="item-details">
+                                <h2>{{ $item->product->ProductName }}</h2>
+                                <p>Harga: Rp{{ number_format($item->product->pricing->UnitPrice, 0, ',', '.') }}</p>
+                            </div>
+                            <div class="quantity-control">
+                                <button type="button" onclick="decrementQuantity('{{ $item->product->ProductID }}')">-</button>
+                                <input type="number" name="quantities[{{ $item->product->ProductID }}]" value="{{ $item->Quantity }}" min="0" max="70" class="quantity-input" required>
+                                <button type="button" onclick="incrementQuantity('{{ $item->product->ProductID }}')">+</button>
+                            </div>
+                            <div class="subtotal">
+                                Subtotal: Rp{{ number_format($item->product->pricing->UnitPrice * $item->Quantity, 0, ',', '.') }}
+                            </div>
+                            <a href="{{ route('cart.remove', $item->product->ProductName) }}" class="delete">
+                                <i class="bi bi-trash"></i> Hapus
+                            </a>
                         </div>
-                        <div class="item-details">
-                            <h2>{{ $item->product->ProductName }}</h2>
-                            <p>Harga: Rp{{ number_format($item->product->pricing->UnitPrice, 0, ',', '.') }}</p>
-                        </div>
-                        <div class="quantity-control">
-                            <button onclick="decrementQuantity('{{ $item->product->ProductName }}')">-</button>
-                            <input type="number" name="quantity[{{ $item->product->ProductName }}]" value="{{ $item->Quantity }}" min="0" max="70" class="quantity-input" required>
-                            <button onclick="incrementQuantity('{{ $item->product->ProductName }}')">+</button>
-                        </div>
-                        <div class="subtotal">
-                            Subtotal: Rp{{ number_format($item->product->pricing->UnitPrice * $item->Quantity, 0, ',', '.') }}
-                        </div>
-                        <a href="{{ route('cart.remove', $item->product->ProductName) }}" class="delete">
-                            <i class="bi bi-trash"></i> Hapus
-                        </a>
-                    </div>
-                @endforeach
-            </div>
-
-            <div class="footer">
-                <div class="total-order">
-                    <p>Total Pesanan: Rp{{ number_format($total, 0, ',', '.') }}</p>
+                    @endforeach
                 </div>
-                <button class="checkout-btn">Pesan</button>
-            </div>
+
+                <div class="footer">
+                    <div class="total-order">
+                        <p>Total Pesanan: Rp{{ number_format($total, 0, ',', '.') }}</p>
+                    </div>
+                    <button type="submit" class="checkout-btn">Check Out</button>
+                </div>
+            </form>
         @else
             <p>Keranjang Anda kosong.</p>
         @endif
@@ -75,15 +78,15 @@
 
     <!-- JavaScript for Quantity Controls -->
     <script>
-        function incrementQuantity(itemName) {
-            const input = document.querySelector(`input[name="quantity[${itemName}]"]`);
+        function incrementQuantity(productID) {
+            const input = document.querySelector(`input[name="quantities[${productID}]"]`);
             if (input) {
                 input.value = parseInt(input.value) + 1;
             }
         }
 
-        function decrementQuantity(itemName) {
-            const input = document.querySelector(`input[name="quantity[${itemName}]"]`);
+        function decrementQuantity(productID) {
+            const input = document.querySelector(`input[name="quantities[${productID}]"]`);
             if (input && input.value > 1) {
                 input.value = parseInt(input.value) - 1;
             }
