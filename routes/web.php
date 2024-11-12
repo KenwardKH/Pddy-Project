@@ -41,9 +41,8 @@ Route::get('/kategori/peralatan_kantor', [PeralatanKantorController::class, 'ind
 Route::get('/addToOrder', [PeralatanKantorController::class, 'addToOrder'])->name('pengguna.addToOrder');
 //keranjang
 Route::get('/keranjang', [CartController::class, 'index'])->name('customer.cart');
-Route::post('/keranjang/add', [CartController::class, 'addToCart'])->name('customer.addToCart');
+Route::post('/keranjang/update', [CartController::class, 'updateCart'])->name('customer.updateCart');
 Route::get('/keranjang/remove/{productName}', [CartController::class, 'removeItem'])->name('cart.remove');
-Route::post('/keranjang/update', [CartController::class, 'updateCart'])->name('cart.update');
 
 
 //Kasir

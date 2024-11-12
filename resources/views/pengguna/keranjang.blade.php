@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Keranjang Belanja</title>
     <link rel="stylesheet" href="{{ asset('css/keranjang.css') }}">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css"
+        rel="stylesheet">
 </head>
+
 <body>
     <!-- Header Section -->
     <div class="header">
@@ -15,7 +18,7 @@
         <nav class="nav">
             <div class="left">
                 <a href="{{ route('pengguna.home') }}">Home</a>
-                <a href="{{ route('profile.show')}}">Profil</a>
+                <a href="{{ route('profile.show') }}">Profil</a>
             </div>
             <div class="right">
                 <a href="#">Keranjang <i class="bi bi-cart"></i></a>
@@ -31,26 +34,33 @@
         <h1 class="header-title">Keranjang Belanja</h1>
         <div class="header-line"></div>
 
-        @if(!empty($cart) && count($cart) > 0)
-            <form action="{{ route('cart.update') }}" method="POST">
+        @if (!empty($cart) && count($cart) > 0)
+            <form action="{{ route('customer.updateCart') }}" method="POST">
                 @csrf
                 <div class="cart-items">
-                    @foreach($cart as $item)
+                    @foreach ($cart as $item)
                         <div class="cart-item">
                             <div class="item-image">
-                                <img src="{{ asset('images/produk/' . $item->product->image) }}" alt="{{ $item->product->ProductName }}">
+                                <img src="{{ asset('images/produk/' . $item->product->image) }}"
+                                    alt="{{ $item->product->ProductName }}">
                             </div>
                             <div class="item-details">
                                 <h2>{{ $item->product->ProductName }}</h2>
                                 <p>Harga: Rp{{ number_format($item->product->pricing->UnitPrice, 0, ',', '.') }}</p>
+                                <p>Tersedia: {{ $item->product->CurrentStock }}</p>
                             </div>
                             <div class="quantity-control">
-                                <button type="button" onclick="decrementQuantity('{{ $item->product->ProductID }}')">-</button>
-                                <input type="number" name="quantities[{{ $item->product->ProductID }}]" value="{{ $item->Quantity }}" min="0" max="70" class="quantity-input" required>
-                                <button type="button" onclick="incrementQuantity('{{ $item->product->ProductID }}')">+</button>
+                                <button type="button"
+                                    onclick="decrementQuantity('{{ $item->product->ProductID }}')">-</button>
+                                <input type="number" name="quantity[{{ $item->product->ProductID }}]"
+                                    value="{{ $item->Quantity }}" min="0"
+                                    max={{ $item->product->CurrentStock }} class="quantity-input" required>
+                                <button type="button"
+                                    onclick="incrementQuantity('{{ $item->product->ProductID }}')">+</button>
                             </div>
                             <div class="subtotal">
-                                Subtotal: Rp{{ number_format($item->product->pricing->UnitPrice * $item->Quantity, 0, ',', '.') }}
+                                Subtotal:
+                                Rp{{ number_format($item->product->pricing->UnitPrice * $item->Quantity, 0, ',', '.') }}
                             </div>
                             <a href="{{ route('cart.remove', $item->product->ProductName) }}" class="delete">
                                 <i class="bi bi-trash"></i> Hapus
@@ -79,18 +89,19 @@
     <!-- JavaScript for Quantity Controls -->
     <script>
         function incrementQuantity(productID) {
-            const input = document.querySelector(`input[name="quantities[${productID}]"]`);
+            const input = document.querySelector(`input[name="quantity[${productID}]"]`);
             if (input) {
                 input.value = parseInt(input.value) + 1;
             }
         }
 
         function decrementQuantity(productID) {
-            const input = document.querySelector(`input[name="quantities[${productID}]"]`);
+            const input = document.querySelector(`input[name="quantity[${productID}]"]`);
             if (input && input.value > 1) {
                 input.value = parseInt(input.value) - 1;
             }
         }
     </script>
 </body>
+
 </html>

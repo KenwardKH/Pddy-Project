@@ -36,7 +36,7 @@
 
         <h2 class="page-title">Peralatan Kantor</h2>
 
-        <form action="{{ route('customer.addToCart') }}" method="POST" class="product-list">
+        <form action="{{ route('customer.updateCart') }}" method="POST" class="product-list">
             @csrf
             @foreach($products as $product)
     <div class="product-item">
@@ -45,6 +45,8 @@
 
         <!-- Display product price if available -->
         <p><strong>Rp{{ number_format($product->pricing->UnitPrice ?? 0, 0, ',', '.') }}</strong></p>
+        <b>Detail:</b>
+        <p>{{ $product->Description }}</p>
         <p>Tersedia: {{ $product->CurrentStock }}</p>
 
         <!-- Check if the product is in the customer's cart and retrieve the quantity if it is -->
@@ -74,14 +76,14 @@
                 const anyQuantitySelected = $('.quantity-input').toArray().some(input => parseInt($(input).val()) > 0);
                 $('.order-button').toggle(anyQuantitySelected);
             };
-
+    
             // Initial check to display button if any input already has a value
             togglePesanButton();
-
+    
             $('.increment').click(function() {
                 const input = $(this).siblings('.quantity-input');
                 const decrementButton = $(this).siblings('.decrement');
-
+    
                 if (input.val() == 0) {
                     input.val(1).show();
                     decrementButton.show();
@@ -90,20 +92,31 @@
                 }
                 togglePesanButton();
             });
-
+    
             $('.decrement').click(function() {
                 const input = $(this).siblings('.quantity-input');
-
+                const decrementButton = $(this);
+    
                 if (parseInt(input.val()) > 1) {
                     input.val(parseInt(input.val()) - 1);
                 } else {
-                    input.val(0).hide();
-                    $(this).hide();
+                    input.val(0);
+                    input.hide(); // Hide input when value is 0
+                    decrementButton.hide(); // Hide decrement button when value is 0
                 }
                 togglePesanButton();
             });
+    
+            // Hide inputs and decrement buttons that start at 0 on page load
+            $('.quantity-input').each(function() {
+                if ($(this).val() == 0) {
+                    $(this).hide();
+                    $(this).siblings('.decrement').hide();
+                }
+            });
         });
     </script>
+    
 
 </body>
 </html>
