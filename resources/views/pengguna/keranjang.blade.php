@@ -31,62 +31,46 @@
         <h1 class="header-title">Keranjang Belanja</h1>
         <div class="header-line"></div>
 
-        <!-- Check if cart is not empty -->
         @if(!empty($cart) && count($cart) > 0)
             <div class="cart-items">
                 @foreach($cart as $item)
-                    @if($item['quantity'] > 0)
                     <div class="cart-item">
                         <div class="item-image">
-                            <img src="{{ asset('images/produk/' . $item['image']) }}" alt="{{ $item['name'] }}">
+                            <img src="{{ asset('images/produk/' . $item->product->image) }}" alt="{{ $item->product->ProductName }}">
                         </div>
                         <div class="item-details">
-                            <h2>{{ $item['name'] }}</h2>
-                            <p>Harga: Rp{{ number_format($item['price'], 0, ',', '.') }}</p>
+                            <h2>{{ $item->product->ProductName }}</h2>
+                            <p>Harga: Rp{{ number_format($item->product->pricing->UnitPrice, 0, ',', '.') }}</p>
                         </div>
                         <div class="quantity-control">
-                            <button onclick="decrementQuantity('{{ $item['name'] }}')">-</button>
-                            <input type="number" name="quantity[{{ $item['name'] }}]" value="{{ $item['quantity'] }}" min="1" max="70" class="quantity-input" required>
-                            <button onclick="incrementQuantity('{{ $item['name'] }}')">+</button>
+                            <button onclick="decrementQuantity('{{ $item->product->ProductName }}')">-</button>
+                            <input type="number" name="quantity[{{ $item->product->ProductName }}]" value="{{ $item->Quantity }}" min="0" max="70" class="quantity-input" required>
+                            <button onclick="incrementQuantity('{{ $item->product->ProductName }}')">+</button>
                         </div>
-                        <div class="subtotal">Subtotal: Rp{{ number_format($item['price'] * $item['quantity'], 0, ',', '.') }}</div>
-                        <a href="{{ route('cart.remove', $item['name']) }}" class="delete"><i class="bi bi-trash"></i> Hapus</a>
+                        <div class="subtotal">
+                            Subtotal: Rp{{ number_format($item->product->pricing->UnitPrice * $item->Quantity, 0, ',', '.') }}
+                        </div>
+                        <a href="{{ route('cart.remove', $item->product->ProductName) }}" class="delete">
+                            <i class="bi bi-trash"></i> Hapus
+                        </a>
                     </div>
-                    @endif
                 @endforeach
             </div>
 
-            <!-- Footer Section with Shipping, Payment and Total Order -->
-<div class="footer">
-    <div class="footer-left">
-        <div class="shipping-method">
-            <label for="shipping_method">Pilih Metode Pengiriman:</label>
-            <select name="shipping_method" class="form-control">
-                <option value="">Pilih Metode Pengiriman</option>
-                <option value="antar">Antar</option>
-                <option value="ambil_sendiri">Ambil Sendiri</option>
-            </select>
-        </div>
-        <div class="payment-method">
-            <label for="payment_method">Pilih Metode Pembayaran:</label>
-            <select name="payment_method" class="form-control">
-                <option value="">Pilih Metode Pembayaran</option>
-                <option value="cash">Cash</option>
-                <option value="transfer">Transfer</option>
-                <option value="kredit">Kredit</option>
-            </select>
-        </div>
-    </div>
-                <div class="footer-right">
-                    <div class="total-order">
-                        <p>Total Pesanan: Rp{{ number_format($total, 0, ',', '.') }}</p>
-                    </div>
-                    <button class="checkout-btn">Pesan</button>
+            <div class="footer">
+                <div class="total-order">
+                    <p>Total Pesanan: Rp{{ number_format($total, 0, ',', '.') }}</p>
                 </div>
+                <button class="checkout-btn">Pesan</button>
             </div>
         @else
             <p>Keranjang Anda kosong.</p>
         @endif
+        <div class="back-button-container">
+            <a href="{{ route('pengguna.peralatan_kantor.index') }}" class="back-btn">
+                <i class="bi bi-arrow-left-circle"></i> Kembali ke Peralatan Kantor
+            </a>
+        </div>
     </div>
 
     <!-- JavaScript for Quantity Controls -->
@@ -107,4 +91,3 @@
     </script>
 </body>
 </html>
-

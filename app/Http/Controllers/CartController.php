@@ -3,114 +3,89 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Session;
+use App\Models\CustomerCart;
+use App\Models\Product;
+use App\Models\Customer;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
-    /**
-     * Menambahkan produk ke keranjang.
-     */
+    // Menampilkan keranjang
+    public function index()
+    {
+        $customerId = Auth::id();
+
+        // Get cart items for the customer with associated product data
+        $cartItems = CustomerCart::with('product')
+            ->where('CustomerID', $customerId)
+            ->get();
+
+        // Calculate total price
+        $total = $cartItems->sum(function ($item) {
+            return $item->product->pricing->UnitPrice * $item->Quantity;
+        });
+
+        return view('pengguna.keranjang', [
+            'cart' => $cartItems,
+            'total' => $total,
+        ]);
+    }
+
+
+    // Menambahkan produk ke keranjang
     public function addToCart(Request $request)
-{
-    $cartItems = $request->input('quantity', []);
-    $productImages = $request->input('image', []);
-    $productPrices = $request->input('price', []);
-
-    $cart = Session::get('cart', []);
-    $quantities = Session::get('quantities', []); // Menyimpan kuantitas produk yang dipilih
-
-    foreach ($cartItems as $productName => $quantity) {
-        if ($quantity > 0) {
-            // Pastikan gambar dan harga ada
-            if (!isset($productImages[$productName]) || !isset($productPrices[$productName])) {
-                \Log::error("Data tidak lengkap untuk produk: {$productName}");
-                continue; // Lewati jika data tidak lengkap
-            }
-
-            $image = $productImages[$productName];
-            $price = $productPrices[$productName];
-
-            // Simpan item ke keranjang
-            $cart[$productName] = [
-                'name' => $productName,
-                'quantity' => $quantity,
-                'image' => $image,
-                'price' => $price,
-            ];
-
-            // Simpan kuantitas produk dalam sesi
-            $quantities[$productName] = $quantity;
-        }
-    }
-
-    // Simpan keranjang dan kuantitas produk ke dalam sesi
-    Session::put('cart', $cart);
-    Session::put('quantities', $quantities);
-
-    return redirect()->route('cart.view')->with('success', 'Produk berhasil ditambahkan ke keranjang');
-}
-
-
-    
-    public function viewCart()
     {
-        // Ambil keranjang dari sesi
-        $cart = Session::get('cart', []);
-        
-        \Log::info('Isi keranjang:', $cart); // Log isi keranjang untuk debugging
-    
-        // Hitung total harga
-        $total = 0;
-        foreach ($cart as $item) {
-            // Cek apakah 'price' dan 'quantity' ada
-            if (!isset($item['price']) || !isset($item['quantity'])) {
-                \Log::error("Item tidak memiliki 'price' atau 'quantity':", $item);
-                continue; // Lewati item ini jika tidak ada
-            }
-            $total += $item['price'] * $item['quantity'];
-        }
-    
-        // Tampilkan tampilan keranjang
-        return view('pengguna.keranjang', compact('cart', 'total'));
-    }
-    
-    
+        $customerId = auth()->user()->customer->CustomerID;
+        $quantities = $request->input('quantity');
 
-    /**
-     * Menghapus produk dari keranjang.
-     */
-    public function removeFromCart($productName)
-    {
-        $cart = Session::get('cart', []);
+        foreach ($quantities as $productId => $quantity) {
+            if ($quantity > 0) {
+                // Ensure the correct product is found by its ProductID
+                $product = Product::find($productId);
 
-        if (isset($cart[$productName])) {
-            unset($cart[$productName]); // Hapus produk dari keranjang
-            Session::put('cart', $cart);
-            return redirect()->route('cart.view')->with('success', 'Produk berhasil dihapus dari keranjang');
-        }
+                if ($product) {
+                    // Check if the product already exists in the cart
+                    $existingCartItem = CustomerCart::where('CustomerID', $customerId)
+                        ->where('ProductID', $productId)
+                        ->first();
 
-        return redirect()->route('cart.view')->with('error', 'Produk tidak ditemukan di keranjang');
-    }
-
-    /**
-     * Memperbarui jumlah produk dalam keranjang.
-     */
-    public function updateCart(Request $request)
-    {
-        $cart = Session::get('cart', []);
-        $updatedQuantities = $request->input('quantity', []);
-
-        foreach ($updatedQuantities as $productName => $quantity) {
-            if (isset($cart[$productName])) {
-                if ($quantity > 0) {
-                    $cart[$productName]['quantity'] = $quantity; // Update kuantitas
-                } else {
-                    unset($cart[$productName]); // Hapus produk jika kuantitas 0
+                    if ($existingCartItem) {
+                        // If product exists, update quantity
+                        $existingCartItem->Quantity += $quantity;
+                        $existingCartItem->save();
+                    } else {
+                        // If product doesn't exist, create a new cart item
+                        CustomerCart::create([
+                            'CustomerID' => $customerId,
+                            'ProductID' => $productId,
+                            'Quantity' => $quantity,
+                        ]);
+                    }
                 }
             }
         }
 
-        Session::put('cart', $cart);
-        return redirect()->route('cart.view')->with('success', 'Keranjang berhasil diperbarui');
+        return redirect()->route('customer.cart');
     }
+
+
+    
+    // Menghapus item dari keranjang
+    public function removeItem($productName)
+    {
+        $customerId = Auth::id();
+
+        // Find the product by its name
+        $product = Product::where('ProductName', $productName)->first();
+
+        if ($product) {
+            // Find the cart item associated with the customer and product
+            CustomerCart::where('CustomerID', $customerId)
+                ->where('ProductID', $product->ProductID)
+                ->delete(); // Delete the cart item
+        }
+
+        return redirect()->route('customer.cart')->with('success', 'Barang berhasil dihapus dari keranjang!');
+    }
+
 }

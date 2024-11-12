@@ -39,25 +39,8 @@
             <a href="{{ route('pengguna.peralatan_kantor.index') }}">
             <img src="{{ asset('images/perlengkapan kantor.png') }}" alt="Peralatan Kantor">
             <p>Peralatan Kantor</p>
-        </a>
+            </a>
         </div>
-        <div class="category">
-            <a href="{{ route('pengguna.peralatan_sekolah.index') }}">
-            <img src="{{ asset('images/perlengkapan sekolah.png') }}" alt="Peralatan Sekolah">
-            <p>Peralatan Sekolah</p>
-        </a>
-        </div>
-        <div class="category">
-        <a href="{{ route ('pengguna.buku_dan_kertas.index')}}">
-            <img src="{{ asset('images/buku dan kertas.png') }}" alt="Buku dan Kertas">
-            <p>Buku dan Kertas</p>
-        </a>
-        </div>
-        <div class="category">
-        <a href="{{ route ('pengguna.pulpen_dan_pensil.index')}}">
-            <img src="{{ asset('images/pulpen dan pensil.png') }}" alt="Pulpen dan Kertas">
-            <p>Pulpen dan Pensil</p>
-        </a>
     </div>
 </div>
 

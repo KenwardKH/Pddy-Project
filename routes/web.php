@@ -17,7 +17,7 @@ use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\GoogleAuthController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 Route::get('/dashboard', function () {
@@ -39,16 +39,10 @@ Route::get('/pengguna/home', [PenggunaController::class, 'home'])->name('penggun
 Route::get('/pengguna/profile', [InformasiPenggunaController::class, 'show'])->name('profile.show');
 Route::get('/kategori/peralatan_kantor', [PeralatanKantorController::class, 'index'])->name('pengguna.peralatan_kantor.index');
 Route::get('/addToOrder', [PeralatanKantorController::class, 'addToOrder'])->name('pengguna.addToOrder');
-Route::get('/kategori/peralatan_sekolah', [PeralatanSekolahController::class, 'index'])->name('pengguna.peralatan_sekolah.index');
-Route::get('/addToOrder', [PeralatanSekolahController::class, 'addToOrder'])->name('pengguna.addToOrder');
-Route::get('/kategori/buku_dan_kertas', [BukuDanKertasController::class, 'index'])->name('pengguna.buku_dan_kertas.index');
-Route::get('/addToOrder', [BukuDanKertasController::class, 'addToOrder'])->name('pengguna.addToOrder');
-Route::get('/kategori/pulpen_dan_pensil', [PulpenDanPensilController::class, 'index'])->name('pengguna.pulpen_dan_pensil.index');
-Route::get('/addToOrder', [PulpenDanPensilController::class, 'addToOrder'])->name('pengguna.addToOrder');
 //keranjang
-Route::post('/add-to-cart', [CartController::class, 'addToCart'])->name('pengguna.addToOrder');
-Route::get('/cart', [CartController::class, 'viewCart'])->name('cart.view');
-Route::get('/remove-from-cart/{productName}', [CartController::class, 'removeFromCart'])->name('cart.remove');
+Route::get('/keranjang', [CartController::class, 'index'])->name('customer.cart');
+Route::post('/keranjang/add', [CartController::class, 'addToCart'])->name('customer.addToCart');
+Route::get('/keranjang/remove/{productName}', [CartController::class, 'removeItem'])->name('cart.remove');
 
 //Kasir
 Route::get('/kasir/home', [KasirController::class, 'home'])->name('kasir.home');
@@ -58,4 +52,4 @@ Route::get('/kasir/stock-barang', [KasirController::class, 'stock'])->name('kasi
 Route::get('/kasir/konfirmasi', [KasirController::class, 'konfirmasi'])->name('kasir.konfirmasi');
 Route::get('/kasir/status', [KasirController::class, 'status'])->name('kasir.status');
 
-// require _DIR_.'/auth.php';
+require __DIR__.'/auth.php';

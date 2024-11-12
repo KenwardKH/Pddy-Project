@@ -8,12 +8,7 @@ class Product extends Model
 {
     protected $table = 'products';
     protected $primaryKey = 'ProductID';
-    protected $fillable = ['ProductName', 'Description', 'CurrentStock', 'CategoryID'];
-
-    public function category()
-    {
-        return $this->belongsTo(Category::class, 'CategoryID');
-    }
+    protected $fillable = ['ProductName', 'Description', 'CurrentStock', 'image'];
 
     public function pricing()
     {

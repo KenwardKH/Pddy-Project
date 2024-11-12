@@ -276,3 +276,21 @@ h1.header-title {
     background-color: #218838;
     }
 
+    .back-button-container {
+        margin-top: 20px;
+        text-align: center;
+    }
+    
+    .back-btn {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        font-size: 16px;
+        border-radius: 5px;
+        text-decoration: none;
+    }
+    
+    .back-btn:hover {
+        background-color: #0056b3;
+    }
+    

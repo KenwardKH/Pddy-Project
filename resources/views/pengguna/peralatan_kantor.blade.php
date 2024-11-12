@@ -31,118 +31,66 @@
 
         <form action="" method="GET" class="search-container">
             <input type="text" placeholder="Cari produk..." class="search-bar" name="search">
-            <select class="category-dropdown" name="category">
-                <option value="">Semua Kategori</option>
-                <option value="kategori1">Kategori 1</option>
-                <option value="kategori2">Kategori 2</option>
-                <option value="kategori3">Kategori 3</option>
-            </select>
             <button type="submit" class="search-button"><i class="bi bi-search"></i></button>
         </form>
 
         <h2 class="page-title">Peralatan Kantor</h2>
 
-        <form action="{{ route('pengguna.addToOrder') }}" method="POST" class="product-list">
+        <form action="{{ route('customer.addToCart') }}" method="POST" class="product-list">
             @csrf
             @foreach($products as $product)
-    <div class="product-item">
-        <!-- Display product image -->
-        <img src="{{ asset('images/produk/' . $product->image) }}" alt="{{ $product->ProductName }}">
+                <div class="product-item">
+                    <img src="{{ asset('images/produk/' . $product->image) }}" alt="{{ $product->ProductName }}">
+                    <h3>{{ $product->ProductName }}</h3>
+                    <p><strong>Rp{{ number_format($product->pricing->UnitPrice, 0, ',', '.') }}</strong></p>
+                    <p>Tersedia: {{ $product->CurrentStock }}</p>
 
-        <!-- Display product name and price -->
-        <h3>{{ $product->ProductName }}</h3>
-        <p><strong>Rp{{ number_format($product->pricing->UnitPrice, 0, ',', '.') }}</strong></p>
-        <p>Tersedia: {{ $product->CurrentStock }}</p>
-
-        <!-- Quantity selector -->
-        <div class="quantity-selector">
-            <button type="button" class="decrement">-</button>
-            <input type="number" name="quantity[{{ $product->name }}]" value="0" min="0" max="{{ $product->CurrentStock }}" class="quantity-input">
-            <button type="button" class="increment">+</button>
-        </div>
-    </div>
-@endforeach
-
-            
+                    <!-- Quantity selector -->
+                    <div class="quantity-selector">
+                        <i class="bi bi-dash-square decrement" style="display: none;"></i>
+                        <input type="number" name="quantity[{{ $product->ProductID }}]" value="0" min="0" max="70" class="quantity-input" style="display: none;" required>
+                        <i type="button" class="bi bi-plus-square increment"></i>
+                    </div>
+                </div>
+            @endforeach
             <button type="submit" class="order-button" style="display: none;">Pesan</button>
         </form>
     </div>
     
 
     <script>
-        // JavaScript for hiding and showing the search container on scroll
-    let lastScrollTop = 0;
-    const searchContainer = document.querySelector('.search-container');
-
-    window.addEventListener('scroll', function() {
-        let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-
-        if (scrollTop > lastScrollTop) {
-            // Scroll down: hide search container
-            searchContainer.classList.add('hidden');
-        } else {
-            // Scroll up: show search container
-            searchContainer.classList.remove('hidden');
-        }
-        
-        lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // For Mobile or negative scrolling
-    });
-
         $(document).ready(function() {
-                // Increment and decrement button functionality
-                $('.increment').click(function() {
-                    let input = $(this).siblings('.quantity-input');
-                    let decrementButton = $(this).siblings('.decrement');
-    
-                    if (input.val() == 0) {
-                        input.val(1).show();
-                        decrementButton.show();
-                    } else {
-                        let currentValue = parseInt(input.val());
-                        let max = parseInt(input.attr('max'));
-                        if (currentValue < max) {
-                            input.val(currentValue + 1);
-                        }
-                    }
-                    togglePesanButton();
-                });
-    
-                $('.decrement').click(function() {
-                    let input = $(this).siblings('.quantity-input');
-                    let currentValue = parseInt(input.val());
-    
-                    if (currentValue > 1) {
-                        input.val(currentValue - 1);
-                    } else if (currentValue == 1) {
-                        input.val(0).hide();
-                        $(this).hide();
-                    }
-                    togglePesanButton();
-                });
-    
-            // Fungsi untuk menampilkan tombol Pesan jika ada kuantitas lebih dari 0
-            function togglePesanButton() {
-                var anyQuantitySelected = false;
-                $('.quantity-input').each(function() {
-                    if (parseInt($(this).val()) > 0) {
-                        anyQuantitySelected = true;
-                        return false; // Stop looping jika ada kuantitas yang lebih dari 0
-                    }
-                });
-    
-                // Tampilkan tombol Pesan jika ada kuantitas yang dipilih
-                if (anyQuantitySelected) {
-                    $('.order-button').show();
-                } else {
-                    $('.order-button').hide();
+            const togglePesanButton = () => {
+                const anyQuantitySelected = $('.quantity-input').toArray().some(input => parseInt($(input).val()) > 0);
+                $('.order-button').toggle(anyQuantitySelected);
+            };
+
+            $('.increment').click(function() {
+                const input = $(this).siblings('.quantity-input');
+                const decrementButton = $(this).siblings('.decrement');
+
+                if (input.val() == 0) {
+                    input.val(1).show();
+                    decrementButton.show();
+                } else if (parseInt(input.val()) < parseInt(input.attr('max'))) {
+                    input.val(parseInt(input.val()) + 1);
                 }
-            }
-    
-            // Fungsi untuk menampilkan/hide tombol Pesan ketika quantity berubah
-            $('.quantity-input').on('input', function() {
+                togglePesanButton();
+            });
+
+            $('.decrement').click(function() {
+                const input = $(this).siblings('.quantity-input');
+
+                if (parseInt(input.val()) > 1) {
+                    input.val(parseInt(input.val()) - 1);
+                } else {
+                    input.val(0).hide();
+                    $(this).hide();
+                }
                 togglePesanButton();
             });
         });
     </script>
+
 </body>
 </html>
