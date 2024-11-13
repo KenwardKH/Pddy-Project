@@ -37,12 +37,15 @@ Route::get('auth/google/call-back', [GoogleAuthController::class, 'callbackGoogl
 //pengguna
 Route::get('/pengguna/home', [PenggunaController::class, 'home'])->name('pengguna.home');
 Route::get('/pengguna/profile', [InformasiPenggunaController::class, 'show'])->name('profile.show');
+Route::get('/pengguna/status', [PenggunaController::class, 'status'])->name('pengguna.status');
 Route::get('/kategori/peralatan_kantor', [PeralatanKantorController::class, 'index'])->name('pengguna.peralatan_kantor.index');
 Route::get('/addToOrder', [PeralatanKantorController::class, 'addToOrder'])->name('pengguna.addToOrder');
+
 //keranjang
 Route::get('/keranjang', [CartController::class, 'index'])->name('customer.cart');
 Route::post('/keranjang/update', [CartController::class, 'updateCart'])->name('customer.updateCart');
 Route::get('/keranjang/remove/{productName}', [CartController::class, 'removeItem'])->name('cart.remove');
+Route::post('/checkout', [CartController::class, 'checkout'])->name('checkout');
 
 
 //Kasir

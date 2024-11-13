@@ -8,7 +8,7 @@ class Invoice extends Model
 {
     protected $table = 'invoices';
     protected $primaryKey = 'InvoiceID';
-    protected $fillable = ['CustomerID', 'InvoiceDate', 'DueDate'];
+    protected $fillable = ['CustomerID', 'InvoiceDate', 'DueDate','type'];
 
     public function customer()
     {
@@ -24,4 +24,19 @@ class Invoice extends Model
     {
         return $this->hasOne(Payment::class, 'InvoiceID');
     }
+
+    public function deliveryStatus()
+    {
+        return $this->hasOne(DeliveryOrderStatus::class, 'invoice_id');
+    }
+
+    public function pickupStatus()
+    {
+        return $this->hasOne(PickupOrderStatus::class, 'invoice_id');
+    }
+    public function transactionLog()
+    {
+        return $this->hasOne(TransactionLog::class, 'InvoiceID');
+    }
+
 }

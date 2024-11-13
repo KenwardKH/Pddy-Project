@@ -7,6 +7,8 @@ use App\Models\CustomerCart;
 use App\Models\Product;
 use App\Models\Customer;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+
 
 class CartController extends Controller
 {
@@ -90,5 +92,47 @@ class CartController extends Controller
         }
 
         return redirect()->route('customer.cart')->with('success', 'Barang berhasil dihapus dari keranjang!');
+    }
+    public function getCustomerId()
+    {
+        // Get the authenticated user's id
+        $userId = Auth::id();
+
+        // Fetch the CustomerID from the customers table
+        $customer = DB::table('customers')
+            ->where('user_id', $userId)
+            ->select('CustomerID')
+            ->first();
+
+        if (!$customer) {
+            return response()->json(['error' => 'Customer not found'], 404);
+        }
+
+        // Return the CustomerID
+        return $customer->CustomerID;
+    }
+    public function checkout()
+    {
+        // Get the authenticated user's CustomerID
+        $userId = Auth::id();
+        $customer = DB::table('customers')
+            ->where('user_id', $userId)
+            ->select('CustomerID')
+            ->first();
+
+        if (!$customer) {
+            return response()->json(['error' => 'Customer not found'], 404);
+        }
+
+        $customerId = $customer->CustomerID;
+
+        try {
+            // Call the stored procedure using the CustomerID
+            DB::statement('CALL CheckoutCart(?)', [$customerId]);
+
+            return redirect()->route('pengguna.status');
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 }

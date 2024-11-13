@@ -19,7 +19,7 @@
                     <a href="{{ route('profile.show')}}">Profil</a>
                 </div>
                 <div class="right">
-                    <a href="#">Keranjang <i class="bi bi-cart"></i></a>
+                    <a href="/keranjang">Keranjang <i class="bi bi-cart"></i></a>
                     <a href="#">Status Pesanan <i class="bi bi-journal-text"></i></a>
                     <a href="#">Riwayat Pesanan <i class="bi bi-clock-history"></i></a>
                     <a href="#">Keluar <i class="bi bi-box-arrow-right"></i></a>

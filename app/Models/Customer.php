@@ -27,5 +27,10 @@ class Customer extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
+    public function transactionLogs()
+    {
+        return $this->hasMany(TransactionLog::class, 'CustomerID');
+    }
+
 
 }

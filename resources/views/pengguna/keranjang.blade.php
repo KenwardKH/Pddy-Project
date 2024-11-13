@@ -22,7 +22,7 @@
             </div>
             <div class="right">
                 <a href="#">Keranjang <i class="bi bi-cart"></i></a>
-                <a href="#">Status Pesanan <i class="bi bi-journal-text"></i></a>
+                <a href="{{ route('pengguna.status') }}">Status Pesanan <i class="bi bi-journal-text"></i></a>
                 <a href="#">Riwayat Pesanan <i class="bi bi-clock-history"></i></a>
                 <a href="#">Keluar <i class="bi bi-box-arrow-right"></i></a>
             </div>
@@ -68,7 +68,9 @@
                         </div>
                     @endforeach
                 </div>
-
+            </form>
+            <form action="{{ route('checkout') }}" method="POST">
+                @csrf
                 <div class="footer">
                     <div class="total-order">
                         <p>Total Pesanan: Rp{{ number_format($total, 0, ',', '.') }}</p>
