@@ -70,7 +70,7 @@
                 @csrf
                 <div class="form-group">
                     <label for="customerAddress">Opsi Pengiriman:</label>
-                    <select id="customerAddress" name="shipping_option">
+                    <select id="customerAddress" name="shipping_option" onchange="toggleAddressField()">
                         <option value="ambil_sendiri">Ambil Sendiri</option>
                         <option value="diantar">Diantar</option>
                     </select>
@@ -115,6 +115,20 @@
                 }
             });
         });
+        function toggleAddressField() {
+            const shippingOption = document.getElementById("customerAddress").value;
+            const addressField = document.getElementById("alamat");
+            const addressContainer = document.getElementById("pengambilan");
+
+            if (shippingOption === "diantar") {
+                addressContainer.style.display = "block";
+                addressField.setAttribute("required", "required");
+            } else {
+                addressContainer.style.display = "none";
+                addressField.removeAttribute("required");
+                addressField.value = ""; // Clear the field if not required
+            }
+        }
     </script>
 </body>
 
