@@ -87,7 +87,7 @@
             </a>
         </div>
     </div>
-
+    
     <!-- JavaScript for Quantity Controls -->
     <script>
         function incrementQuantity(productID) {
