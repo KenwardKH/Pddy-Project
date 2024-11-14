@@ -101,7 +101,7 @@
             </a>
         </div>
     </div>
-
+    
     <!-- JavaScript for Quantity Controls -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
