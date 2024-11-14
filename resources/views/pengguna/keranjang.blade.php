@@ -77,10 +77,10 @@
                 </div>
                 <div id="pengambilan" class="form-group" style="display: none;">
                     <label for="alamat">Alamat Pengiriman:</label>
-                    <input type="text" id="alamat" name="alamat" required>
+                    <input type="text" id="alamat" name="alamat">
                 </div>
                 <label for="pembayaran">Pilih Opsi Pembayaran:</label>
-                <select id="pembayaran"  name="payment_option" style="margin-bottom:15px; padding:10px">
+                <select id="pembayaran" name="payment_option" style="margin-bottom:15px; padding:10px">
                     <option value="cash">Cash</option>
                     <option value="transfer">Transfer</option>
                     <option value="kredit">Kredit</option>
@@ -105,16 +105,16 @@
     <!-- JavaScript for Quantity Controls -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-        // Fungsi untuk menampilkan atau menyembunyikan input alamat pengiriman berdasarkan opsi pengiriman
-        $('#customerAddress').change(function() {
-            if ($(this).val() === 'diantar') {
-                $('#pengambilan').show();
-            } else {
-                $('#pengambilan').hide();
-                $('#opsi').find("input[type=text], textarea").val("");
-            }
+            // Fungsi untuk menampilkan atau menyembunyikan input alamat pengiriman berdasarkan opsi pengiriman
+            $('#customerAddress').change(function() {
+                if ($(this).val() === 'diantar') {
+                    $('#pengambilan').show();
+                } else {
+                    $('#pengambilan').hide();
+                    $('#opsi').find("input[type=text], textarea").val("");
+                }
+            });
         });
-    });
     </script>
 </body>
 

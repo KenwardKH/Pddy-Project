@@ -14,6 +14,7 @@ class DeliveryOrderStatus extends Model
     protected $fillable = [
         'invoice_id', 
         'status',
+        'alamat',
         'updated_at',
         'created_at'
     ];
