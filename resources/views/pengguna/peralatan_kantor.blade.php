@@ -18,13 +18,14 @@
             <div class="nav">
                 <div class="left">
                     <a href="{{ route('pengguna.home') }}">Home</a>
-                    <a href="#">Profil</a>
+                    <a href="{{ route('profile.show') }}">Profil</a>
                 </div>
                 <div class="right">
-                    <a href="#">Keranjang <i class="bi bi-cart"></i></a>
-                    <a href="#">Status Pesanan <i class="bi bi-journal-text"></i></a>
-                    <a href="#">Riwayat Pesanan <i class="bi bi-clock-history"></i></a>
-                    <a href="#">Keluar <i class="bi bi-box-arrow-right"></i></a>
+                    <a href="{{ route('pengguna.buat_pesanan') }}">Beli Barang <i class="bi bi-bag-plus"></i></a>
+                    <a href="/keranjang">Keranjang <i class="bi bi-cart"></i></a>
+                    <a href="{{ route('pengguna.status') }}">Status Pesanan <i class="bi bi-journal-text"></i></a>
+                    <a href="{{ route('pengguna.riwayat') }}">Riwayat Pesanan <i class="bi bi-clock-history"></i></a>
+                    <a href="{{ route('logout') }}">Keluar <i class="bi bi-box-arrow-right"></i></a>
                 </div>
             </div>
         </div>
@@ -55,6 +56,9 @@
         @endphp
 
         <!-- Quantity selector -->
+        @if($product->CurrentStock == 0)
+        <p class="habis">Produk Habis</p>
+        @else
         <div class="quantity-selector">
             <i class="bi bi-dash-square decrement" style=""></i>
             <input type="number" name="quantity[{{ $product->ProductID }}]"
@@ -62,6 +66,7 @@
                    min="0" max="70" class="quantity-input" required>
             <i type="button" class="bi bi-plus-square increment"></i>
         </div>
+        @endif
     </div>
 @endforeach
             <button type="submit" class="order-button" style="display: none;">Masukkan ke Keranjang</button>

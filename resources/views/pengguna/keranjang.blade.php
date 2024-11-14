@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Keranjang Belanja</title>
     <link rel="stylesheet" href="{{ asset('css/keranjang.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css"
         rel="stylesheet">
 </head>
@@ -21,10 +22,11 @@
                 <a href="{{ route('profile.show') }}">Profil</a>
             </div>
             <div class="right">
-                <a href="#">Keranjang <i class="bi bi-cart"></i></a>
+                <a href="{{ route('pengguna.buat_pesanan') }}">Beli Barang <i class="bi bi-bag-plus"></i></a>
+                <a href="/keranjang">Keranjang <i class="bi bi-cart"></i></a>
                 <a href="{{ route('pengguna.status') }}">Status Pesanan <i class="bi bi-journal-text"></i></a>
-                <a href="#">Riwayat Pesanan <i class="bi bi-clock-history"></i></a>
-                <a href="#">Keluar <i class="bi bi-box-arrow-right"></i></a>
+                <a href="{{ route('pengguna.riwayat') }}">Riwayat Pesanan <i class="bi bi-clock-history"></i></a>
+                <a href="{{ route('logout') }}">Keluar <i class="bi bi-box-arrow-right"></i></a>
             </div>
         </nav>
     </div>
@@ -50,13 +52,8 @@
                                 <p>Tersedia: {{ $item->product->CurrentStock }}</p>
                             </div>
                             <div class="quantity-control">
-                                <button type="button"
-                                    onclick="decrementQuantity('{{ $item->product->ProductID }}')">-</button>
-                                <input type="number" name="quantity[{{ $item->product->ProductID }}]"
-                                    value="{{ $item->Quantity }}" min="0"
-                                    max={{ $item->product->CurrentStock }} class="quantity-input" required>
-                                <button type="button"
-                                    onclick="incrementQuantity('{{ $item->product->ProductID }}')">+</button>
+                                <h4>Jumlah: </h4>
+                                <p style="color: #FFA500"><b>{{ $item->Quantity }}</b></p>
                             </div>
                             <div class="subtotal">
                                 Subtotal:
@@ -69,11 +66,28 @@
                     @endforeach
                 </div>
             </form>
-            <form action="{{ route('checkout') }}" method="POST">
+            <form id="opsi" action="{{ route('checkout') }}" method="POST">
                 @csrf
+                <div class="form-group">
+                    <label for="customerAddress">Opsi Pengiriman:</label>
+                    <select id="customerAddress" name="shipping_option">
+                        <option value="ambil_sendiri">Ambil Sendiri</option>
+                        <option value="diantar">Diantar</option>
+                    </select>
+                </div>
+                <div id="pengambilan" class="form-group" style="display: none;">
+                    <label for="alamat">Alamat Pengiriman:</label>
+                    <input type="text" id="alamat" name="alamat" required>
+                </div>
+                <label for="pembayaran">Pilih Opsi Pembayaran:</label>
+                <select id="pembayaran"  name="payment_option" style="margin-bottom:15px; padding:10px">
+                    <option value="cash">Cash</option>
+                    <option value="transfer">Transfer</option>
+                    <option value="kredit">Kredit</option>
+                </select>
                 <div class="footer">
                     <div class="total-order">
-                        <p>Total Pesanan: Rp{{ number_format($total, 0, ',', '.') }}</p>
+                        <h3>Total Pesanan: Rp{{ number_format($total, 0, ',', '.') }}</h3>
                     </div>
                     <button type="submit" class="checkout-btn">Check Out</button>
                 </div>
@@ -82,27 +96,25 @@
             <p>Keranjang Anda kosong.</p>
         @endif
         <div class="back-button-container">
-            <a href="{{ route('pengguna.peralatan_kantor.index') }}" class="back-btn">
-                <i class="bi bi-arrow-left-circle"></i> Kembali ke Peralatan Kantor
+            <a href="{{ route('pengguna.buat_pesanan') }}" class="back-btn">
+                <i class="bi bi-arrow-left-circle"></i> Kembali ke Halaman Pesanan
             </a>
         </div>
     </div>
 
     <!-- JavaScript for Quantity Controls -->
     <script>
-        function incrementQuantity(productID) {
-            const input = document.querySelector(`input[name="quantity[${productID}]"]`);
-            if (input) {
-                input.value = parseInt(input.value) + 1;
+        document.addEventListener('DOMContentLoaded', function() {
+        // Fungsi untuk menampilkan atau menyembunyikan input alamat pengiriman berdasarkan opsi pengiriman
+        $('#customerAddress').change(function() {
+            if ($(this).val() === 'diantar') {
+                $('#pengambilan').show();
+            } else {
+                $('#pengambilan').hide();
+                $('#opsi').find("input[type=text], textarea").val("");
             }
-        }
-
-        function decrementQuantity(productID) {
-            const input = document.querySelector(`input[name="quantity[${productID}]"]`);
-            if (input && input.value > 1) {
-                input.value = parseInt(input.value) - 1;
-            }
-        }
+        });
+    });
     </script>
 </body>
 

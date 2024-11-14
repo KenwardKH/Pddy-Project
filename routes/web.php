@@ -38,7 +38,8 @@ Route::get('auth/google/call-back', [GoogleAuthController::class, 'callbackGoogl
 Route::get('/pengguna/home', [PenggunaController::class, 'home'])->name('pengguna.home');
 Route::get('/pengguna/profile', [InformasiPenggunaController::class, 'show'])->name('profile.show');
 Route::get('/pengguna/status', [PenggunaController::class, 'status'])->name('pengguna.status');
-Route::get('/kategori/peralatan_kantor', [PeralatanKantorController::class, 'index'])->name('pengguna.peralatan_kantor.index');
+Route::get('/pengguna/riwayat', [PenggunaController::class, 'riwayat'])->name('pengguna.riwayat');
+Route::get('/pengguna/buat_pesanan', [PeralatanKantorController::class, 'index'])->name('pengguna.buat_pesanan');
 Route::get('/addToOrder', [PeralatanKantorController::class, 'addToOrder'])->name('pengguna.addToOrder');
 
 //keranjang
@@ -54,6 +55,7 @@ Route::get('/kasir/buat-pesanan', [PesananController::class, 'index'])->name('bu
 Route::post('/kasir/tambah-pesanan', [PesananController::class, 'addToOrder'])->name('tambah-pesanan');
 Route::get('/kasir/stock-barang', [KasirController::class, 'stock'])->name('kasir.stock');
 Route::get('/kasir/konfirmasi', [KasirController::class, 'konfirmasi'])->name('kasir.konfirmasi');
-Route::get('/kasir/status', [KasirController::class, 'status'])->name('kasir.status');
+Route::get('/kasir/status/{type?}', [KasirController::class, 'index'])->name('status');
+Route::get('/kasir/status/update/{id}/{type}', [KasirController::class, 'updateStatus'])->name('status.update');
 
 require __DIR__.'/auth.php';

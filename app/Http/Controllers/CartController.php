@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use App\Models\CustomerCart;
 use App\Models\Product;
 use App\Models\Customer;
+use App\Models\Invoice;
+use App\Models\DeliveryOrderStatus;
+use App\Models\PickupOrderStatus;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -111,7 +115,7 @@ class CartController extends Controller
         // Return the CustomerID
         return $customer->CustomerID;
     }
-    public function checkout()
+    public function checkout(Request $request)
     {
         // Get the authenticated user's CustomerID
         $userId = Auth::id();
@@ -125,10 +129,40 @@ class CartController extends Controller
         }
 
         $customerId = $customer->CustomerID;
+        $shippingOption = $request->input('shipping_option');
+        $paymentOption = $request->input('payment_option');
+        $alamat = $request->input('alamat', null);  // Dapatkan alamat jika diantar
 
         try {
             // Call the stored procedure using the CustomerID
             DB::statement('CALL CheckoutCart(?)', [$customerId]);
+
+            // Create Invoice
+            $invoiceData = [
+                'CustomerID' => $customerId,
+                'InvoiceDate' => now(),
+                'type' => $shippingOption === 'diantar' ? 'Delivery' : 'Pickup',
+            ];
+
+            if ($paymentOption === 'kredit') {
+                $invoiceData['DueDate'] = Carbon::now()->addMonth();
+            }
+
+            $invoice = Invoice::create($invoiceData);
+
+            // Save to appropriate status model
+            if ($shippingOption === 'diantar' && $alamat) {
+                DeliveryOrderStatus::create([
+                    'invoice_id' => $invoice->InvoiceID,
+                    'status' => 'Diantar',
+                    'alamat' => $alamat,
+                ]);
+            } else {
+                PickupOrderStatus::create([
+                    'invoice_id' => $invoice->InvoiceID,
+                    'status' => 'Ambil Sendiri',
+                ]);
+            }
 
             return redirect()->route('pengguna.status');
         } catch (\Exception $e) {

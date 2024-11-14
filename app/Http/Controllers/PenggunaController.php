@@ -31,4 +31,9 @@ class PenggunaController extends Controller
 
         return view('pengguna.pengguna_status', compact('invoices'));
     }
+
+    public function riwayat()
+    {
+        return view('pengguna.pengguna_riwayat');
+    }
 }

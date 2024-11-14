@@ -239,6 +239,11 @@ input[type="number"]::-webkit-inner-spin-button {
     padding-bottom: 60px; /* Additional padding for the fixed button at the bottom */
 }
 
+.habis{
+    color: red;
+    font-weight: bold;
+}
+
 @media (max-width: 1200px) {
     .product-list {
         grid-template-columns: repeat(4, 1fr); /* 4 products per row on medium screens */
