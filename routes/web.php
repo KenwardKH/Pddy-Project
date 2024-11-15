@@ -47,6 +47,7 @@ Route::get('/keranjang', [CartController::class, 'index'])->name('customer.cart'
 Route::post('/keranjang/update', [CartController::class, 'updateCart'])->name('customer.updateCart');
 Route::get('/keranjang/remove/{productName}', [CartController::class, 'removeItem'])->name('cart.remove');
 Route::post('/checkout', [CartController::class, 'checkout'])->name('checkout');
+Route::get('/api/invoice/{id}', [PenggunaController::class, 'getInvoiceDetails']);
 
 
 //Kasir

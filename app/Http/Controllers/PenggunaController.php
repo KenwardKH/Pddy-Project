@@ -52,5 +52,32 @@ class PenggunaController extends Controller
         return view('pengguna.pengguna_riwayat', compact('invoices'));
     }
 
+    public function getInvoiceDetails($id)
+    {
+        $invoice = Invoice::with(['invoiceDetails.product.pricing', 'transactionLog'])
+            ->findOrFail($id);
+    
+        // Get total amount from the transaction log
+        $totalAmount = optional($invoice->transactionLog)->TotalAmount;
+    
+        // Map the invoice details
+        $details = $invoice->invoiceDetails->map(function ($detail) use ($totalAmount) {
+            return [
+                'product' => $detail->product,
+                'price' => $detail->product->pricing->UnitPrice,
+                'Quantity' => $detail->Quantity,
+                'total' => $detail->Quantity * $detail->product->pricing->UnitPrice,
+                'totalAmount' => $totalAmount
+            ];
+        });
+    
+        // Log data for debugging
+        \Log::info($details);
+    
+        return response()->json(['details' => $details]);
+    }
+    
+
+
 
 }

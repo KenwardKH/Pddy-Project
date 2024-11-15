@@ -1,13 +1,13 @@
-body { 
-    font-family: 'Roboto', sans-serif; 
-    background-color: white; 
+body {
+    font-family: "Roboto", sans-serif;
+    background-color: white;
     background-color: #e8f5e9;
 }
 
 .header {
-    display: flex; 
+    display: flex;
     flex-direction: column;
-    padding: 10px; 
+    padding: 10px;
     border-bottom: orange solid 2px;
     position: fixed;
     width: 100%;
@@ -20,28 +20,28 @@ body {
 .container {
     margin-top: 160px; /* Offset content for the fixed header height */
 }
-        
-.header { 
-    display: flex; 
+
+.header {
+    display: flex;
     flex-direction: column;
-    padding: 10px; 
+    padding: 10px;
     border-bottom: orange solid 2px;
 }
 .header img {
     width: 400px;
 }
-        
-.header h1 { 
-    font-size: 24px; 
-    color: #333; 
+
+.header h1 {
+    font-size: 24px;
+    color: #333;
 }
-        
-.nav { 
+
+.nav {
     display: flex;
     width: 100%;
-    justify-content: space-between;  
+    justify-content: space-between;
 }
-.nav a{
+.nav a {
     display: inline-flex;
     align-items: center;
     font-size: 16px; /* Adjust the size as needed */
@@ -68,11 +68,11 @@ body {
     justify-content: space-around;
     width: 50%;
 }
-        
-.nav a { 
-    text-decoration: none; 
-    color: #333; 
-    font-weight: bold; 
+
+.nav a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
 }
 
 /* Search container styling */
@@ -121,7 +121,7 @@ body {
     background-color: #218838; /* Darker green for hover */
 }
 
-.dashboard{
+.dashboard {
     text-align: center;
 }
 
@@ -145,7 +145,6 @@ table {
     box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1);
 }
 
-
 .toggle-button {
     padding: 10px 20px;
     color: #555;
@@ -163,12 +162,13 @@ table {
 
 /* Gaya untuk tombol yang aktif */
 .toggle-button.active {
-    background-color: #4CAF50; /* Warna hijau untuk menandakan pilihan aktif */
+    background-color: #4caf50; /* Warna hijau untuk menandakan pilihan aktif */
     color: white;
-    border-color: #4CAF50;
+    border-color: #4caf50;
 }
 
-th, td {
+th,
+td {
     padding: 14px;
     text-align: center;
     vertical-align: middle;
@@ -214,7 +214,6 @@ tbody tr:hover {
     background-color: #2980b9;
 }
 
-
 .cetak-button {
     background-color: #4caf50;
     color: #ffffff;
@@ -227,6 +226,21 @@ tbody tr:hover {
 }
 
 .cetak-button:hover {
+    background-color: #388e3c;
+}
+
+.detail-button {
+    background-color: #4caf50;
+    color: #ffffff;
+    border: none;
+    padding: 8px 12px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.detail-button:hover {
     background-color: #388e3c;
 }
 
@@ -243,7 +257,7 @@ tbody tr:hover {
     color: #d32f2f;
 }
 
-td{
+td {
     font-size: 0.9em;
     color: #555;
     font-weight: 500;
@@ -257,4 +271,89 @@ td{
     text-align: center;
 }
 
+/* Setiap item keranjang */
+.cart-item {
+    display: flex;
+    align-items: center;
+    padding: 20px; /* Memberikan ruang di dalam item keranjang */
+    /* border: 1px solid #ddd; Border yang lebih tipis */
+    /* border-radius: 5px; */
+    background-color: #fff;
+    margin-bottom: 15px; /* Menambah jarak antar item */
+    width: calc(
+        100% - 20px
+    ); /* Memungkinkan lebar penuh dikurangi padding kiri dan kanan */
+    max-width: 100%;
+    justify-content: space-between; /* Menjaga jarak antar elemen di dalam item */
+}
+.cart-items {
+    margin-bottom: 60px; /* Sesuaikan nilai margin-bottom sesuai kebutuhan */
+}
 
+/* Subtotal dan Delete Button */
+.subtotal {
+    flex: 2; /* Membuat subtotal lebih lebar */
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+}
+
+/* Product Image */
+.item-image {
+    flex: 1;
+}
+
+.item-image img {
+    width: 175px;
+    height: 175px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+/* Product Details */
+.item-details {
+    flex: 2;
+    padding-left: 15px;
+}
+
+.item-details h2 {
+    font-size: 17px;
+    margin-bottom: 5px;
+}
+
+.item-details p {
+    margin-bottom: 5px;
+    font-size: 15px;
+    color: #ffa500;
+}
+
+.quantity-control {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Memberikan jarak antara tombol + dan - */
+    justify-content: center; /* Menjaga kontrol tetap berada di tengah */
+    flex: 1; /* Membuat kontrol kuantitas mengambil ruang yang cukup */
+    margin: 0 20px;
+}
+
+.modal-header .close-button{
+    font-size: 30px;
+}
+
+.modal-footer h3{
+    text-align: left;
+}
+
+.modal-footer .close-button{
+    padding: 5px 10px;
+    margin: 2px;
+    background-color: rgb(255, 0, 0);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+.modal-footer .close-button:hover{
+    background-color: rgb(194, 25, 25)
+}
