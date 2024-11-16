@@ -48,5 +48,11 @@ class User extends Authenticatable
     {
         return $this->hasOne(Customer::class, 'user_id', 'id');
     }
+
+    public function kasir()
+    {
+        return $this->hasOne(Kasir::class, 'user_id', 'id');
+    }
+
     
 }
