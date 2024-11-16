@@ -39,7 +39,7 @@ class GoogleAuthController extends Controller
                 if (Auth::user()->role === 'kasir') {
                     return redirect()->intended('/kasir/home');
                 } elseif (Auth::user()->role === 'pelanggan') {
-                    return redirect()->intended('/pelanggan/home');
+                    return redirect()->intended('/pengguna/home');
                 } elseif (Auth::user()->role === 'pemilik') {
                     return redirect()->intended('/pemilik/home');
                 }
