@@ -4,30 +4,27 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Kasir extends Model
+class Supplier extends Model
 {
     // Nama tabel yang sesuai dengan database
-    protected $table = 'kasir';
+    protected $table = 'suppliers';
 
     // Menentukan kolom primary key jika menggunakan nama selain id
-    protected $primaryKey = 'id_kasir';
+    protected $primaryKey = 'SupplierID';
 
     // Menentukan apakah timestamps harus diaktifkan (laravel default: created_at dan updated_at)
     public $timestamps = false;  // Karena di tabel tidak ada kolom timestamps (created_at, updated_at)
 
     // Menentukan kolom mana yang bisa diisi secara mass-assignment
     protected $fillable = [
-        'user_id',
-        'nama_kasir',
-        'alamat_kasir',
-        'kontak_kasir',
+        'SupplierName',
+        'SupplierAddress',
+        'SupplierContact',
     ];
 
-    // Jika kasir berelasi dengan model lain, misalnya 'User', Anda bisa menambah relasi seperti ini:
-    public function user()
+    // Jika tabel 'suppliers' berelasi dengan model lain, Anda bisa menambah relasi seperti ini
+    public function products()
     {
-        return $this->belongsTo(User::class);
+        return $this->hasMany(Product::class, 'SupplierID');
     }
-    
-    
 }

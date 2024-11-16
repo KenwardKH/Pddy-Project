@@ -1,0 +1,259 @@
+body { 
+    font-family: 'Roboto', sans-serif; 
+    background-color: white; 
+}
+
+.container { 
+    margin: auto; 
+    text-align: center; 
+}
+        
+.header { 
+    display: flex; 
+    flex-direction: column;
+    padding: 8px; 
+    border-bottom: rgb(136, 243, 193) solid 2px;
+}
+.header img {
+    width: 350px;
+}
+        
+.header h1 { 
+    font-size: 24px; 
+    color: #333; 
+}
+        
+.nav { 
+    display: flex;
+    width: 100%;
+    justify-content: space-between;  
+}
+.nav a{
+    display: inline-flex;
+    align-items: center;
+    font-size: 16px; /* Adjust the size as needed */
+}
+
+.nav i {
+    font-size: 18px; /* Adjust this to match the text size */
+    line-height: 1; /* Ensures the icon height aligns properly */
+    margin-left: 4px;
+}
+
+.nav a:hover {
+    color: #80F4AC;
+}
+
+.nav .left {
+    display: flex;
+    justify-content: space-around;
+    width: 10%;
+}
+
+.nav .right {
+    display: flex;
+    justify-content: space-around;
+    width: 46%;
+}
+        
+.nav a { 
+    text-decoration: none; 
+    color: #333; 
+    font-weight: bold; 
+}
+
+/* CSS untuk search bar */
+.search-container {
+    display: flex;
+    align-items: center;
+    margin-top: 20px; /* Jarak antara judul dan search bar */
+    justify-content: flex-end; /* Menyelaraskan ke kanan */
+}
+
+.search-input {
+    padding: 6px; /* Padding yang lebih kecil */
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 150px; /* Lebar input yang lebih kecil */
+    margin-right: 5px; /* Jarak antara input dan tombol */
+}
+
+.search-button {
+    background-color: #80F4AC; /* Warna latar belakang tombol */
+    color: white; /* Warna font */
+    border: none;
+    border-radius: 5px;
+    padding: 6px; /* Padding tombol yang lebih kecil */
+    cursor: pointer; /* Menunjukkan bahwa ini bisa diklik */
+}
+
+.search-button i {
+    font-size: 16px; /* Ukuran ikon */
+}
+
+.search-button:hover {
+    background-color: #4fd894; /* Warna latar belakang saat hover */
+}
+
+/* CSS untuk tabel dan judul */
+table {
+    width: calc(100% - 5px);
+    border-collapse: collapse;
+    margin-top: 40px; /* Jarak antara judul dan tabel */
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left; /* Default untuk td */
+}
+
+th {
+    background-color: #353c41; /* Warna latar belakang */
+    color: white; /* Warna font */
+    text-align: center; /* Memusatkan teks dalam header tabel */
+}
+
+td {
+    text-align: left; /* Memastikan teks dalam td tidak terpusat */
+}
+
+/* Styling untuk judul */
+.table-title {
+    margin-top: 40px;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    color: #333;
+}
+
+/* Posisi dan Tampilan Tombol */
+.button-container {
+    text-align: center;
+    margin: 20px 0; /* Jarak tombol ke elemen lain */
+}
+
+.add-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Bayangan tombol */
+}
+
+.add-button:hover {
+    background-color: #0056b3; /* Warna hover */
+    transform: scale(1.05); /* Zoom ringan */
+}
+
+/* Gaya Modal */
+
+/* Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6); /* Background semi-transparent */
+    display: flex;
+    justify-content: center; /* Pusatkan secara horizontal */
+    align-items: center; /* Pusatkan secara vertikal */
+    z-index: 1000;
+}
+
+/* Konten Modal */
+.modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    width: 400px;
+    max-width: 90%;
+    position: relative; /* Untuk posisi tombol close */
+
+    /* Geser ke kiri */
+    transform: translateX(-30px); /* Geser ke kiri 10px */
+}
+
+
+
+/* Animasi Muncul */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Tombol Tutup */
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 20px;
+    color: #888;
+    cursor: pointer;
+}
+
+.close-button:hover {
+    color: #000;
+}
+
+/* Gaya Form */
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+input {
+    width: 95%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+
+.submit-button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+    background-color: #218838;
+}
+
+/* Gaya Modal Sukses */
+.success-icon {
+    font-size: 50px;
+    color: green;
+    text-align: center;
+    margin-bottom: 20px;
+}
+.modal h2 {
+    text-align: center;
+}
+
+

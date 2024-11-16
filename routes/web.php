@@ -10,6 +10,7 @@ use App\Http\Controllers\PeralatanSekolahController;
 use App\Http\Controllers\BukuDanKertasController;
 use App\Http\Controllers\PulpenDanPensilController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\OwnerController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -58,5 +59,15 @@ Route::get('/kasir/stock-barang', [KasirController::class, 'stock'])->name('kasi
 Route::get('/kasir/konfirmasi', [KasirController::class, 'konfirmasi'])->name('kasir.konfirmasi');
 Route::get('/kasir/status/{type?}', [KasirController::class, 'index'])->name('status');
 Route::get('/kasir/status/update/{id}/{type}', [KasirController::class, 'updateStatus'])->name('status.update');
+
+//owner
+Route::get('/owner/dashboard', [OwnerController::class, 'index'])->name('owner.dashboard');
+Route::get('/owner/user', [OwnerController::class, 'user'])->name('owner.user');
+Route::get('/owner/daftar-pembeli', [OwnerController::class, 'customer'])->name('owner.daftar-costumer');
+Route::get('/owner/daftar-kasir', [OwnerController::class, 'kasir'])->name('owner.daftar-kasir');
+Route::post('/tambah-kasir', [OwnerController::class, 'tambahKasir'])->name('owner.add-kasir');
+Route::get('/owner/daftar-supplier', [OwnerController::class, 'supplier'])->name('owner.daftar-supplier');
+Route::post('/add-supplier', [OwnerController::class, 'addSupplier'])->name('owner.add-supplier');
+Route::get('/owner/log-transaksi', [OwnerController::class, 'transaksi'])->name('owner.log-transaksi');
 
 require __DIR__.'/auth.php';

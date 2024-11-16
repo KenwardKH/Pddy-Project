@@ -19,7 +19,11 @@ class CartController extends Controller
     // Menampilkan keranjang
     public function index()
     {
-        $customerId = Auth::id();
+        $userId = Auth::id();
+
+        $customerId = DB::table('customers')
+        ->where('user_id', $userId)
+        ->value('CustomerID');
 
         // Get cart items for the customer with associated product data
         $cartItems = CustomerCart::with('product')
@@ -40,7 +44,11 @@ class CartController extends Controller
     // Mengupdate keranjang
     public function updateCart(Request $request)
     {
-        $customerId = Auth::id();
+        $userId = Auth::id();
+
+        $customerId = DB::table('customers')
+        ->where('user_id', $userId)
+        ->value('CustomerID');
 
         // Get quantities from the form input
         $quantities = $request->input('quantity', []);
@@ -83,7 +91,12 @@ class CartController extends Controller
     // Menghapus item dari keranjang
     public function removeItem($productName)
     {
-        $customerId = Auth::id();
+        $userId = Auth::id();
+
+        // Ambil CustomerID berdasarkan user_id
+        $customerId = DB::table('customers')
+            ->where('user_id', $userId)
+            ->value('CustomerID');
 
         // Find the product by its name
         $product = Product::where('ProductName', $productName)->first();
@@ -97,6 +110,7 @@ class CartController extends Controller
 
         return redirect()->route('customer.cart')->with('success', 'Barang berhasil dihapus dari keranjang!');
     }
+    
     public function getCustomerId()
     {
         // Get the authenticated user's id

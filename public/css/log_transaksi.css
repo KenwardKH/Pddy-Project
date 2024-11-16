@@ -1,0 +1,125 @@
+body { 
+    font-family: 'Roboto', sans-serif; 
+    background-color: white; 
+}
+
+.container { 
+    margin: auto; 
+    text-align: center; 
+}
+        
+.header { 
+    display: flex; 
+    flex-direction: column;
+    padding: 8px; 
+    border-bottom: rgb(136, 243, 193) solid 2px;
+}
+.header img {
+    width: 350px;
+}
+        
+.header h1 { 
+    font-size: 24px; 
+    color: #333; 
+}
+        
+.nav { 
+    display: flex;
+    width: 100%;
+    justify-content: space-between;  
+}
+.nav a{
+    display: inline-flex;
+    align-items: center;
+    font-size: 16px; /* Adjust the size as needed */
+}
+
+.nav i {
+    font-size: 18px; /* Adjust this to match the text size */
+    line-height: 1; /* Ensures the icon height aligns properly */
+    margin-left: 4px;
+}
+
+.nav a:hover {
+    color: #80F4AC;
+}
+
+.nav .left {
+    display: flex;
+    justify-content: space-around;
+    width: 10%;
+}
+
+.nav .right {
+    display: flex;
+    justify-content: space-around;
+    width: 46%;
+}
+        
+.nav a { 
+    text-decoration: none; 
+    color: #333; 
+    font-weight: bold; 
+}
+
+/* CSS untuk bar tanggal */
+.search-date-container {
+    display: flex;
+    justify-content: flex-end; /* Menyelaraskan ke kanan */
+    margin-top: 20px; /* Jarak antara judul dan search bar */
+    align-items: center; /* Menyelaraskan item secara vertikal */
+}
+
+.date-input {
+    padding: 6px; /* Padding untuk input tanggal */
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-right: 10px; /* Jarak antara input tanggal */
+    width: 150px; /* Lebar input */
+}
+
+/* Span untuk teks antara dua input */
+.search-date-container span {
+    margin: 0 10px; /* Jarak antara input dan teks "hingga" */
+    font-size: 16px; /* Ukuran font */
+}
+
+
+/* CSS untuk tabel dan judul */
+table {
+    width: calc(100% - 5px);
+    border-collapse: collapse;
+    margin-top: 20px; /* Jarak antara judul dan tabel */
+}
+
+/* CSS untuk tabel dan judul */
+table {
+    width: calc(100% - 5px);
+    border-collapse: collapse;
+    margin-top: 40px; /* Jarak antara judul dan tabel */
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left; /* Default untuk td */
+}
+
+th {
+    background-color: #353c41; /* Warna latar belakang */
+    color: white; /* Warna font */
+    text-align: center; /* Memusatkan teks dalam header tabel */
+}
+
+td {
+    text-align: left; /* Memastikan teks dalam td tidak terpusat */
+}
+
+/* Styling untuk judul */
+.table-title {
+    margin-top: 40px;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    color: #333;
+}

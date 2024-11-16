@@ -1,0 +1,158 @@
+body { 
+    font-family: 'Roboto', sans-serif; 
+    background-color: white; 
+}
+
+.container { 
+    margin: auto; 
+    text-align: center; 
+}
+        
+.header { 
+    display: flex; 
+    flex-direction: column;
+    padding: 8px; 
+    border-bottom: rgb(136, 243, 193) solid 2px;
+}
+.header img {
+    width: 350px;
+}
+        
+.header h1 { 
+    font-size: 24px; 
+    color: #333; 
+}
+        
+.nav { 
+    display: flex;
+    width: 100%;
+    justify-content: space-between;  
+}
+.nav a{
+    display: inline-flex;
+    align-items: center;
+    font-size: 16px; /* Adjust the size as needed */
+}
+
+.nav i {
+    font-size: 18px; /* Adjust this to match the text size */
+    line-height: 1; /* Ensures the icon height aligns properly */
+    margin-left: 4px;
+}
+
+.nav a:hover {
+    color: #80F4AC;
+}
+
+.nav .left {
+    display: flex;
+    justify-content: space-around;
+    width: 10%;
+}
+
+.nav .right {
+    display: flex;
+    justify-content: space-around;
+    width: 46%;
+}
+        
+.nav a { 
+    text-decoration: none; 
+    color: #333; 
+    font-weight: bold; 
+}
+
+.dashboard-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+}
+
+.item {
+    margin: 0 25px;
+}
+
+.btn {
+    background-color: #80F4AC;
+    color: #333;
+    border: none;
+    border-radius: 10px;
+    padding: 20px 30px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    width: 225px;
+    height: 76px;
+    display: flex;
+    align-items: center;
+    
+}
+
+.btn i {
+    font-size: 30px;
+    margin-right: 15px;
+    
+}
+
+.btn span {
+    font-size: 15px;
+    font-weight: bold;
+    text-align: left;
+    line-height: 1.5;
+}
+
+.produk-populer {
+    margin: 120px auto; /* Mengatur margin atas-bawah dan memusatkan secara horizontal */
+    text-align: center;
+    border: 1px solid #d1cccc;
+    background-color: #F4FEFF;
+    width: 1000px;
+    height: 500px;
+    border-radius: 10px;
+    padding: 20px;
+    font-size: 15px;
+    color: #333;
+    
+}
+
+.produk-populer h2 {
+    margin-top: 0;
+}
+
+.produk-populer::after {
+    content: "";
+    display: block;
+    width: 60%;
+    height: 1px;
+    background-color: #d1cccc;
+    margin: 8px auto 0; /* Mengatur margin atas-bawah dan memusatkan secara horizontal */
+}
+
+.laporan {
+    margin: 120px auto; /* Mengatur margin atas-bawah dan memusatkan secara horizontal */
+    text-align: center;
+    border: 1px solid #d1cccc;
+    background-color: #F4FEFF;
+    width: 1000px;
+    height: 500px;
+    border-radius: 10px;
+    padding: 20px;
+    font-size: 15px;
+    color: #333;
+}
+
+.laporan h2 {
+    margin-top: 0;
+}
+
+.laporan::after {
+    content: "";
+    display: block;
+    width: 60%;
+    height: 1px;
+    background-color: #d1cccc;
+    margin: 8px auto 0; /* Mengatur margin atas-bawah dan memusatkan secara horizontal */
+}
