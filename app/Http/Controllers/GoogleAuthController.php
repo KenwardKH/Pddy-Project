@@ -41,7 +41,7 @@ class GoogleAuthController extends Controller
                 } elseif (Auth::user()->role === 'pelanggan') {
                     return redirect()->intended('/pengguna/home');
                 } elseif (Auth::user()->role === 'pemilik') {
-                    return redirect()->intended('/pemilik/home');
+                    return redirect()->intended('/owner/home');
                 }
             } else {
                 // If the user does not exist, show an error

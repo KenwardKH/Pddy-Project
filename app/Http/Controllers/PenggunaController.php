@@ -21,36 +21,68 @@ class PenggunaController extends Controller
     }
 
     public function status()
-    {
-        // Ambil invoice dengan status belum selesai
-        $invoices = Invoice::with(['invoiceDetails', 'transactionLog', 'deliveryStatus', 'pickupStatus'])
-            ->whereHas('deliveryStatus', function ($query) {
-                $query->where('status', '!=', 'Selesai');
-            })
-            ->orWhereHas('pickupStatus', function ($query) {
-                $query->where('status', '!=', 'Selesai');
-            })
-            ->orderBy('InvoiceID', 'asc')
-            ->get();
+{
+    $userId = Auth::id();
 
-        return view('pengguna.pengguna_status', compact('invoices'));
+    // Ambil CustomerID berdasarkan user_id
+    $customerId = DB::table('customers')
+        ->where('user_id', $userId)
+        ->value('CustomerID');
+
+    if (!$customerId) {
+        // Jika tidak ada CustomerID, tampilkan pesan error atau halaman kosong
+        return view('pengguna.pengguna_status', ['invoices' => []]);
     }
 
-    public function riwayat()
-    {
-        // Ambil invoice dengan status selesai
-        $invoices = Invoice::with(['invoiceDetails', 'transactionLog', 'deliveryStatus', 'pickupStatus'])
-            ->whereHas('deliveryStatus', function ($query) {
-                $query->where('status', 'Selesai');
-            })
-            ->orWhereHas('pickupStatus', function ($query) {
-                $query->where('status', 'Selesai');
-            })
-            ->orderBy('InvoiceID', 'asc')
-            ->get();
+    // Ambil semua invoice yang terkait dengan CustomerID
+    $invoices = Invoice::with(['invoiceDetails', 'transactionLog', 'deliveryStatus', 'pickupStatus'])
+        ->where('CustomerID', $customerId) // Filter berdasarkan CustomerID
+        ->where(function ($query) {
+            // Kondisi status "belum selesai" baik untuk deliveryStatus atau pickupStatus
+            $query->whereHas('deliveryStatus', function ($q) {
+                $q->where('status', '!=', 'Selesai');
+            })->orWhereHas('pickupStatus', function ($q) {
+                $q->where('status', '!=', 'Selesai');
+            });
+        })
+        ->orderBy('InvoiceID', 'asc')
+        ->get();
 
-        return view('pengguna.pengguna_riwayat', compact('invoices'));
+    return view('pengguna.pengguna_status', compact('invoices'));
+}
+
+
+public function riwayat()
+{
+    $userId = Auth::id();
+
+    // Ambil CustomerID berdasarkan user_id
+    $customerId = DB::table('customers')
+        ->where('user_id', $userId)
+        ->value('CustomerID');
+
+    if (!$customerId) {
+        // Jika tidak ada CustomerID, tampilkan pesan atau halaman kosong
+        return view('pengguna.pengguna_riwayat', ['invoices' => []]);
     }
+
+    // Ambil semua invoice yang sudah selesai
+    $invoices = Invoice::with(['invoiceDetails', 'transactionLog', 'deliveryStatus', 'pickupStatus'])
+        ->where('CustomerID', $customerId) // Filter berdasarkan CustomerID
+        ->where(function ($query) {
+            // Kondisi status "Selesai" baik untuk deliveryStatus atau pickupStatus
+            $query->whereHas('deliveryStatus', function ($q) {
+                $q->where('status', 'Selesai');
+            })->orWhereHas('pickupStatus', function ($q) {
+                $q->where('status', 'Selesai');
+            });
+        })
+        ->orderBy('InvoiceID', 'asc')
+        ->get();
+
+    return view('pengguna.pengguna_riwayat', compact('invoices'));
+}
+
 
     public function getInvoiceDetails($id)
     {
