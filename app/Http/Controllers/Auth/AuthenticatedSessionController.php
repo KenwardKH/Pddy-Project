@@ -28,7 +28,9 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
         if(Auth::check() && Auth::user()->role === 'kasir'){
-            return redirect()->intended(route('/kasir/kasir_home', absolute: false));
+            return redirect()->intended(route('kasir.home', absolute: false));
+        } else if (Auth::check() && Auth::user()->role === 'pemilik'){
+            return redirect()->intended(route('owner.home', absolute: false));
         }
 
         return redirect()->intended('/pengguna/home');

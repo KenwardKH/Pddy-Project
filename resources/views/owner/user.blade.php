@@ -15,7 +15,7 @@
             <img src="{{ asset('images/logo.png') }}" alt="logo" class="logo">
             <div class="nav">
                 <div class="left">
-                    <a href="{{ route('pengguna.home') }}">Home</a>
+                    <a href="{{ route('owner.home') }}">Home</a>
                     
                 </div>
                 <div class="right">
@@ -27,7 +27,7 @@
                     <a href="{{ route('owner.daftar-supplier') }}">Suplllier<i class="bi bi-shop"></i></a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <button type="submit" class="btn btn-link" style="background: none; border: none; padding: 0; margin: 0; cursor: pointer;">
+                        <button type="submit" class="btn-link" style="background: none; border: none; padding: 0; margin: 0; cursor: pointer;">
                             <a>Keluar <i class="bi bi-box-arrow-right"></i></a> 
                         </button>
                     </form>
