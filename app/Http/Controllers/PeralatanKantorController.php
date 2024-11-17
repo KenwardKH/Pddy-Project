@@ -13,36 +13,7 @@ use App\Models\Product;
 
 class PeralatanKantorController extends Controller
 {
-    // public function index()
-    // {
-        // $products = Product::with('pricing')->get();
-        // $products = Product::with(['pricing', 'customerCart' => function ($query) use ($userId) {
-        //     $query->where('CustomerID', $userId);
-        // }])->get();
 
-    //     return view('pengguna.peralatan_kantor', compact('products'));
-    // }
-    // public function index()
-    // {
-    //     // Get the UserID of the currently authenticated user
-    //     $userId = Auth::id();
-
-    //     // Find the Customer associated with this UserID
-    //     $customer = Customer::where('User_ID', $userId)->first();
-
-    //     // Check if the customer exists
-    //     if (!$customer) {
-    //         // Handle the case if there’s no matching customer, e.g., redirect or return an error message
-    //         return redirect()->route('some.route')->with('error', 'Customer not found.');
-    //     }
-    //     $products = Product::with('pricing')->get();
-    //     // Retrieve CustomerCart items for the found CustomerID with related product and pricing information
-    //     $products = customerCart::with('product.pricing')
-    //                         ->where('CustomerID', $customer->CustomerID)
-    //                         ->get();
-
-    //     return view('pengguna.peralatan_kantor', compact('products'));
-    // }
     public function index()
     {
         // Get the UserID of the currently authenticated user

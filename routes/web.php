@@ -22,7 +22,7 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('pengguna/pengguna_home');
+    return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -53,7 +53,7 @@ Route::get('/api/invoice/{id}', [PenggunaController::class, 'getInvoiceDetails']
 
 //Kasir
 Route::get('/kasir/home', [KasirController::class, 'home'])->name('kasir.home');
-Route::get('/kasir/buat-pesanan', [PesananController::class, 'index'])->name('buat-pesanan');
+Route::get('/kasir/buat-pesanan', [PesananController::class, 'buatPesanan'])->name('buat-pesanan');
 Route::post('/kasir/tambah-pesanan', [PesananController::class, 'addToOrder'])->name('tambah-pesanan');
 Route::get('/kasir/stock-barang', [KasirController::class, 'stock'])->name('kasir.stock');
 Route::get('/kasir/konfirmasi', [KasirController::class, 'konfirmasi'])->name('kasir.konfirmasi');
@@ -61,7 +61,7 @@ Route::get('/kasir/status/{type?}', [KasirController::class, 'index'])->name('st
 Route::get('/kasir/status/update/{id}/{type}', [KasirController::class, 'updateStatus'])->name('status.update');
 
 //owner
-Route::get('/owner/dashboard', [OwnerController::class, 'index'])->name('owner.dashboard');
+Route::get('/owner/home', [OwnerController::class, 'index'])->name('owner.home');
 Route::get('/owner/user', [OwnerController::class, 'user'])->name('owner.user');
 Route::get('/owner/daftar-pembeli', [OwnerController::class, 'customer'])->name('owner.daftar-costumer');
 Route::get('/owner/daftar-kasir', [OwnerController::class, 'kasir'])->name('owner.daftar-kasir');

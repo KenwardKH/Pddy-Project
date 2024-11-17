@@ -4,31 +4,25 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\User;
-use App\Models\Customer;
 
 class SearchCustomer extends Component
 {
-    public $email = '';
-    public $customerName = '';
-    public $customerPhone = '';
+    public $email;
+    public $name;
+    public $phone;
 
-    public function updatedEmail()
+    public function cariAkun()
     {
-        if ($this->email) {
-            $user = User::where('email', $this->email)->with('customer')->first();
-            
-            if ($user && $user->customer) {
-                $this->customerName = $user->customer->CustomerName;
-                $this->customerPhone = $user->customer->CustomerContact;
-            } else {
-                // Debugging
-                dd("User or customer not found", $user);
-                $this->customerName = '';
-                $this->customerPhone = '';
-            }
+        $user = User::with('customer')->where('email', $this->email)->first();
+
+        if ($user && $user->customer) {
+            $this->name = $user->customer->CustomerName;
+            $this->phone = $user->customer->CustomerContact;
+        } else {
+            $this->name = null;
+            $this->phone = null;
         }
     }
-
 
     public function render()
     {

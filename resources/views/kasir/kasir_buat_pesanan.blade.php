@@ -8,6 +8,11 @@
     <link rel="stylesheet" href="{{ asset('css/kasir_buat_pesanan.css') }}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        .modal-product-item img {
+            width: 100px
+        }
+    </style>
     @livewireStyles
 </head>
 
@@ -26,7 +31,13 @@
                     <a href="stock-barang">Stock Barang <i class="bi bi-box-seam"></i></a>
                     <a href="konfirmasi">Konfirmasi Pesanan <i class="bi bi-clipboard-check"></i></a>
                     <a href="status">Status Pesanan <i class="bi bi-journal-text"></i></a>
-                    <a href="#">Keluar <i class="bi bi-box-arrow-right"></i></a>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="btn btn-link"
+                            style="background: none; border: none; padding: 0; margin: 0; cursor: pointer;">
+                            <a>Keluar <i class="bi bi-box-arrow-right"></i></a>
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -60,8 +71,10 @@
 
                     <!-- Check if the product is in the customer's cart and retrieve the quantity if it is -->
                     @php
-                        $cartItem = $cartItems->get($product->ProductID); // Get cart item by product ID, or null if it doesn’t exist
+                        // Mendapatkan item keranjang dari collection berdasarkan ProductID
+                        $cartItem = $cartItems->get($product->ProductID);
                     @endphp
+
 
                     <!-- Quantity selector -->
                     @if ($product->CurrentStock == 0)
@@ -77,25 +90,6 @@
                     @endif
                 </div>
             @endforeach
-            <div class="product-item">
-                <div class="kiri">
-                    <img src="{{ asset('images/produk/pensil2b.png') }}" alt="{{ $product['name'] }}">
-                </div>
-                <div class="tengah">
-                    <h2>Pensil Ajaib 2B</h2>
-                    <h3><strong>Rp25.000</strong></h3>
-                    <h3>Tersedia: 60 lusin</h3>
-                    <h3>Kategori: Alat Tulis</h3>
-                </div>
-                <div class="kanan">
-                    <div class="quantity-selector">
-                        <i class="bi bi-dash-square decrement" style="display: none;"></i>
-                        <input type="number" name="quantity[{{ $product['name'] }}]" value="0" min="0"
-                            max="70" class="quantity-input" style="display: none;" required>
-                        <i type="button" class="bi bi-plus-square increment"></i>
-                    </div>
-                </div>
-            </div>
             <button type="submit" class="order-button" style="display: none;">Pesan</button>
         </form>
 
@@ -115,12 +109,10 @@
                 </select>
 
                 <!-- Search field for existing customers -->
-                <div id="existingCustomerSearch" style="display: none;">
-                    <div class="form-group">
-                        <!-- Pencarian akun pelanggan dengan Livewire -->
-                        @livewire('search-customer')
-                    </div>
+                <div id="existingCustomerSearch" style="display: none">
+                    @livewire('SearchCustomer')
                 </div>
+
 
                 <!-- Form for customer information -->
                 <form id="orderForm" class="check-out">
@@ -158,126 +150,151 @@
     </div>
 
     <script>
+        document.addEventListener('livewire:load', function() {
+            Livewire.on('fillCustomerData', (customer) => {
+                $('#customerName').val(customer.name);
+                $('#customerPhone').val(customer.phone);
+            });
+        });
+
         document.addEventListener('DOMContentLoaded', function() {
-            // Fungsi untuk menampilkan atau menyembunyikan field berdasarkan tipe pelanggan yang dipilih
-            $('#customerType').change(function() {
-                if ($(this).val() === 'existing') {
-                    $('#existingCustomerSearch').show();
-                } else {
-                    $('#existingCustomerSearch').hide();
-                    $('#orderForm').find("input[type=text], textarea").val("");
-                }
-            });
+            // Toggle the visibility of the order button
+            const togglePesanButton = () => {
+                const anyQuantitySelected = Array.from($('.quantity-input')).some(input => parseInt($(input)
+                    .val()) > 0);
+                $('.order-button').toggle(anyQuantitySelected);
+            };
 
-            // Fungsi untuk menampilkan atau menyembunyikan input alamat pengiriman berdasarkan opsi pengiriman
-            $('#customerAddress').change(function() {
-                if ($(this).val() === 'diantar') {
-                    $('#pengambilan').show();
-                } else {
-                    $('#pengambilan').hide();
-                    $('#orderForm').find("input[type=text], textarea").val("");
-                }
-            });
-
-            // Fungsi untuk menampilkan tombol "Pesan" hanya jika ada produk dengan kuantitas lebih dari 0
-            function togglePesanButton() {
-                let anyQuantitySelected = false;
-                $('.quantity-input').each(function() {
-                    if (parseInt($(this).val()) > 0) {
-                        anyQuantitySelected = true;
-                        return false;
-                    }
-                });
-
-                if (anyQuantitySelected) {
-                    $('.order-button').show();
-                } else {
-                    $('.order-button').hide();
-                }
-            }
-
-            // Fungsi untuk menambah kuantitas produk ketika tombol "+" ditekan
-            $('.increment').click(function() {
-                let input = $(this).siblings('.quantity-input');
-                let decrementButton = $(this).siblings('.decrement');
-
-                if (input.val() == 0) {
-                    input.val(1).show();
-                    decrementButton.show();
-                } else {
-                    let currentValue = parseInt(input.val());
-                    let max = parseInt(input.attr('max'));
-                    if (currentValue < max) {
-                        input.val(currentValue + 1);
-                    }
-                }
-                togglePesanButton();
-            });
-
-            // Fungsi untuk mengurangi kuantitas produk ketika tombol "-" ditekan
-            $('.decrement').click(function() {
-                let input = $(this).siblings('.quantity-input');
-                let currentValue = parseInt(input.val());
-
-                if (currentValue > 1) {
-                    input.val(currentValue - 1);
-                } else if (currentValue == 1) {
-                    input.val(0).hide();
-                    $(this).hide();
-                }
-                togglePesanButton();
-            });
-
-            // Fungsi untuk memperbarui informasi produk dan total harga di modal
-            function updateModal() {
+            // Update modal content
+            const updateModal = () => {
                 const selectedProductsContainer = $('.selected-products');
                 selectedProductsContainer.empty();
                 let totalPrice = 0;
 
                 $('.quantity-input').each(function() {
-                    let quantity = parseInt($(this).val());
+                    const quantity = parseInt($(this).val());
                     if (quantity > 0) {
-                        let productName = $(this).closest('.product-item').find('h2').text();
-                        let priceText = $(this).closest('.product-item').find('strong').text().replace('Rp',
-                            '').replace('.', '');
-                        let price = parseInt(priceText);
-                        let productTotal = price * quantity;
+                        // Retrieve product details dynamically
+                        const productItem = $(this).closest('.product-item');
+                        const productName = productItem.find('h3').text();
+                        const priceText = productItem.find('p strong').text().replace(/[^\d]/g,
+                            ''); // Remove non-numeric
+                        const unit = productItem.find('p strong').text().split('/').pop()
+                            .trim(); // Get the unit from text
+                        const imageUrl = productItem.find('img').attr('src'); // Get the image URL
+                        const price = parseInt(priceText);
+                        const productTotal = price * quantity;
                         totalPrice += productTotal;
 
-                        selectedProductsContainer.append(
-                            `<p>${productName} - ${quantity} pcs - Rp${productTotal.toLocaleString('id-ID')}</p>`
-                        );
+                        // Append product details including image
+                        selectedProductsContainer.append(`
+                <div class="modal-product-item">
+                    <img src="${imageUrl}" alt="${productName}" class="modal-product-image">
+                    <p>${productName} - ${quantity} ${unit} - Rp${productTotal.toLocaleString('id-ID')}</p>
+                </div>
+            `);
                     }
                 });
 
                 $('#totalPrice').text(`Rp${totalPrice.toLocaleString('id-ID')}`);
-            }
+            };
 
-            // Fungsi untuk menampilkan modal dan menghitung total
-            $('.order-button').click(function(e) {
-                e.preventDefault();
-                updateModal();
-                $('#orderModal').show();
+            // Update quantity value based on increment or decrement
+            const updateQuantity = (input, increment) => {
+                let currentValue = parseInt(input.val());
+                const max = parseInt(input.attr('max'));
+                const min = parseInt(input.attr('min')) || 0;
+
+                if (increment && currentValue < max) {
+                    currentValue += 1;
+                    input.val(currentValue);
+                } else if (!increment && currentValue > min) {
+                    currentValue -= 1;
+                    input.val(currentValue);
+                }
+
+                // Show decrement button and input field if the value is greater than 0
+                if (currentValue > 0) {
+                    input.show();
+                    input.siblings('.decrement').show();
+                } else {
+                    // Hide decrement button and input field if the value is 0
+                    input.hide();
+                    input.siblings('.decrement').hide();
+                }
+
+                togglePesanButton(); // Update the visibility of the order button
+            };
+
+
+            // Increment button click handler
+            $('.increment').click(function() {
+                const input = $(this).siblings('.quantity-input');
+                updateQuantity(input, true);
             });
 
-            // Fungsi untuk menutup modal saat tombol close diklik atau klik di luar modal
-            $('.close-button').click(function() {
-                $('#orderModal').hide();
+            // Decrement button click handler
+            $('.decrement').click(function() {
+                const input = $(this).siblings('.quantity-input');
+                updateQuantity(input, false);
             });
 
-            $(window).click(function(event) {
-                if ($(event.target).is('#orderModal')) {
-                    $('#orderModal').hide();
+            // Hide decrement button and quantity input if quantity is 0 initially
+            $('.quantity-input').each(function() {
+                if ($(this).val() == 0) {
+                    $(this).hide();
+                    $(this).siblings('.decrement').hide();
                 }
             });
 
-            // Mendengarkan event dari Livewire untuk mengisi data pelanggan yang dipilih
+            // Show or hide order button based on quantity change
+            $('.quantity-input').on('change', togglePesanButton);
+
+            // Show modal on order button click
+            $('.order-button').click(function(e) {
+                e.preventDefault();
+                updateModal();
+                $('#orderModal').fadeIn();
+            });
+
+            // Close modal when close button is clicked
+            $('.close-button').click(function() {
+                $('#orderModal').fadeOut();
+            });
+
+            // Close modal when clicking outside of it
+            $(window).click(function(event) {
+                if ($(event.target).is('#orderModal')) {
+                    $('#orderModal').fadeOut();
+                }
+            });
+
+            // Show/hide customer search or reset fields based on customer type selection
+            $('#customerType').change(function() {
+                if ($(this).val() === 'existing') {
+                    $('#existingCustomerSearch').slideDown();
+                } else {
+                    $('#existingCustomerSearch').slideUp();
+                    $('#orderForm').find("input[type=text], textarea").val("");
+                }
+            });
+
+            // Show/hide address input based on delivery option
+            $('#customerAddress').change(function() {
+                if ($(this).val() === 'diantar') {
+                    $('#pengambilan').slideDown();
+                } else {
+                    $('#pengambilan').slideUp();
+                    $('#pengambilan').find("input[type=text]").val("");
+                }
+            });
+
+            // Livewire integration for filling customer data
             document.addEventListener('livewire:load', function() {
-                Livewire.on('fillCustomerData', customer => {
+                Livewire.on('fillCustomerData', (customer) => {
                     $('#customerName').val(customer.name);
                     $('#customerPhone').val(customer.phone);
                     $('#alamat').val(customer.address);
-                    console.log(customer)
                 });
             });
         });
@@ -285,7 +302,6 @@
 
 
     @livewireScripts
-
 </body>
 
 </html>

@@ -25,6 +25,12 @@
                     <a href="{{ route('owner.log-transaksi') }}">Transaksi <i class="bi bi-receipt-cutoff"></i></a>
                     <a href="#">Laporan<i class="bi bi-journal-text"></i></a>
                     <a href="{{ route('owner.daftar-supplier') }}">Suplllier<i class="bi bi-shop"></i></a>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="btn btn-link" style="background: none; border: none; padding: 0; margin: 0; cursor: pointer;">
+                            <a>Keluar <i class="bi bi-box-arrow-right"></i></a> 
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>

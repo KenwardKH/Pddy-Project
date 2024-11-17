@@ -3,99 +3,33 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Session;
+use App\Models\Product;
+use App\Models\CustomerCart;
+use Illuminate\Support\Facades\Auth;
 
 class PesananController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Menampilkan halaman Buat Pesanan.
      */
-    public function index()
+    public function buatPesanan()
     {
-        $products = [
-            ['id' => 1, 'name' => 'Pensil Ajaib 2b', 'price' => 25000, 'available' => 60, 'image' => 'pensil2b.png'],
-            ['id' => 2, 'name' => 'Penghapus Ajaib 2b', 'price' => 25000, 'available' => 70, 'image' => 'eraser.png']
-        ];
-        return view('kasir.kasir_buat_pesanan', compact('products'));
-    }
-
-    public function addToOrder(Request $request)
-    {
-        // Retrieve quantities from the form input
-        $quantities = $request->input('quantity');
-
-        // Initialize or retrieve the current order from the session
-        $order = Session::get('order', []);
-
-        foreach ($quantities as $productName => $quantity) {
-            if ($quantity > 0) {
-                // Check if the product is already in the order
-                if (isset($order[$productName])) {
-                    // Update the quantity if it already exists
-                    $order[$productName]['quantity'] += $quantity;
-                } else {
-                    // Add new product to the order
-                    $order[$productName] = [
-                        'name' => $productName,
-                        'quantity' => $quantity
-                    ];
-                }
-            }
+        $kasir = Auth::user()->kasir; // Mendapatkan data kasir berdasarkan user yang login
+        
+        if (!$kasir) {
+            return redirect()->route('login')->with('error', 'Anda harus login sebagai kasir.');
         }
 
-        // Save the order in the session
-        Session::put('order', $order);
+        // Ambil semua produk
+        $products = Product::with('pricing')->get();
 
-        return redirect()->route('kasir.kasir_buat_pesanan')->with('success', 'Produk berhasil ditambahkan ke pesanan!');
-    }
+        // Ambil keranjang pelanggan (dummy pelanggan atau dari session, bisa disesuaikan)
+        $customerId = session('customer_id', null); // Ambil customer_id dari session
+        $cartItems = CustomerCart::where('CustomerID', $customerId)->get()->keyBy('ProductID');
 
-
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return view('kasir.kasir_buat_pesanan', [
+            'products' => $products,
+            'cartItems' => $cartItems
+        ]);
     }
 }

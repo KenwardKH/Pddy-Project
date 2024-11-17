@@ -30,12 +30,6 @@
     <div class="dashboard">
         <form action="" method="GET" class="search-container">
             <input type="text" placeholder="Cari produk..." class="search-bar" name="search">
-            <select class="category-dropdown" name="category">
-                <option value="">Semua Kategori</option>
-                <option value="kategori1">Kategori 1</option>
-                <option value="kategori2">Kategori 2</option>
-                <option value="kategori3">Kategori 3</option>
-            </select>
             <button type="submit" class="search-button"><i class="bi bi-search"></i></button>
         </form>
         <h1>Stock Barang</h1>
