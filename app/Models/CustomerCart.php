@@ -27,7 +27,7 @@ class CustomerCart extends Model
      */
     public function customer()
     {
-        return $this->belongsTo(Customer::class, 'CustomerID');
+        return $this->belongsTo(Customer::class, 'CustomerID', 'CustomerID'); // Sesuai dengan primary key tabel customers
     }
 
     /**
@@ -35,6 +35,6 @@ class CustomerCart extends Model
      */
     public function product()
     {
-        return $this->belongsTo(Product::class, 'ProductID');
+        return $this->belongsTo(Product::class, 'ProductID', 'ProductID'); // Sesuai dengan primary key tabel products
     }
 }

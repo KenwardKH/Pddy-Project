@@ -23,10 +23,7 @@ class TransactionLog extends Model
 
     // Define the fillable properties to allow mass assignment
     protected $fillable = [
-        'InvoiceID',
-        'CustomerID',
-        'TotalAmount',
-        'TransactionDate'
+        'InvoiceID', 'CustomerID', 'customerName', 'customerContact', 'TotalAmount', 'TransactionDate'
     ];
 
     // Specify any columns that should be cast to specific data types
@@ -35,14 +32,4 @@ class TransactionLog extends Model
         'TransactionDate' => 'datetime',
     ];
 
-    // Define relationships if needed
-    public function customer()
-    {
-        return $this->belongsTo(Customer::class, 'CustomerID');
-    }
-
-    public function invoice()
-    {
-        return $this->belongsTo(Invoice::class, 'InvoiceID');
-    }
 }

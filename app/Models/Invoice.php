@@ -8,13 +8,15 @@ class Invoice extends Model
 {
     protected $table = 'invoices';
     protected $primaryKey = 'InvoiceID';
-    protected $fillable = ['CustomerID', 'InvoiceDate', 'DueDate', 'type', 'payment_option'];
+    protected $fillable = [
+        'CustomerID',
+        'customerName', 
+        'customerContact', 
+        'InvoiceDate', 
+        'DueDate', 
+        'type', 
+        'payment_option',];
     public $timestamps = false;
-
-    public function customer()
-    {
-        return $this->belongsTo(Customer::class, 'CustomerID');
-    }
 
     public function invoiceDetails()
     {
@@ -35,9 +37,6 @@ class Invoice extends Model
     {
         return $this->hasOne(PickupOrderStatus::class, 'invoice_id');
     }
-    public function transactionLog()
-    {
-        return $this->hasOne(TransactionLog::class, 'InvoiceID');
-    }
+
 
 }
