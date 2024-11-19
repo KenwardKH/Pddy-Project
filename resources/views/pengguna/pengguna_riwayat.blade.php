@@ -214,7 +214,7 @@
                             modalContent.innerHTML += `
                     <div class="cart-item">
                         <div class="item-image">
-                            <img src="/images/produk/${detail.product}" alt="${detail.product}">
+                            <img src="/images/produk/${detail.productImage}" alt="${detail.productImage}">
                         </div>
                         <div class="item-details">
                             <h2>${detail.product}</h2>
@@ -222,7 +222,7 @@
                         </div>
                         <div class="quantity-control">
                             <h4>Jumlah: </h4>
-                            <p style="color: #FFA500"><b>${detail.Quantity}</b></p>
+                            <p style="color: #FFA500; width: 70px;"><b>${detail.Quantity}</b> ${detail.productUnit}</p>
                         </div>
                         <div class="subtotal">
                             Subtotal:

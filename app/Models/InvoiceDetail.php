@@ -8,7 +8,7 @@ class InvoiceDetail extends Model
 {
     protected $table = 'invoicedetails';
     protected $primaryKey = 'DetailID';
-    protected $fillable = ['invoice_id', 'productName', 'Quantity', 'price'];
+    protected $fillable = ['invoice_id', 'productName','productImage', 'Quantity','productUnit', 'price'];
 
     public function invoice()
     {

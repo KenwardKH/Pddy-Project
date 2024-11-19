@@ -100,6 +100,8 @@ public function riwayat()
                 'product' => $detail->productName, // Mengambil langsung nama produk dari InvoiceDetail
                 'price' => $detail->price,        // Mengambil harga dari InvoiceDetail
                 'Quantity' => $detail->Quantity, // Mengambil jumlah dari InvoiceDetail
+                'productImage' => $detail->productImage, // Mengambil gambar dari InvoiceDetail
+                'productUnit' => $detail->productUnit, // Mengambil satuan dari InvoiceDetail
                 'total' => $detail->Quantity * $detail->price, // Menghitung total
             ];
         });
