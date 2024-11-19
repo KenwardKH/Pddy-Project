@@ -35,7 +35,7 @@ class PenggunaController extends Controller
     }
 
     // Ambil semua invoice yang terkait dengan CustomerID
-    $invoices = Invoice::with(['invoiceDetails', 'transactionLog', 'deliveryStatus', 'pickupStatus'])
+    $invoices = Invoice::with(['invoiceDetails', 'deliveryStatus', 'pickupStatus'])
         ->where('CustomerID', $customerId) // Filter berdasarkan CustomerID
         ->where(function ($query) {
             // Kondisi status "belum selesai" baik untuk deliveryStatus atau pickupStatus
@@ -67,7 +67,7 @@ public function riwayat()
     }
 
     // Ambil semua invoice yang sudah selesai
-    $invoices = Invoice::with(['invoiceDetails', 'transactionLog', 'deliveryStatus', 'pickupStatus'])
+    $invoices = Invoice::with(['invoiceDetails', 'deliveryStatus', 'pickupStatus'])
         ->where('CustomerID', $customerId) // Filter berdasarkan CustomerID
         ->where(function ($query) {
             // Kondisi status "Selesai" baik untuk deliveryStatus atau pickupStatus
@@ -86,27 +86,31 @@ public function riwayat()
 
     public function getInvoiceDetails($id)
     {
-        $invoice = Invoice::with(['invoiceDetails.product.pricing', 'transactionLog'])
+        $invoice = Invoice::with(['invoiceDetails'])
             ->findOrFail($id);
-    
-        // Get total amount from the transaction log
-        $totalAmount = optional($invoice->transactionLog)->TotalAmount;
+        
+        // Hitung totalAmount
+        $totalAmount = $invoice->invoiceDetails->reduce(function ($carry, $detail) {
+            return $carry + ($detail->Quantity * $detail->price);
+        }, 0);
     
         // Map the invoice details
-        $details = $invoice->invoiceDetails->map(function ($detail) use ($totalAmount) {
+        $details = $invoice->invoiceDetails->map(function ($detail) {
             return [
-                'product' => $detail->product,
-                'price' => $detail->product->pricing->UnitPrice,
-                'Quantity' => $detail->Quantity,
-                'total' => $detail->Quantity * $detail->product->pricing->UnitPrice,
-                'totalAmount' => $totalAmount
+                'product' => $detail->productName, // Mengambil langsung nama produk dari InvoiceDetail
+                'price' => $detail->price,        // Mengambil harga dari InvoiceDetail
+                'Quantity' => $detail->Quantity, // Mengambil jumlah dari InvoiceDetail
+                'total' => $detail->Quantity * $detail->price, // Menghitung total
             ];
         });
     
         // Log data for debugging
-        \Log::info($details);
-    
-        return response()->json(['details' => $details]);
+        \Log::info(['details' => $details, 'totalAmount' => $totalAmount]);
+
+        return response()->json([
+            'details' => $details,
+            'totalAmount' => $totalAmount, // Menyertakan totalAmount ke dalam respons
+        ]);
     }
     
 

@@ -98,8 +98,9 @@
                     <a href="{{ route('pengguna.riwayat') }}">Riwayat Pesanan <i class="bi bi-clock-history"></i></a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <button type="submit" class="btn btn-link" style="background: none; border: none; padding: 0; margin: 0; cursor: pointer;">
-                            <a>Keluar <i class="bi bi-box-arrow-right"></i></a> 
+                        <button type="submit" class="btn btn-link"
+                            style="background: none; border: none; padding: 0; margin: 0; cursor: pointer;">
+                            <a>Keluar <i class="bi bi-box-arrow-right"></i></a>
                         </button>
                     </form>
                 </div>
@@ -213,10 +214,10 @@
                             modalContent.innerHTML += `
                     <div class="cart-item">
                         <div class="item-image">
-                            <img src="/images/produk/${detail.product.image}" alt="${detail.product.ProductName}">
+                            <img src="/images/produk/${detail.product}" alt="${detail.product}">
                         </div>
                         <div class="item-details">
-                            <h2>${detail.product.ProductName}</h2>
+                            <h2>${detail.product}</h2>
                             <p>Harga: ${formatRupiah(detail.price)}</p>
                         </div>
                         <div class="quantity-control">
@@ -232,7 +233,7 @@
 
                         // Set the total amount in the footer
                         document.getElementById('total-amount').innerHTML =
-                            `Total Pesanan: ${formatRupiah(data.details[0].totalAmount)}.00`;
+                            `Total Pesanan: ${formatRupiah(data.totalAmount)}.00`;
                         document.getElementById('order-modal').classList.add('show');
                         document.querySelector('.overlay').classList.add('show');
                     })
