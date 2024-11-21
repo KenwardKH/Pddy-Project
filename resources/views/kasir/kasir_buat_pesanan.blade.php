@@ -8,12 +8,6 @@
     <link rel="stylesheet" href="{{ asset('css/kasir_buat_pesanan.css') }}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <style>
-        .modal-product-item img {
-            width: 100px
-        }
-    </style>
-    @livewireStyles
 </head>
 
 <body>
@@ -23,14 +17,15 @@
             <img src="{{ asset('images/logo.png') }}" alt="logo">
             <div class="nav">
                 <div class="left">
-                    <a href="home">Home</a>
+                    <a href="{{ route('kasir.home') }}">Home</a>
                     <a href="#">Profil</a>
                 </div>
                 <div class="right">
-                    <a href="buat-pesanan">Buat Pesanan <i class="bi bi-cart"></i></a>
-                    <a href="stock-barang">Stock Barang <i class="bi bi-box-seam"></i></a>
-                    <a href="konfirmasi">Konfirmasi Pesanan <i class="bi bi-clipboard-check"></i></a>
-                    <a href="status">Status Pesanan <i class="bi bi-journal-text"></i></a>
+                    <a href="{{ route('buat-pesanan') }}">Buat Pesanan <i class="bi bi-bag-plus"></i></a>
+                    <a href="{{ route('kasir.cart') }}">Keranjang <i class="bi bi-cart"></i></a>
+                    <a href="{{ route('kasir.stock') }}">Stock Barang <i class="bi bi-box-seam"></i></a>
+                    <a href="{{ route('status') }}">Status Pesanan <i class="bi bi-journal-text"></i></a>
+                    <a href="#">Riwayat Pesanan <i class="bi bi-journal-text"></i></a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit" class="btn btn-link"
@@ -55,7 +50,7 @@
         </form>
 
 
-        <form action="{{ route('tambah-pesanan') }}" method="POST" class="product-list">
+        <form action="{{ route('kasir.updateCart') }}" method="POST" class="product-list">
             @csrf
             @foreach ($products as $product)
                 <div class="product-item">
@@ -92,216 +87,57 @@
             @endforeach
             <button type="submit" class="order-button" style="display: none;">Pesan</button>
         </form>
-
-        <!-- Modal structure -->
-        <div id="orderModal" class="modal">
-            <div class="modal-content">
-                <span class="close-button">&times;</span>
-                <h2>Produk yang Dipilih</h2>
-                <div class="selected-products"></div>
-                <h3>Total Harga: <span id="totalPrice">Rp0</span></h3>
-
-                <h2>Informasi Pemesan</h2>
-                <label for="customerType">Pilih Tipe Pelanggan:</label>
-                <select id="customerType" style="margin-bottom:15px">
-                    <option value="new">Pelanggan Baru</option>
-                    <option value="existing">Pelanggan Terdaftar</option>
-                </select>
-
-                <!-- Search field for existing customers -->
-                <div id="existingCustomerSearch" style="display: none">
-                    @livewire('SearchCustomer')
-                </div>
-
-
-                <!-- Form for customer information -->
-                <form id="orderForm" class="check-out">
-                    <div class="form-group">
-                        <label for="customerName">Nama:</label>
-                        <input type="text" id="customerName" name="customerName" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="customerPhone">Nomor HP:</label>
-                        <input type="tel" id="customerPhone" name="customerPhone" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="customerAddress">Opsi Pengiriman:</label>
-                        <select id="customerAddress">
-                            <option value="ambil_sendiri">Ambil Sendiri</option>
-                            <option value="diantar">Diantar</option>
-                        </select>
-                    </div>
-                    <div id="pengambilan" class="form-group" style="display: none;">
-                        <label for="alamat">Alamat Pengiriman:</label>
-                        <input type="text" id="alamat" name="alamat" required>
-                    </div>
-                    <label for="pembayaran">Pilih Opsi Pembayaran:</label>
-                    <select id="pembayaran" style="margin-bottom:15px">
-                        <option value="cash">Cash</option>
-                        <option value="transfer">Transfer</option>
-                        <option value="kredit">Kredit</option>
-                    </select>
-                    <button type="button" class="checkout-button">Checkout</button>
-                </form>
-            </div>
-        </div>
-
-
     </div>
 
     <script>
-        document.addEventListener('livewire:load', function() {
-            Livewire.on('fillCustomerData', (customer) => {
-                $('#customerName').val(customer.name);
-                $('#customerPhone').val(customer.phone);
-            });
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            // Toggle the visibility of the order button
+        $(document).ready(function() {
+            // Function to toggle "Masukkan ke Keranjang" button based on input values
             const togglePesanButton = () => {
-                const anyQuantitySelected = Array.from($('.quantity-input')).some(input => parseInt($(input)
-                    .val()) > 0);
+                const anyQuantitySelected = $('.quantity-input').toArray().some(input => parseInt($(input)
+                .val()) > 0);
                 $('.order-button').toggle(anyQuantitySelected);
             };
 
-            // Update modal content
-            const updateModal = () => {
-                const selectedProductsContainer = $('.selected-products');
-                selectedProductsContainer.empty();
-                let totalPrice = 0;
+            // Initial check to display button if any input already has a value
+            togglePesanButton();
 
-                $('.quantity-input').each(function() {
-                    const quantity = parseInt($(this).val());
-                    if (quantity > 0) {
-                        // Retrieve product details dynamically
-                        const productItem = $(this).closest('.product-item');
-                        const productName = productItem.find('h3').text();
-                        const priceText = productItem.find('p strong').text().replace(/[^\d]/g,
-                            ''); // Remove non-numeric
-                        const unit = productItem.find('p strong').text().split('/').pop()
-                            .trim(); // Get the unit from text
-                        const imageUrl = productItem.find('img').attr('src'); // Get the image URL
-                        const price = parseInt(priceText);
-                        const productTotal = price * quantity;
-                        totalPrice += productTotal;
-
-                        // Append product details including image
-                        selectedProductsContainer.append(`
-                <div class="modal-product-item">
-                    <img src="${imageUrl}" alt="${productName}" class="modal-product-image">
-                    <p>${productName} - ${quantity} ${unit} - Rp${productTotal.toLocaleString('id-ID')}</p>
-                </div>
-            `);
-                    }
-                });
-
-                $('#totalPrice').text(`Rp${totalPrice.toLocaleString('id-ID')}`);
-            };
-
-            // Update quantity value based on increment or decrement
-            const updateQuantity = (input, increment) => {
-                let currentValue = parseInt(input.val());
-                const max = parseInt(input.attr('max'));
-                const min = parseInt(input.attr('min')) || 0;
-
-                if (increment && currentValue < max) {
-                    currentValue += 1;
-                    input.val(currentValue);
-                } else if (!increment && currentValue > min) {
-                    currentValue -= 1;
-                    input.val(currentValue);
-                }
-
-                // Show decrement button and input field if the value is greater than 0
-                if (currentValue > 0) {
-                    input.show();
-                    input.siblings('.decrement').show();
-                } else {
-                    // Hide decrement button and input field if the value is 0
-                    input.hide();
-                    input.siblings('.decrement').hide();
-                }
-
-                togglePesanButton(); // Update the visibility of the order button
-            };
-
-
-            // Increment button click handler
             $('.increment').click(function() {
                 const input = $(this).siblings('.quantity-input');
-                updateQuantity(input, true);
+                const decrementButton = $(this).siblings('.decrement');
+
+                if (input.val() == 0) {
+                    input.val(1).show();
+                    decrementButton.show();
+                } else if (parseInt(input.val()) < parseInt(input.attr('max'))) {
+                    input.val(parseInt(input.val()) + 1);
+                }
+                togglePesanButton();
             });
 
-            // Decrement button click handler
             $('.decrement').click(function() {
                 const input = $(this).siblings('.quantity-input');
-                updateQuantity(input, false);
+                const decrementButton = $(this);
+
+                if (parseInt(input.val()) > 1) {
+                    input.val(parseInt(input.val()) - 1);
+                } else {
+                    input.val(0);
+                    input.hide(); // Hide input when value is 0
+                    decrementButton.hide(); // Hide decrement button when value is 0
+                }
+                togglePesanButton();
             });
 
-            // Hide decrement button and quantity input if quantity is 0 initially
+            // Hide inputs and decrement buttons that start at 0 on page load
             $('.quantity-input').each(function() {
                 if ($(this).val() == 0) {
                     $(this).hide();
                     $(this).siblings('.decrement').hide();
                 }
             });
-
-            // Show or hide order button based on quantity change
-            $('.quantity-input').on('change', togglePesanButton);
-
-            // Show modal on order button click
-            $('.order-button').click(function(e) {
-                e.preventDefault();
-                updateModal();
-                $('#orderModal').fadeIn();
-            });
-
-            // Close modal when close button is clicked
-            $('.close-button').click(function() {
-                $('#orderModal').fadeOut();
-            });
-
-            // Close modal when clicking outside of it
-            $(window).click(function(event) {
-                if ($(event.target).is('#orderModal')) {
-                    $('#orderModal').fadeOut();
-                }
-            });
-
-            // Show/hide customer search or reset fields based on customer type selection
-            $('#customerType').change(function() {
-                if ($(this).val() === 'existing') {
-                    $('#existingCustomerSearch').slideDown();
-                } else {
-                    $('#existingCustomerSearch').slideUp();
-                    $('#orderForm').find("input[type=text], textarea").val("");
-                }
-            });
-
-            // Show/hide address input based on delivery option
-            $('#customerAddress').change(function() {
-                if ($(this).val() === 'diantar') {
-                    $('#pengambilan').slideDown();
-                } else {
-                    $('#pengambilan').slideUp();
-                    $('#pengambilan').find("input[type=text]").val("");
-                }
-            });
-
-            // Livewire integration for filling customer data
-            document.addEventListener('livewire:load', function() {
-                Livewire.on('fillCustomerData', (customer) => {
-                    $('#customerName').val(customer.name);
-                    $('#customerPhone').val(customer.phone);
-                    $('#alamat').val(customer.address);
-                });
-            });
         });
     </script>
 
-
-    @livewireScripts
 </body>
 
 </html>

@@ -1,49 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Kasir Home</title>
-        <link rel="stylesheet" href="{{asset('css/kasir_konfirmasi.css')}}">
-        <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    </head>
-    <body>
-        <div class="container">
-            <div class="header">
-                <img src="{{asset('images/logo.png')}}" alt="logo">
-                <div class="nav">
-                    <div class="left">
-                        <a href="home">Home</a>
-                        <a href="#">Profil</a>   
-                    </div>
-                    <div class="right">
-                        <a href="buat-pesanan">Buat Pesanan <i class="bi bi-cart"></i></a>
-                        <a href="stock-barang">Stock Barang <i class="bi bi-box-seam"></i></a>
-                        <a href="konfirmasi">Konfirmasi Pesanan <i class="bi bi-clipboard-check"></i></a>
-                        <a href="status">Status Pesanan <i class="bi bi-journal-text"></i></a>
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit" class="btn btn-link" style="background: none; border: none; padding: 0; margin: 0; cursor: pointer;">
-                                <a>Keluar <i class="bi bi-box-arrow-right"></i></a> 
-                            </button>
-                        </form>
-                    </div>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kasir Home</title>
+    <link rel="stylesheet" href="{{ asset('css/kasir_konfirmasi.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="{{ asset('images/logo.png') }}" alt="logo">
+            <div class="nav">
+                <div class="left">
+                    <a href="{{ route('kasir.home') }}">Home</a>
+                    <a href="#">Profil</a>
+                </div>
+                <div class="right">
+                    <a href="{{ route('buat-pesanan') }}">Buat Pesanan <i class="bi bi-bag-plus"></i></a>
+                    <a href="{{ route('kasir.cart') }}">Keranjang <i class="bi bi-cart"></i></a>
+                    <a href="{{ route('kasir.stock') }}">Stock Barang <i class="bi bi-box-seam"></i></a>
+                    <a href="{{ route('status') }}">Status Pesanan <i class="bi bi-journal-text"></i></a>
+                    <a href="#">Riwayat Pesanan <i class="bi bi-journal-text"></i></a>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="btn btn-link"
+                            style="background: none; border: none; padding: 0; margin: 0; cursor: pointer;">
+                            <a>Keluar <i class="bi bi-box-arrow-right"></i></a>
+                        </button>
+                    </form>
                 </div>
             </div>
-            <div class="dashboard">
-                <form action="" method="GET" class="search-container">
-                    <input type="text" placeholder="Cari produk..." class="search-bar" name="search">
-                    <select class="category-dropdown" name="category">
-                        <option value="">Semua Kategori</option>
-                        <option value="kategori1">Kategori 1</option>
-                        <option value="kategori2">Kategori 2</option>
-                        <option value="kategori3">Kategori 3</option>
-                    </select>
-                    <button type="submit" class="search-button"><i class="bi bi-search"></i></button>
-                </form>
-                <h1>Daftar Pesanan Online</h1>
-                <div class="table">
+        </div>
+        <div class="dashboard">
+            <form action="" method="GET" class="search-container">
+                <input type="text" placeholder="Cari produk..." class="search-bar" name="search">
+                <select class="category-dropdown" name="category">
+                    <option value="">Semua Kategori</option>
+                    <option value="kategori1">Kategori 1</option>
+                    <option value="kategori2">Kategori 2</option>
+                    <option value="kategori3">Kategori 3</option>
+                </select>
+                <button type="submit" class="search-button"><i class="bi bi-search"></i></button>
+            </form>
+            <h1>Daftar Pesanan Online</h1>
+            <div class="table">
                 <table>
                     <thead>
                         <tr>
@@ -86,8 +90,9 @@
                         </tr>
                     </tbody>
                 </table>
-                </div>
             </div>
         </div>
-    </body>
+    </div>
+</body>
+
 </html>

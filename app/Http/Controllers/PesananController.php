@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
-use App\Models\CustomerCart;
+use App\Models\CashierCart;
+use App\Models\Kasir;
 use Illuminate\Support\Facades\Auth;
 
 class PesananController extends Controller
@@ -14,22 +15,24 @@ class PesananController extends Controller
      */
     public function buatPesanan()
     {
-        $kasir = Auth::user()->kasir; // Mendapatkan data kasir berdasarkan user yang login
+        $userId = Auth::id();
+
+        // Find the Customer associated with this UserID
+        $kasir = Kasir::where('User_ID', $userId)->first();
         
         if (!$kasir) {
             return redirect()->route('login')->with('error', 'Anda harus login sebagai kasir.');
         }
 
-        // Ambil semua produk
         $products = Product::with('pricing')->get();
 
-        // Ambil keranjang pelanggan (dummy pelanggan atau dari session, bisa disesuaikan)
-        $customerId = session('customer_id', null); // Ambil customer_id dari session
-        $cartItems = CustomerCart::where('CustomerID', $customerId)->get()->keyBy('ProductID');
+        // Retrieve the cart items for the current customer
+        $cartItems = CashierCart::where('CashierID', $kasir->id_kasir)
+                    ->with('product.pricing') // Include product and pricing details for each cart item
+                    ->get()
+                    ->keyBy('ProductID'); // Index by ProductID for easier access
 
-        return view('kasir.kasir_buat_pesanan', [
-            'products' => $products,
-            'cartItems' => $cartItems
-        ]);
+        // Pass both products and cartItems to the view
+        return view('kasir.kasir_buat_pesanan', compact('products', 'cartItems'));
     }
 }

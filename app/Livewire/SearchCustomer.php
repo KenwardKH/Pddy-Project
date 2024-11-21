@@ -10,6 +10,7 @@ class SearchCustomer extends Component
     public $email;
     public $name;
     public $phone;
+    public $customerId;
 
     public function cariAkun()
     {
@@ -18,9 +19,11 @@ class SearchCustomer extends Component
         if ($user && $user->customer) {
             $this->name = $user->customer->CustomerName;
             $this->phone = $user->customer->CustomerContact;
+            $this->customerId = $user->customer->CustomerID;
         } else {
             $this->name = null;
             $this->phone = null;
+            $this->customerId = null;
         }
     }
 

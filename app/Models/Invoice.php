@@ -15,7 +15,10 @@ class Invoice extends Model
         'InvoiceDate', 
         'DueDate', 
         'type', 
-        'payment_option',];
+        'payment_option',
+        'CashierID',
+        'CashierName'
+    ];
     public $timestamps = false;
 
     public function invoiceDetails()

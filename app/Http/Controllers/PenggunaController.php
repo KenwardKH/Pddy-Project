@@ -47,6 +47,15 @@ class PenggunaController extends Controller
         })
         ->orderBy('InvoiceID', 'asc')
         ->get();
+    
+    // Add totalAmount calculation for each invoice
+    $invoices = $invoices->map(function ($invoice) {
+        $invoice->totalAmount = $invoice->invoiceDetails->reduce(function ($carry, $detail) {
+            return $carry + ($detail->Quantity * $detail->price);
+        }, 0);
+        return $invoice;
+    });
+
 
     return view('pengguna.pengguna_status', compact('invoices'));
 }
@@ -79,6 +88,14 @@ public function riwayat()
         })
         ->orderBy('InvoiceID', 'asc')
         ->get();
+    
+    // Add totalAmount calculation for each invoice
+    $invoices = $invoices->map(function ($invoice) {
+        $invoice->totalAmount = $invoice->invoiceDetails->reduce(function ($carry, $detail) {
+            return $carry + ($detail->Quantity * $detail->price);
+        }, 0);
+        return $invoice;
+    });
 
     return view('pengguna.pengguna_riwayat', compact('invoices'));
 }

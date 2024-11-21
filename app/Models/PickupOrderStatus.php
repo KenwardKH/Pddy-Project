@@ -15,7 +15,8 @@ class PickupOrderStatus extends Model
         'invoice_id', 
         'status',
         'updated_at',
-        'created_at'
+        'created_at',
+        'updated_by'
     ];
 
     public function invoice()

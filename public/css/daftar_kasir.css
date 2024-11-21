@@ -129,8 +129,9 @@ td {
 
 /* Posisi dan Tampilan Tombol */
 .button-container {
-    text-align: center;
+    text-align: right;
     margin: 20px 0; /* Jarak tombol ke elemen lain */
+    margin-right: 20px;
 }
 
 .add-button {
@@ -256,4 +257,16 @@ input {
     text-align: center;
 }
 
+.error-messages {
+    color: red;
+    background-color: #ffe5e5;
+    border: 1px solid #ff5c5c;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+}
+.error-messages ul {
+    margin: 0;
+    padding-left: 20px;
+}
 

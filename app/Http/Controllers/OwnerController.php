@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Hash;
 use App\Models\Product;
 use App\Models\Kasir;
 use App\Models\Customer;
@@ -93,20 +94,22 @@ class OwnerController extends Controller
             'kontak_kasir' => 'required|string|max:20',
             'alamat_kasir' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',  // Validasi email untuk user baru
+            'password' => 'required|string|confirmed|min:8',
         ]);
         
         // Membuat user baru
         $user = User::create([
             'email' => $validated['email'],
-            'password' => bcrypt('password123'),  // Password default, bisa diganti
+            'password' => Hash::make($request->password), 
+            'role' => 'kasir',
         ]);
         
         // Simpan data kasir ke database
         Kasir::create([
             'user_id' => $user->id,  // Mengaitkan kasir dengan user
             'nama_kasir' => $validated['nama_kasir'],
-            'kontak_kasir' => $validated['kontak_kasir'],
             'alamat_kasir' => $validated['alamat_kasir'],
+            'kontak_kasir' => $validated['kontak_kasir'],
         ]);
     
         // Redirect dengan pesan sukses

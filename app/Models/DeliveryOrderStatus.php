@@ -16,7 +16,8 @@ class DeliveryOrderStatus extends Model
         'status',
         'alamat',
         'updated_at',
-        'created_at'
+        'created_at',
+        'updated_by'
     ];
 
     public function invoice()

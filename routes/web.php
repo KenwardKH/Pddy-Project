@@ -10,6 +10,7 @@ use App\Http\Controllers\PeralatanSekolahController;
 use App\Http\Controllers\BukuDanKertasController;
 use App\Http\Controllers\PulpenDanPensilController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CartKasirController;
 use App\Http\Controllers\OwnerController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
@@ -59,11 +60,16 @@ Route::get('/api/invoice/{id}', [PenggunaController::class, 'getInvoiceDetails']
 //Kasir
 Route::get('/kasir/home', [KasirController::class, 'home'])->name('kasir.home');
 Route::get('/kasir/buat-pesanan', [PesananController::class, 'buatPesanan'])->name('buat-pesanan');
-Route::post('/kasir/tambah-pesanan', [PesananController::class, 'addToOrder'])->name('tambah-pesanan');
 Route::get('/kasir/stock-barang', [KasirController::class, 'stock'])->name('kasir.stock');
 Route::get('/kasir/konfirmasi', [KasirController::class, 'konfirmasi'])->name('kasir.konfirmasi');
 Route::get('/kasir/status/{type?}', [KasirController::class, 'index'])->name('status');
 Route::get('/kasir/status/update/{id}/{type}', [KasirController::class, 'updateStatus'])->name('status.update');
+
+//Kasir keranjang
+Route::get('/kasir/keranjang', [CartKasirController::class, 'index'])->name('kasir.cart');
+Route::post('/kasir/keranjang-update', [CartKasirController::class, 'updateCart'])->name('kasir.updateCart');
+Route::get('/keranjang/remove/{productName}', [CartKasirController::class, 'removeItem'])->name('kasir.cart.remove');
+Route::post('/kasir/checkout', [CartKasirController::class, 'checkout'])->name('kasir.checkout');
 
 //owner
 Route::get('/owner/home', [OwnerController::class, 'index'])->name('owner.home');

@@ -6,10 +6,11 @@
     </div>
     <div class="form-group">
         <label for="name">Nama:</label>
-        <input type="text" id="name" class="form-control" wire:model="name" readonly>
+        <input name="customerName" type="text" id="name" class="form-control" wire:model="name" readonly>
+        <input name="customerId" type="text" id="customerId" class="form-control" wire:model="customerId" readonly hidden>
     </div>
     <div class="form-group">
         <label for="phone">Nomor HP:</label>
-        <input type="text" id="phone" class="form-control" wire:model="phone" readonly>
+        <input name="customerPhone" type="text" id="phone" class="form-control" wire:model="phone" readonly>
     </div>
 </div>

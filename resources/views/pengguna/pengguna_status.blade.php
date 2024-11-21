@@ -139,7 +139,7 @@
                             </td>
                             <td>{{ $invoice->deliveryStatus->alamat ?? 'N/A' }}</td>
                             <td>{{ $invoice->invoiceDetails->sum('Quantity') }}</td>
-                            <td>{{ $invoice->transactionLog->TotalAmount ?? 'N/A' }}</td>
+                            <td>{{ $invoice->totalAmount ?? 'N/A' }}</td>
                             <td>{{ $invoice->payment_option ?? 'N/A' }}</td>
                             <td>{{ $invoice->DueDate ?? 'N/A' }}</td>
                             <td>{{ $invoice->deliveryStatus->status ?? ($invoice->pickupStatus->status ?? 'N/A') }}
