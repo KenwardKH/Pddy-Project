@@ -26,7 +26,7 @@ class Kasir extends Model
     // Jika kasir berelasi dengan model lain, misalnya 'User', Anda bisa menambah relasi seperti ini:
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
     
     

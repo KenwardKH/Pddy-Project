@@ -38,13 +38,13 @@ Route::get('auth/google/call-back', [GoogleAuthController::class, 'callbackGoogl
 
 //pengguna
 Route::get('/pengguna/home', [PenggunaController::class, 'home'])->name('pengguna.home');
-Route::get('/pengguna/profile', [InformasiPenggunaController::class, 'show'])->name('profile.show');
 Route::get('/pengguna/status', [PenggunaController::class, 'status'])->name('pengguna.status');
 Route::get('/pengguna/riwayat', [PenggunaController::class, 'riwayat'])->name('pengguna.riwayat');
 Route::get('/pengguna/buat_pesanan', [PeralatanKantorController::class, 'index'])->name('pengguna.buat_pesanan');
 Route::get('/addToOrder', [PeralatanKantorController::class, 'addToOrder'])->name('pengguna.addToOrder');
 
 //profile pengguna
+Route::get('/pengguna/profile', [InformasiPenggunaController::class, 'show'])->name('profile.show');
 Route::patch('/pengguna/profile', [InformasiPenggunaController::class, 'update'])->name('profile.update');
 Route::put('/pengguna/profile/password', [InformasiPenggunaController::class, 'updatePassword'])->name('profile.password.update');
 Route::delete('pengguna/profile', [InformasiPenggunaController::class, 'destroy'])->name('profile.destroy');
@@ -61,14 +61,21 @@ Route::get('/api/invoice/{id}', [PenggunaController::class, 'getInvoiceDetails']
 Route::get('/kasir/home', [KasirController::class, 'home'])->name('kasir.home');
 Route::get('/kasir/buat-pesanan', [PesananController::class, 'buatPesanan'])->name('buat-pesanan');
 Route::get('/kasir/stock-barang', [KasirController::class, 'stock'])->name('kasir.stock');
-Route::get('/kasir/konfirmasi', [KasirController::class, 'konfirmasi'])->name('kasir.konfirmasi');
-Route::get('/kasir/status/{type?}', [KasirController::class, 'index'])->name('status');
-Route::get('/kasir/status/update/{id}/{type}', [KasirController::class, 'updateStatus'])->name('status.update');
+Route::get('/kasir/status/{type?}', [KasirController::class, 'status'])->name('status');
+Route::delete('/hapus/pesanan/{id}', [KasirController::class, 'destroy'])->name('pesanan.destroy');
+Route::post('/status/next/{id}', [KasirController::class, 'nextStatus'])->name('status.next');
+Route::get('/kasir/riwayat', [KasirController::class, 'riwayat'])->name('kasir.riwayat');
+
+//profile kasir
+Route::get('/kasir/profile', [InformasiPenggunaController::class, 'showKasir'])->name('kasir.profile.show');
+Route::patch('/kasir/profile', [InformasiPenggunaController::class, 'updateKasir'])->name('kasir.profile.update');
+Route::put('/kasir/profile/password', [InformasiPenggunaController::class, 'updatePassword'])->name('kasir.profile.password.update');
+Route::delete('kasir/profile', [InformasiPenggunaController::class, 'destroy'])->name('kasir.profile.destroy');
 
 //Kasir keranjang
 Route::get('/kasir/keranjang', [CartKasirController::class, 'index'])->name('kasir.cart');
 Route::post('/kasir/keranjang-update', [CartKasirController::class, 'updateCart'])->name('kasir.updateCart');
-Route::get('/keranjang/remove/{productName}', [CartKasirController::class, 'removeItem'])->name('kasir.cart.remove');
+Route::get('/keranjang/hapus/{productName}', [CartKasirController::class, 'removeItem'])->name('kasir.cart.remove');
 Route::post('/kasir/checkout', [CartKasirController::class, 'checkout'])->name('kasir.checkout');
 
 //owner

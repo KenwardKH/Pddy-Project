@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Keranjang Belanja</title>
-    <link rel="stylesheet" href="{{ asset('css/keranjang.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/kasir_keranjang.css') }}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css"
         rel="stylesheet">
@@ -20,14 +20,14 @@
         <div class="nav">
             <div class="left">
                 <a href="{{ route('kasir.home') }}">Home</a>
-                <a href="#">Profil</a>
+                <a href="{{ route('kasir.profile.show') }}">Profil</a>
             </div>
             <div class="right">
                 <a href="{{ route('buat-pesanan') }}">Buat Pesanan <i class="bi bi-bag-plus"></i></a>
                 <a href="{{ route('kasir.cart') }}">Keranjang <i class="bi bi-cart"></i></a>
                 <a href="{{ route('kasir.stock') }}">Stock Barang <i class="bi bi-box-seam"></i></a>
                 <a href="{{ route('status') }}">Status Pesanan <i class="bi bi-journal-text"></i></a>
-                <a href="#">Riwayat Pesanan <i class="bi bi-journal-text"></i></a>
+                <a href="{{ route('kasir.riwayat') }}">Riwayat Pesanan <i class="bi bi-journal-text"></i></a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" class="btn btn-link"

@@ -2,70 +2,102 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
+use App\Models\Invoice;
+use App\Models\InvoiceDetail;
+use App\Models\TransactionLog;
+use App\Models\DeliveryOrderStatus;
+use App\Models\PickupOrderStatus;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class KasirController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index($type = 'diantar')
-    {
-        $ordersDiantar = [
-            ['no' => 1, 'nama' => 'Adam Irawan','nomor_hp' => '081234567890', 'total' => '2750000', 'alamat' => 'Jln Universitas No.4, Medan','pembayaran' => 'Cash','tempo' => '-', 'status' => 'Diproses', 'tanggal' => '20/09/2024'],
-            ['no' => 2, 'nama' => 'Budi Setiawan', 'nomor_hp' => '08123546690', 'total' => '1550000', 'alamat' => 'Jln Majapahit No.6, Medan', 'pembayaran' => 'Transfer','tempo' => '-', 'status' => 'Diantar', 'tanggal' => '30/10/2024']
-        ];
+    public function status($type = 'delivery')
+{
+    $invoices = Invoice::with(['invoiceDetails', 'deliveryStatus', 'pickupStatus'])
+        ->where(function ($query) {
+            // Kondisi status "belum selesai" baik untuk deliveryStatus atau pickupStatus
+            $query->whereHas('deliveryStatus', function ($q) {
+                $q->where('status', '!=', 'Selesai');
+            })->orWhereHas('pickupStatus', function ($q) {
+                $q->where('status', '!=', 'Selesai');
+            });
+        });
 
-        $ordersAmbil = [
-            ['no' => 1, 'nama' => 'Susan Mahardika', 'nomor_hp' => '083584964093', 'total' => '2300000', 'alamat' => 'Jln Merdeka No.10, Medan','pembayaran' => 'Transfer','tempo' => '-', 'status' => 'Menunggu Pengambilan', 'tanggal' => '24/10/2024'],
-            ['no' => 2, 'nama' => 'Rudi Santoso', 'nomor_hp' => '083584964093', 'total' => '2300000', 'alamat' => 'Jln Perintis No.15, Medan','pembayaran' => 'Kredit','tempo' => '21/12/2024', 'status' => 'Selesai', 'tanggal' => '10/11/2024']
-        ];
-
-        $orders = $type === 'ambil' ? $ordersAmbil : $ordersDiantar;
-
-        return view('kasir.kasir_status', compact('type', 'orders'));
+    // Filter berdasarkan 'type' jika parameter diberikan
+    if ($type === 'delivery') {
+        $invoices = $invoices->whereHas('deliveryStatus');
+    } elseif ($type === 'pickup') {
+        $invoices = $invoices->whereHas('pickupStatus');
     }
 
-    public function updateStatus($id, $type)
+    $invoices = $invoices->orderBy('InvoiceID', 'asc')->get();
+
+    // Hitung `totalAmount` untuk setiap invoice
+    $invoices->map(function ($invoice) {
+        $invoice->totalAmount = $invoice->invoiceDetails->reduce(function ($carry, $detail) {
+            $quantity = (int) $detail->Quantity; 
+            $price = (float) $detail->price;
+            return $carry + ($quantity * $price);
+        }, 0);
+        return $invoice;
+    });
+
+    return view('kasir.kasir_status', ['type' => $type, 'invoices' => $invoices]);
+}
+
+
+    public function nextStatus($id, Request $request)
     {
-        // Temukan pesanan berdasarkan ID
-        $order = Order::find($id); // Ganti Order dengan model yang sesuai
+        $type = $request->type; // 'delivery' atau 'pickup'
+        $status = null;
 
-        if ($order) {
-            // Tentukan status berikutnya berdasarkan tipe dan status saat ini
-            if ($type === 'diantar') {
-                // Urutan status untuk pesanan "Diantar"
-                switch ($order->status) {
-                    case 'Diproses':
-                        $order->status = 'Diantar';
-                        break;
-                    case 'Diantar':
-                        $order->status = 'Selesai';
-                        break;
-                    default:
-                        return redirect()->back()->with('error', 'Status tidak valid untuk pesanan diantar');
-                }
-            } elseif ($type === 'ambil') {
-                // Urutan status untuk pesanan "Ambil Sendiri"
-                switch ($order->status) {
-                    case 'Diproses':
-                        $order->status = 'Menunggu Pengambilan';
-                        break;
-                    case 'Menunggu Pengambilan':
-                        $order->status = 'Selesai';
-                        break;
-                    default:
-                        return redirect()->back()->with('error', 'Status tidak valid untuk pesanan ambil sendiri');
-                }
-            }
-
-            // Simpan perubahan status
-            $order->save();
-
-            return redirect()->back()->with('success', 'Status berhasil diperbarui.');
+       // Ambil data kasir yang sedang login
+        $kasir = Auth::user()->kasir; // Menggunakan relasi 'kasir'
+        if (!$kasir) {
+            return redirect()->back()->with('error', 'Kasir belum login atau data kasir tidak ditemukan.');
         }
 
-        return redirect()->back()->with('error', 'Pesanan tidak ditemukan.');
+        // Ambil informasi kasir
+        $cashierId = $kasir->id_kasir ?? null; // ID dari tabel kasir
+        $cashierName = $kasir->nama_kasir ?? null;
+
+        if (!$cashierId || !$cashierName) {
+            return redirect()->back()->with('error', 'Data kasir tidak valid.');
+        }
+
+
+        if ($type === 'delivery') {
+            $orderStatus = DeliveryOrderStatus::where('invoice_id', $id)->first();
+            if ($orderStatus) {
+                $statusSequence = ['diproses', 'diantar', 'selesai'];
+                $currentIndex = array_search($orderStatus->status, $statusSequence);
+                $status = $statusSequence[min($currentIndex + 1, count($statusSequence) - 1)];
+                $orderStatus->status = $status;
+                $orderStatus->updated_by = $cashierId;
+                $orderStatus->save();
+            }
+        } elseif ($type === 'pickup') {
+            $orderStatus = PickupOrderStatus::where('invoice_id', $id)->first();
+            if ($orderStatus) {
+                $statusSequence = ['diproses', 'menunggu pengambilan', 'selesai'];
+                $currentIndex = array_search($orderStatus->status, $statusSequence);
+                $status = $statusSequence[min($currentIndex + 1, count($statusSequence) - 1)];
+                $orderStatus->status = $status;
+                $orderStatus->updated_by = $cashierId;
+                $orderStatus->save();
+            }
+        }
+
+        if ($status) {
+            return redirect()->back()->with('success', 'Status berhasil diubah ke ' . $status);
+        }
+
+        return redirect()->back()->with('error', 'Pesanan tidak ditemukan atau sudah selesai.');
     }
 
 
@@ -82,8 +114,11 @@ class KasirController extends Controller
 
     public function stock()
     {
-        
-        return view('kasir.kasir_stock_barang');
+        $products = Product::with('pricing')->get();
+
+        return view('kasir.kasir_stock_barang',[
+            'products' => $products
+        ]);
     }
 
     public function profile()
@@ -92,25 +127,64 @@ class KasirController extends Controller
         return view('kasir.kasir_profile');
     }
 
-    public function konfirmasi()
+    public function getInvoiceDetails($id)
     {
+        $invoice = Invoice::with(['invoiceDetails'])
+            ->findOrFail($id);
         
-        return view('kasir.kasir_konfirmasi');
+        // Hitung totalAmount
+        $totalAmount = $invoice->invoiceDetails->reduce(function ($carry, $detail) {
+            return $carry + ($detail->Quantity * $detail->price);
+        }, 0);
+    
+        // Map the invoice details
+        $details = $invoice->invoiceDetails->map(function ($detail) {
+            return [
+                'product' => $detail->productName, // Mengambil langsung nama produk dari InvoiceDetail
+                'price' => $detail->price,        // Mengambil harga dari InvoiceDetail
+                'Quantity' => $detail->Quantity, // Mengambil jumlah dari InvoiceDetail
+                'productImage' => $detail->productImage, // Mengambil gambar dari InvoiceDetail
+                'productUnit' => $detail->productUnit, // Mengambil satuan dari InvoiceDetail
+                'total' => $detail->Quantity * $detail->price, // Menghitung total
+            ];
+        });
+    
+        // Log data for debugging
+        \Log::info(['details' => $details, 'totalAmount' => $totalAmount]);
+
+        return response()->json([
+            'details' => $details,
+            'totalAmount' => $totalAmount, // Menyertakan totalAmount ke dalam respons
+        ]);
     }
 
-    public function status()
-    {
-        
-        return view('kasir.kasir_status');
-    }
+    public function riwayat()
+{
+    // Ambil semua invoice yang sudah selesai
+    $invoices = Invoice::with(['invoiceDetails', 'deliveryStatus', 'pickupStatus'])
+        ->where(function ($query) {
+            // Kondisi status "Selesai" baik untuk deliveryStatus atau pickupStatus
+            $query->whereHas('deliveryStatus', function ($q) {
+                $q->where('status', 'Selesai');
+            })->orWhereHas('pickupStatus', function ($q) {
+                $q->where('status', 'Selesai');
+            });
+        })
+        ->orderBy('InvoiceID', 'asc')
+        ->get();
+    
+    // Add totalAmount calculation for each invoice
+    $invoices = $invoices->map(function ($invoice) {
+        $invoice->totalAmount = $invoice->invoiceDetails->reduce(function ($carry, $detail) {
+            $quantity = (int) $detail->Quantity; 
+            $price = (float) $detail->price;
+            return $carry + ($quantity * $price);
+        }, 0);
+        return $invoice;
+    });
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+    return view('kasir.kasir_riwayat', compact('invoices'));
+}
 
     /**
      * Store a newly created resource in storage.
@@ -147,8 +221,19 @@ class KasirController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        try {
+            $invoice = Invoice::findOrFail($id);
+            $invoice->delete();
+
+            // Redirect back with a success message
+            return redirect()->back()->with('success', 'Pesanan berhasil dihapus.');
+        } catch (\Exception $e) {
+            // Redirect back with an error message
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menghapus pesanan.');
+        }
     }
+
+
 }

@@ -17,6 +17,14 @@ class InformasiPenggunaController extends Controller
         return view('pengguna.profile', compact('user', 'customer'));
     }
 
+    public function showKasir()
+    {
+        $user = Auth::user();
+        $kasir = $user->kasir; // Mengambil data kasir terkait
+
+        return view('kasir.kasir_profile', compact('user', 'kasir'));
+    }
+
     public function update(Request $request)
     {
         $user = Auth::user();
@@ -51,7 +59,44 @@ class InformasiPenggunaController extends Controller
             ]);
         }
 
-        return redirect()->route('profile.show')->with('info', 'Informasi diri Anda berhasil diperbarui.');
+        return redirect()->route('kasir.profile.show')->with('info', 'Informasi diri Anda berhasil diperbarui.');
+    }
+
+    public function updateKasir(Request $request)
+    {
+        $user = Auth::user();
+
+        // Validasi input
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+            'KasirContact' => 'required|digits_between:10,15',
+            'KasirAddress' => 'required|string|max:255',
+        ]);
+
+        // Update data user
+        $user->update([
+            'email' => $request->email,
+        ]);
+
+        // Update data customer
+        $kasir = $user->kasir;
+        if ($kasir) {
+            $kasir->update([
+                'nama_kasir' => $request->name,
+                'kontak_kasir' => $request->KasirContact,
+                'alamat_kasir' => $request->KasirAddress,
+            ]);
+        } else {
+            Kasir::create([
+                'user_id' => $user->id,
+                'nama_kasir' => $request->name,
+                'kontak_kasir' => $request->KasirContact,
+                'alamat_kasir' => $request->KasirAddress,
+            ]);
+        }
+
+        return redirect()->route('kasir.profile.show')->with('info', 'Informasi diri Anda berhasil diperbarui.');
     }
 
     public function updatePassword(Request $request)

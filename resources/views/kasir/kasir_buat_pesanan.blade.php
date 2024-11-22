@@ -18,14 +18,14 @@
             <div class="nav">
                 <div class="left">
                     <a href="{{ route('kasir.home') }}">Home</a>
-                    <a href="#">Profil</a>
+                    <a href="{{ route('kasir.profile.show') }}">Profil</a>
                 </div>
                 <div class="right">
                     <a href="{{ route('buat-pesanan') }}">Buat Pesanan <i class="bi bi-bag-plus"></i></a>
                     <a href="{{ route('kasir.cart') }}">Keranjang <i class="bi bi-cart"></i></a>
                     <a href="{{ route('kasir.stock') }}">Stock Barang <i class="bi bi-box-seam"></i></a>
                     <a href="{{ route('status') }}">Status Pesanan <i class="bi bi-journal-text"></i></a>
-                    <a href="#">Riwayat Pesanan <i class="bi bi-journal-text"></i></a>
+                    <a href="{{ route('kasir.riwayat') }}">Riwayat Pesanan <i class="bi bi-journal-text"></i></a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit" class="btn btn-link"
@@ -40,12 +40,6 @@
 
         <form action="" method="GET" class="search-container">
             <input type="text" placeholder="Cari produk..." class="search-bar" name="search">
-            <select class="category-dropdown" name="category">
-                <option value="">Semua Kategori</option>
-                <option value="kategori1">Kategori 1</option>
-                <option value="kategori2">Kategori 2</option>
-                <option value="kategori3">Kategori 3</option>
-            </select>
             <button type="submit" class="search-button"><i class="bi bi-search"></i></button>
         </form>
 

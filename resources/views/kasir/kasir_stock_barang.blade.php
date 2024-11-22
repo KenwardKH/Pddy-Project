@@ -18,14 +18,14 @@
             <div class="nav">
                 <div class="left">
                     <a href="{{ route('kasir.home') }}">Home</a>
-                    <a href="#">Profil</a>
+                    <a href="{{ route('kasir.profile.show') }}">Profil</a>
                 </div>
                 <div class="right">
                     <a href="{{ route('buat-pesanan') }}">Buat Pesanan <i class="bi bi-bag-plus"></i></a>
                     <a href="{{ route('kasir.cart') }}">Keranjang <i class="bi bi-cart"></i></a>
                     <a href="{{ route('kasir.stock') }}">Stock Barang <i class="bi bi-box-seam"></i></a>
                     <a href="{{ route('status') }}">Status Pesanan <i class="bi bi-journal-text"></i></a>
-                    <a href="#">Riwayat Pesanan <i class="bi bi-journal-text"></i></a>
+                    <a href="{{ route('kasir.riwayat') }}">Riwayat Pesanan <i class="bi bi-journal-text"></i></a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit" class="btn btn-link"
@@ -52,33 +52,23 @@
                             <th>Harga Jual</th>
                             <th>Jumlah</th>
                             <th>Satuan</th>
-                            <th>Kategori</th>
                             <th class="deskripsi">Deskripsi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1.</td>
-                            <td><img src="{{ asset('images/produk/pensil2b.png') }}" alt="Pencil Ajaib 2b"></td>
-                            <td>Pensil Ajaib 2b</td>
-                            <td>25000</td>
-                            <td>60</td>
-                            <td>lusin</td>
-                            <td>Alat Tulis</td>
-                            <td>Pensil Ajaib 2B adalah pensil berkualitas tinggi dengan tingkat kekerasan lembut, ideal
-                                untuk menggambar dan menulis</td>
-                        </tr>
-                        <tr>
-                            <td>2.</td>
-                            <td><img src="{{ asset('images/produk/penghapus2b.png') }}" alt="Penghapus Ajaib 2b"></td>
-                            <td>Penghapus Ajaib 2b</td>
-                            <td>25000</td>
-                            <td>70</td>
-                            <td>lusin</td>
-                            <td>Alat Tulis</td>
-                            <td>Penghapus Ajaib 2B adalah penghapus berkualitas tinggi yang efektif menghapus pensil
-                                tanpa merusak kertas.</td>
-                        </tr>
+                        @foreach ($products as $index => $product)
+                            <tr>
+                                <td>{{ $index + 1 }}.</td>
+                                <td>
+                                    <img src="{{ asset('images/produk/' . $product->image) }}" alt="{{ $product->ProductName }}">
+                                </td>
+                                <td>{{ $product->ProductName }}</td>
+                                <td>{{ $product->pricing->UnitPrice ?? '-' }}</td>
+                                <td>{{ $product->CurrentStock }}</td>
+                                <td>{{ $product->productUnit }}</td>
+                                <td>{{ $product->Description }}</td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>

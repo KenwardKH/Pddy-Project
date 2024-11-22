@@ -97,12 +97,6 @@ body {
     font-size: 16px;
 }
 
-.category-dropdown {
-    padding: 8px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
 
 .search-button {
     padding: 8px 12px;
@@ -135,7 +129,7 @@ body {
 }
 
 table {
-    width: 90%;
+    width: 98%;
     border-collapse: collapse;
     border-spacing: 0;
     background-color: #ffffff;
@@ -178,7 +172,7 @@ th, td {
 th {
     background-color: #343a40;
     color: #ffffff;
-    font-weight: 600;
+    font-weight: 400;
 }
 
 tbody tr {
@@ -206,13 +200,12 @@ tbody tr:hover {
 }
 
 .btn-status {
-    padding: 8px 12px;
+    padding: 5px 10px;
+    margin: 2px;
     background-color: #3498db;
     color: #fff;
     border: none;
-    cursor: pointer;
     border-radius: 4px;
-    transition: background-color 0.3s;
     text-decoration: none;
 }
 
