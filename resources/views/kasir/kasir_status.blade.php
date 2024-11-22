@@ -41,13 +41,6 @@
                 <button type="submit" class="search-button"><i class="bi bi-search"></i></button>
             </form>
             <h1>Status Pesanan</h1>
-            @if (session('success'))
-                <div class="alert alert-success">{{ session('success') }}</div>
-            @endif
-
-            @if (session('error'))
-                <div class="alert alert-danger">{{ session('error') }}</div>
-            @endif
 
             <!-- Toggle Buttons -->
             <div class="button-container">
@@ -142,7 +135,7 @@
                                         <form action="{{ route('status.next', $invoice->InvoiceID) }}" method="POST">
                                             @csrf
                                             <input type="hidden" name="type" value="{{ $invoice->type }}">
-                                            <button type="submit" class="status-button">
+                                            <button type="submit" class="btn-status">
                                                 @if ($invoice->type === 'delivery')
                                                     {{ $invoice->deliveryStatus->status ?? 'diproses' }}
                                                 @elseif ($invoice->type === 'pickup')
