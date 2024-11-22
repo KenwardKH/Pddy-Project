@@ -103,15 +103,28 @@ class KasirController extends Controller
 
     public function home()
     {
-        $data = [
-            'onlineOrders' => 3,
-            'unpaidOrders' => 3,
-            'processingOrders' => 4,
-            'stockRunningLow' => 3,
-        ];
-        return view('kasir.kasir_home', compact('data'));
-    }
+        // Ambil data invoice
+        $invoices = Invoice::with(['invoiceDetails', 'deliveryStatus', 'pickupStatus'])->get();
 
+        // Hitung status pesanan
+        $pickupProcess= PickupOrderStatus::where('status', 'diproses')->count();
+        $deliveryProcess= DeliveryOrderStatus::where('status', 'diproses')->count();
+
+        $waitingForPickup = PickupOrderStatus::where('status', 'Menunggu Pengambilan')->count();
+        $inProcess = $pickupProcess + $deliveryProcess;
+        $onDelivery = DeliveryOrderStatus::where('status', 'diantar')->count();
+
+        // Ambil data produk
+        $productTypes = Product::count();
+
+        return view('kasir.kasir_home', [
+            'invoices' => $invoices,
+            'waitingForPickup' => $waitingForPickup,
+            'inProcess' => $inProcess,
+            'onDelivery' => $onDelivery,
+            'productTypes' => $productTypes,
+        ]);
+    }
     public function stock()
     {
         $products = Product::with('pricing')->get();

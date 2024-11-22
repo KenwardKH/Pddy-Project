@@ -38,31 +38,31 @@
         </div>
 
         <div class="dashboard">
-            <a href="#" class="card card-green">
-                <div><b>Pesanan Online</b></div>
-                <div class="count">{{ $data['onlineOrders'] }}</div>
-                <div><i class="bi bi-arrow-right-square" style="font-size:30px;"></i></div>
+            <a href="{{ route('status') }}" class="card card-green">
+                <div><b>Menunggu Pengambilan</b></div>
+                <div class="count">{{ $waitingForPickup }}</div>
+                <div><i class="bi bi-check2-square" style="font-size:30px;"></i></div>
             </a>
-            <a href="#" class="card card-yellow">
-                <div><b>Belum Dibayar</b></div>
-                <div class="count">{{ $data['unpaidOrders'] }}</div>
-                <div><i class="bi bi-arrow-right-square" style="font-size:30px;"></i></div>
-            </a>
-            <a href="#" class="card card-blue">
+            <a href="{{ route('status') }}" class="card card-yellow">
                 <div><b>Sedang Diproses</b></div>
-                <div class="count">{{ $data['processingOrders'] }}</div>
-                <div><i class="bi bi-arrow-right-square" style="font-size:30px;"></i></div>
+                <div class="count">{{ $inProcess }}</div>
+                <div><i class="bi bi-hourglass-split" style="font-size:30px;"></i></div>
             </a>
-            <a href="#" class="card card-green">
+            <a href="{{ route('status') }}" class="card card-blue">
+                <div><b>Sedang Diantar</b></div>
+                <div class="count">{{ $onDelivery }}</div>
+                <div><i class="bi bi-truck" style="font-size:30px;"></i></div>
+            </a>
+            <a href="{{ route('buat-pesanan') }}" class="card card-green">
                 <div><b>Buat Pesanan</b></div>
                 <div><i class="bi bi-cart" style="font-size:40px;"></i></div>
             </a>
-            <a href="#" class="card card-red">
-                <div><b>Stock Hampir Habis</b></div>
-                <div class="count">{{ $data['stockRunningLow'] }}</div>
-                <div><i class="bi bi-arrow-right-square" style="font-size:30px;"></i></div>
+            <a href="{{ route('kasir.stock') }}" class="card card-red">
+                <div><b>Jenis Barang</b></div>
+                <div class="count">{{ $productTypes }}</div>
+                <div><i class="bi bi-box-seam" style="font-size:30px;"></i></div>
             </a>
-            <a href="#" class="card card-gray">
+            <a href="{{ route('status') }}" class="card card-gray">
                 <div><b>Status Pesanan</b></div>
                 <div><i class="bi bi-journal-text" style="font-size:40px;"></i></div>
             </a>
