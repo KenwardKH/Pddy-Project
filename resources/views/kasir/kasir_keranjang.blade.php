@@ -110,7 +110,6 @@
                 <select id="pembayaran" name="payment_option" style="margin-bottom:15px; padding:10px">
                     <option value="tunai">Cash</option>
                     <option value="transfer">Transfer</option>
-                    <option value="kredit">Kredit</option>
                 </select>
                 <div class="footer">
                     <div class="total-order">

@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Payment extends Model
 {
     protected $table = 'payments';
+    public $timestamps = false; // Nonaktifkan timestamps
     protected $primaryKey = 'PaymentID';
-    protected $fillable = ['InvoiceID', 'PaymentDate', 'AmountPaid'];
+    protected $fillable = ['InvoiceID', 'PaymentDate', 'AmountPaid','PaymentImage'];
 
     public function invoice()
     {

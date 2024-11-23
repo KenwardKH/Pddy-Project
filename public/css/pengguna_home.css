@@ -59,7 +59,7 @@ body {
 .nav .right {
     display: flex;
     justify-content: space-around;
-    width: 43%;
+    width: 60%;
 }
 
 .nav a {

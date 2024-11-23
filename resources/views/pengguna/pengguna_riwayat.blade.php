@@ -94,6 +94,7 @@
                 <div class="right">
                     <a href="{{ route('pengguna.buat_pesanan') }}">Beli Barang <i class="bi bi-bag-plus"></i></a>
                     <a href="/keranjang">Keranjang <i class="bi bi-cart"></i></a>
+                    <a href="{{ route('pengguna.pembayaran') }}">Daftar Pembayaran <i class="bi bi-cash-stack"></i></a>
                     <a href="{{ route('pengguna.status') }}">Status Pesanan <i class="bi bi-journal-text"></i></a>
                     <a href="{{ route('pengguna.riwayat') }}">Riwayat Pesanan <i class="bi bi-clock-history"></i></a>
                     <form method="POST" action="{{ route('logout') }}">
@@ -125,7 +126,6 @@
                         <th>Jumlah Produk</th>
                         <th>Total Harga</th>
                         <th>Opsi Pembayaran</th>
-                        <th>Jatuh Tempo</th>
                         <th>Status</th>
                         <th>Cetak Invoice</th>
                         <th>Tanggal Pesan</th>
@@ -149,13 +149,6 @@
                             <td>{{ $invoice->invoiceDetails->sum('Quantity') }}</td>
                             <td>{{ $invoice->totalAmount ?? 'N/A' }}</td>
                             <td>{{ $invoice->payment_option ?? 'N/A' }}</td>
-                            <td>
-                                @if ($invoice->DueDate == null)
-                                    N/A
-                                @else
-                                    {{ $invoice->DueDate }}
-                                @endif
-                            </td>
                             <td>
                                 @if ($invoice->deliveryStatus)
                                     {{ $invoice->deliveryStatus->status }}

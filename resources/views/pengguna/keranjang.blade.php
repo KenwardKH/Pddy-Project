@@ -24,6 +24,7 @@
             <div class="right">
                 <a href="{{ route('pengguna.buat_pesanan') }}">Beli Barang <i class="bi bi-bag-plus"></i></a>
                 <a href="/keranjang">Keranjang <i class="bi bi-cart"></i></a>
+                <a href="{{ route('pengguna.pembayaran') }}">Daftar Pembayaran <i class="bi bi-cash-stack"></i></a>
                 <a href="{{ route('pengguna.status') }}">Status Pesanan <i class="bi bi-journal-text"></i></a>
                 <a href="{{ route('pengguna.riwayat') }}">Riwayat Pesanan <i class="bi bi-clock-history"></i></a>
                 <form method="POST" action="{{ route('logout') }}">
@@ -84,12 +85,7 @@
                     <label for="alamat">Alamat Pengiriman:</label>
                     <input type="text" id="alamat" name="alamat">
                 </div>
-                <label for="pembayaran">Pilih Opsi Pembayaran:</label>
-                <select id="pembayaran" name="payment_option" style="margin-bottom:15px; padding:10px">
-                    <option value="cash">Cash</option>
-                    <option value="transfer">Transfer</option>
-                    <option value="kredit">Kredit</option>
-                </select>
+                <p>Pembayaran: Transfer</p>
                 <div class="footer">
                     <div class="total-order">
                         <h3>Total Pesanan: Rp{{ number_format($total, 0, ',', '.') }}</h3>

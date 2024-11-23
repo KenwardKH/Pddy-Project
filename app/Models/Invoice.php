@@ -13,7 +13,6 @@ class Invoice extends Model
         'customerName', 
         'customerContact', 
         'InvoiceDate', 
-        'DueDate', 
         'type', 
         'payment_option',
         'CashierID',

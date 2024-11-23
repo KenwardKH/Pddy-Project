@@ -75,52 +75,6 @@ body {
     font-weight: bold;
 }
 
-/* Search container styling */
-.search-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    position: fixed;
-    width: 100%;
-    top: 116px; /* Adjust this to position it below the header */
-    background-color: white; /* Optional: add a background to match the header */
-    padding: 10px 0; /* Optional: add padding for spacing */
-    z-index: 999; /* Ensure it stays on top */
-}
-
-.search-bar {
-    width: 250px;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-}
-
-.category-dropdown {
-    padding: 8px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-.search-button {
-    padding: 8px 12px;
-    background-color: #28a745; /* Customize the color */
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.search-button i {
-    font-size: 18px;
-}
-
-.search-button:hover {
-    background-color: #218838; /* Darker green for hover */
-}
-
 .dashboard {
     text-align: center;
 }
@@ -214,21 +168,6 @@ tbody tr:hover {
     background-color: #2980b9;
 }
 
-.cetak-button {
-    background-color: #4caf50;
-    color: #ffffff;
-    border: none;
-    padding: 8px 12px;
-    font-weight: bold;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.3s;
-}
-
-.cetak-button:hover {
-    background-color: #388e3c;
-}
-
 .detail-button {
     background-color: #4caf50;
     color: #ffffff;
@@ -244,32 +183,45 @@ tbody tr:hover {
     background-color: #388e3c;
 }
 
-.delete-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1.6em;
-    color: #f44336;
-    transition: color 0.3s;
-}
-
-.delete-button:hover {
-    color: #d32f2f;
-}
-
 td {
     font-size: 0.9em;
     color: #555;
     font-weight: 500;
 }
 
-.status-complete {
+/* Tombol Bayar */
+button.pembayaran {
+    background-color: #007bff; /* Biru */
     color: white;
-    padding: 5px 10px;
-    border-radius: 4px;
-    background-color: green;
-    text-align: center;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 15px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
 }
+
+button.pembayaran:hover {
+    background-color: #0056b3; /* Biru gelap saat hover */
+}
+
+/* Tombol Batal */
+button.batal{
+    background-color: #dc3545; /* Merah */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 15px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+}
+
+button.batal:hover {
+    background-color: #a71d2a; /* Merah gelap saat hover */
+}
+
+
 
 /* Setiap item keranjang */
 .cart-item {
@@ -336,15 +288,15 @@ td {
     margin: 0 20px;
 }
 
-.modal-header .close-button{
+.modal-header .close-button {
     font-size: 30px;
 }
 
-.modal-footer h3{
+.modal-footer h3 {
     text-align: left;
 }
 
-.modal-footer .close-button{
+.modal-footer .close-button {
     padding: 5px 10px;
     margin: 2px;
     background-color: rgb(255, 0, 0);
@@ -354,6 +306,210 @@ td {
     text-decoration: none;
 }
 
-.modal-footer .close-button:hover{
-    background-color: rgb(194, 25, 25)
+.modal-footer .close-button:hover {
+    background-color: rgb(194, 25, 25);
+}
+
+.bank img {
+    width: 100px;
+}
+.bank {
+    display: flex;
+    align-items: center;
+    column-gap: 20px;
+}
+
+.data {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.bukti_tf {
+    width: 150px;
+    cursor: pointer;
+}
+
+/* Modal untuk gambar */
+#image-modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1001;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    width: 90%;
+    max-width: 1300px;
+    height: auto;
+    max-height: 90%;
+    border-radius: 10px;
+    text-align: center;
+    overflow: auto;
+}
+
+#image-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+#image-modal.show,
+#image-overlay.show {
+    display: block;
+}
+
+/* Overlay Styling */
+#payment-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 999;
+}
+
+/* Modal Styling */
+#payment-modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    background-color: #fff;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    padding: 25px;
+    width: 90%;
+    max-width: 600px;
+    border-radius: 15px;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Modal Header */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 10px;
+}
+
+.modal-header h2 {
+    font-size: 1.5rem;
+    margin: 0;
+    color: #333;
+}
+
+.close-button {
+    font-size: 1.5rem;
+    color: #999;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.close-button:hover {
+    color: #333;
+}
+
+/* Modal Body */
+.modal-body h3 {
+    font-size: 1.25rem;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+.payment-methods {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.bank {
+    text-align: center;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 15px;
+    background: #fafafa;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.bank img {
+    width: 80px;
+    margin-bottom: 10px;
+}
+
+.bank-details p {
+    font-size: 0.95rem;
+    color: #333;
+    margin: 5px 0;
+}
+
+/* Form Styling */
+.form-group {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 1rem;
+    color: #333;
+}
+
+.form-group input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.form-actions {
+    text-align: center;
+}
+
+.submit-button {
+    margin-top: 15px;
+    padding: 12px 25px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.submit-button:hover {
+    background-color: #0056b3;
+}
+
+/* Modal Show Classes */
+#payment-modal.show,
+#payment-overlay.show {
+    display: block;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -60%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
 }

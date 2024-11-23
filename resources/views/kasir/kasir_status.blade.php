@@ -88,7 +88,6 @@
                                     <td>{{ $invoice->totalAmount ?? 'N/A' }}</td>
                                     <td>{{ $invoice->deliveryStatus->alamat ?? 'N/A' }}</td>
                                     <td>{{ $invoice->payment_option ?? 'N/A' }}</td>
-                                    <td>{{ $invoice->DueDate ?? 'N/A' }}</td>
                                     <td>
                                         <button class="detail-button"
                                             data-id="{{ $invoice->InvoiceID }}">Detail</button>
@@ -126,7 +125,6 @@
                                     <td>{{ $invoice->invoiceDetails->sum('Quantity') }}</td>
                                     <td>{{ $invoice->totalAmount ?? 'N/A' }}</td>
                                     <td>{{ $invoice->payment_option ?? 'N/A' }}</td>
-                                    <td>{{ $invoice->DueDate ?? 'N/A' }}</td>
                                     <td>
                                         <button class="detail-button"
                                             data-id="{{ $invoice->InvoiceID }}">Detail</button>

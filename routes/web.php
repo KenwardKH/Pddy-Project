@@ -38,10 +38,12 @@ Route::get('auth/google/call-back', [GoogleAuthController::class, 'callbackGoogl
 
 //pengguna
 Route::get('/pengguna/home', [PenggunaController::class, 'home'])->name('pengguna.home');
+Route::get('/pengguna/pembayaran', [PenggunaController::class, 'pembayaran'])->name('pengguna.pembayaran');
 Route::get('/pengguna/status', [PenggunaController::class, 'status'])->name('pengguna.status');
 Route::get('/pengguna/riwayat', [PenggunaController::class, 'riwayat'])->name('pengguna.riwayat');
 Route::get('/pengguna/buat_pesanan', [PeralatanKantorController::class, 'index'])->name('pengguna.buat_pesanan');
 Route::get('/addToOrder', [PeralatanKantorController::class, 'addToOrder'])->name('pengguna.addToOrder');
+Route::post('/pembayaran/upload', [PenggunaController::class, 'bukti_transfer'])->name('pembayaran.upload');
 
 //profile pengguna
 Route::get('/pengguna/profile', [InformasiPenggunaController::class, 'show'])->name('profile.show');

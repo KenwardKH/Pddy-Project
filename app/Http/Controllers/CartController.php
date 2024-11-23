@@ -144,7 +144,7 @@ class CartController extends Controller
 
     $customerId = $customer->CustomerID;
     $shippingOption = $request->input('shipping_option');
-    $paymentOption = $request->input('payment_option');
+    $paymentOption = 'transfer';
     $alamat = $request->input('alamat', null);  // Address if delivery option selected
 
     try {
@@ -156,7 +156,7 @@ class CartController extends Controller
             $alamat
         ]);
 
-        return redirect()->route('pengguna.status');
+        return redirect()->route('pengguna.pembayaran');
     } catch (\Exception $e) {
         return response()->json(['error' => $e->getMessage()], 500);
     }

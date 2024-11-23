@@ -22,9 +22,9 @@ class Supplier extends Model
         'SupplierContact',
     ];
 
-    // Jika tabel 'suppliers' berelasi dengan model lain, Anda bisa menambah relasi seperti ini
-    public function products()
+    // Relasi ke tabel supplierproducts (One-to-Many)
+    public function supplierProducts()
     {
-        return $this->hasMany(Product::class, 'SupplierID');
+        return $this->hasMany(SupplierProduct::class, 'SupplierID', 'SupplierID');
     }
 }
