@@ -94,6 +94,7 @@
                 <div class="right">
                     <a href="{{ route('buat-pesanan') }}">Buat Pesanan <i class="bi bi-bag-plus"></i></a>
                     <a href="{{ route('kasir.cart') }}">Keranjang <i class="bi bi-cart"></i></a>
+                    <a href="{{ route('kasir.pembayaran') }}">Pesanan Online <i class="bi bi-cash-stack"></i></a>
                     <a href="{{ route('kasir.stock') }}">Stock Barang <i class="bi bi-box-seam"></i></a>
                     <a href="{{ route('status') }}">Status Pesanan <i class="bi bi-journal-text"></i></a>
                     <a href="{{ route('kasir.riwayat') }}">Riwayat Pesanan <i class="bi bi-journal-text"></i></a>
@@ -127,7 +128,6 @@
                         <th>Opsi Pengantaran</th>
                         <th>Alamat Pengiriman</th>
                         <th>Opsi Pembayaran</th>
-                        <th>Jatuh Tempo</th>
                         <th>Detail Pesanan</th>
                         <th>Ubah Status</th>
                         <th>Cetak Invoice</th>

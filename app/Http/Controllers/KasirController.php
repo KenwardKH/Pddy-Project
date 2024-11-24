@@ -23,8 +23,10 @@ class KasirController extends Controller
             // Kondisi status "belum selesai" baik untuk deliveryStatus atau pickupStatus
             $query->whereHas('deliveryStatus', function ($q) {
                 $q->where('status', '!=', 'Selesai');
+                $q->where('status', '!=', 'menunggu pembayaran');
             })->orWhereHas('pickupStatus', function ($q) {
                 $q->where('status', '!=', 'Selesai');
+                $q->where('status', '!=', 'menunggu pembayaran');
             });
         });
 
@@ -106,10 +108,13 @@ class KasirController extends Controller
         // Ambil data invoice
         $invoices = Invoice::with(['invoiceDetails', 'deliveryStatus', 'pickupStatus'])->get();
 
+        $OnlinePickupProcess= PickupOrderStatus::where('status', 'menunggu pembayaran')->count();
+        $OnlineDeliveryProcess= DeliveryOrderStatus::where('status', 'menunggu pembayaran')->count();
+
         // Hitung status pesanan
         $pickupProcess= PickupOrderStatus::where('status', 'diproses')->count();
         $deliveryProcess= DeliveryOrderStatus::where('status', 'diproses')->count();
-
+        $onlineProcess= $OnlinePickupProcess + $OnlineDeliveryProcess;
         $waitingForPickup = PickupOrderStatus::where('status', 'Menunggu Pengambilan')->count();
         $inProcess = $pickupProcess + $deliveryProcess;
         $onDelivery = DeliveryOrderStatus::where('status', 'diantar')->count();
@@ -122,6 +127,7 @@ class KasirController extends Controller
             'waitingForPickup' => $waitingForPickup,
             'inProcess' => $inProcess,
             'onDelivery' => $onDelivery,
+            'onlineProcess' => $onlineProcess,
             'productTypes' => $productTypes,
         ]);
     }
@@ -199,12 +205,81 @@ class KasirController extends Controller
     return view('kasir.kasir_riwayat', compact('invoices'));
 }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+public function pembayaran()
+{
+    // Ambil semua invoice yang terkait dengan CustomerID
+    $invoices = Invoice::with(['invoiceDetails', 'deliveryStatus', 'pickupStatus','payment'])
+        ->where(function ($query) {
+            // Kondisi status "belum selesai" baik untuk deliveryStatus atau pickupStatus
+            $query->whereHas('deliveryStatus', function ($q) {
+                $q->where('status', 'menunggu pembayaran');
+            })->orWhereHas('pickupStatus', function ($q) {
+                $q->where('status', 'menunggu pembayaran');
+            });
+        })
+        ->orderBy('InvoiceID', 'asc')
+        ->get();
+    
+    // Add totalAmount calculation for each invoice
+    $invoices = $invoices->map(function ($invoice) {
+        $invoice->totalAmount = $invoice->invoiceDetails->reduce(function ($carry, $detail) {
+            $quantity = (int) $detail->Quantity; 
+            $price = (float) $detail->price;
+            return $carry + ($quantity * $price);
+        }, 0);
+
+        // Hitung lastPay (2 hari setelah InvoiceDate)
+        $invoice->lastPay = \Carbon\Carbon::parse($invoice->InvoiceDate)->addDays(2);
+
+        return $invoice;
+    });
+
+    return view('kasir.kasir_pembayaran', compact('invoices'));
+}
+
+    public function konfirmasi($id, Request $request)
     {
-        //
+        $invoice = Invoice::find($id);
+
+        $type = $request->type; // 'delivery' atau 'pickup'
+        $status = null;
+
+       // Ambil data kasir yang sedang login
+        $kasir = Auth::user()->kasir; // Menggunakan relasi 'kasir'
+        if (!$kasir) {
+            return redirect()->back()->with('error', 'Kasir belum login atau data kasir tidak ditemukan.');
+        }
+
+        // Ambil informasi kasir
+        $cashierId = $kasir->id_kasir ?? null; // ID dari tabel kasir
+        $cashierName = $kasir->nama_kasir ?? null;
+
+        if (!$cashierId || !$cashierName) {
+            return redirect()->back()->with('error', 'Data kasir tidak valid.');
+        }
+
+        if (!$invoice) {
+            return redirect()->back()->with('error', 'Invoice tidak ditemukan.');
+        }
+
+        // Perbarui status sesuai dengan jenis pengantaran
+        if ($invoice->type === 'delivery') {
+            $deliveryStatus = $invoice->deliveryStatus;
+            if ($deliveryStatus) {
+                $deliveryStatus->status = 'Diproses';
+                $deliveryStatus->updated_by = $cashierId;
+                $deliveryStatus->save();
+            }
+        } elseif ($invoice->type === 'pickup') {
+            $pickupStatus = $invoice->pickupStatus;
+            if ($pickupStatus) {
+                $pickupStatus->status = 'Diproses';
+                $pickUpStatus->updated_by = $cashierId;
+                $pickupStatus->save();
+            }
+        }
+
+        return redirect()->back()->with('success', 'Status berhasil diperbarui.');
     }
 
     /**

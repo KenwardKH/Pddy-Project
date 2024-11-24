@@ -144,7 +144,12 @@
                                     <button class="pembayaran">Bayar</button>
                                 @endif
                             </td>
-                            <td>{{ $invoice->deliveryStatus->status ?? ($invoice->pickupStatus->status ?? 'N/A') }}
+                            <td>
+                                @if($invoice->payment && $invoice->payment->PaymentImage)
+                                    Menunggu Konfirmasi
+                                @else
+                                    {{ $invoice->deliveryStatus->status ?? ($invoice->pickupStatus->status ?? 'N/A') }}
+                                @endif
                             </td>
                             <td>{{ $invoice->lastPay }}</td>
                             <td>{{ $invoice->InvoiceDate }}</td>

@@ -23,6 +23,7 @@
                 <div class="right">
                     <a href="{{ route('buat-pesanan') }}">Buat Pesanan <i class="bi bi-bag-plus"></i></a>
                     <a href="{{ route('kasir.cart') }}">Keranjang <i class="bi bi-cart"></i></a>
+                    <a href="{{ route('kasir.pembayaran') }}">Pesanan Online <i class="bi bi-cash-stack"></i></a>
                     <a href="{{ route('kasir.stock') }}">Stock Barang <i class="bi bi-box-seam"></i></a>
                     <a href="{{ route('status') }}">Status Pesanan <i class="bi bi-journal-text"></i></a>
                     <a href="{{ route('kasir.riwayat') }}">Riwayat Pesanan <i class="bi bi-journal-text"></i></a>
@@ -53,6 +54,13 @@
                 <div class="count">{{ $onDelivery }}</div>
                 <div><i class="bi bi-truck" style="font-size:30px;"></i></div>
             </a>
+            <div></div>
+            <a href="{{ route('kasir.pembayaran') }}" class="card card-orange">
+                <div><b>Pesanan Online</b></div>
+                <div class="count">{{ $onlineProcess }}</div>
+                <div><i class="bi bi-globe" style="font-size:30px;"></i></div>
+            </a>
+            <div></div>
             <a href="{{ route('buat-pesanan') }}" class="card card-green">
                 <div><b>Buat Pesanan</b></div>
                 <div><i class="bi bi-cart" style="font-size:40px;"></i></div>

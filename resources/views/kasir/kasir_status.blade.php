@@ -22,6 +22,7 @@
                 <div class="right">
                     <a href="{{ route('buat-pesanan') }}">Buat Pesanan <i class="bi bi-bag-plus"></i></a>
                     <a href="{{ route('kasir.cart') }}">Keranjang <i class="bi bi-cart"></i></a>
+                    <a href="{{ route('kasir.pembayaran') }}">Pesanan Online <i class="bi bi-cash-stack"></i></a>
                     <a href="{{ route('kasir.stock') }}">Stock Barang <i class="bi bi-box-seam"></i></a>
                     <a href="{{ route('status') }}">Status Pesanan <i class="bi bi-journal-text"></i></a>
                     <a href="{{ route('kasir.riwayat') }}">Riwayat Pesanan <i class="bi bi-journal-text"></i></a>
@@ -62,7 +63,6 @@
                                 <th>Alamat Pengiriman</th>
                             @endif
                             <th>Opsi Pembayaran</th>
-                            <th>Jatuh Tempo</th>
                             <th>Detail Pesanan</th>
                             <th>Status</th>
                             <th>Cetak Invoice</th>
@@ -239,7 +239,32 @@
                 document.querySelector('.overlay').classList.remove('show');
             });
         });
+
+        document.querySelectorAll('.btn-status').forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault(); // Mencegah pengiriman form langsung
+                const form = this.closest('form'); // Ambil form terdekat
+                const status = this.textContent.trim(); // Ambil status tombol
+
+                Swal.fire({
+                    title: 'Konfirmasi Perubahan Status',
+                    text: `Apakah Anda yakin ingin mengubah status pesanan?`,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, Ubah',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Submit form jika dikonfirmasi
+                        form.submit();
+                    }
+                });
+            });
+        });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 
 </html>

@@ -42,8 +42,10 @@ class PenggunaController extends Controller
             // Kondisi status "belum selesai" baik untuk deliveryStatus atau pickupStatus
             $query->whereHas('deliveryStatus', function ($q) {
                 $q->where('status', '!=', 'Selesai');
+                $q->where('status', '!=', 'menunggu pembayaran');
             })->orWhereHas('pickupStatus', function ($q) {
                 $q->where('status', '!=', 'Selesai');
+                $q->where('status', '!=', 'menunggu pembayaran');
             });
         })
         ->orderBy('InvoiceID', 'asc')
@@ -81,9 +83,9 @@ class PenggunaController extends Controller
         ->where(function ($query) {
             // Kondisi status "belum selesai" baik untuk deliveryStatus atau pickupStatus
             $query->whereHas('deliveryStatus', function ($q) {
-                $q->where('status', '!=', 'Selesai');
+                $q->where('status', 'menunggu pembayaran');
             })->orWhereHas('pickupStatus', function ($q) {
-                $q->where('status', '!=', 'Selesai');
+                $q->where('status', 'menunggu pembayaran');
             });
         })
         ->orderBy('InvoiceID', 'asc')
