@@ -534,3 +534,116 @@ button.batal:hover {
 .konfirmasi:hover {
     background-color: #45a049; /* Darker green on hover */
 }
+
+/* Overlay */
+.modal-batal .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    z-index: 9998;
+}
+
+/* Modal Container */
+.modal-batal .modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 500px;
+    z-index: 9999;
+    display: none;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Header */
+.modal-batal .modal-header {
+    padding: 16px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0;
+}
+
+.modal-batal .modal-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.modal-batal .close-button {
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.modal-batal .close-button:hover {
+    color: #ffcccc;
+}
+
+/* Body */
+.modal-batal .modal-body {
+    padding: 16px;
+    padding-top: 0;
+}
+
+.modal-batal .modal-description {
+    font-size: 0.95rem;
+    margin-bottom: 12px;
+    color: #555;
+}
+
+.modal-batal textarea {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px;
+    font-size: 0.9rem;
+    resize: none;
+}
+
+/* Buttons */
+.modal-batal .button-group {
+    display: flex;
+    justify-content: right;
+    margin-top: 16px;
+}
+
+.modal-batal .submit-button {
+    background: #f44336;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.modal-batal .submit-button:hover {
+    background: #d32f2f;
+}
+
+.modal-batal .cancel-button:hover {
+    background: #bbb;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -55%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}

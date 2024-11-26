@@ -40,5 +40,9 @@ class Invoice extends Model
         return $this->hasOne(PickupOrderStatus::class, 'invoice_id');
     }
 
+    public function cancelledTransaction()
+    {
+        return $this->hasOne(CancelledTransaction::class, 'InvoiceId');
+    }
 
 }

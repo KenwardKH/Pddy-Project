@@ -113,10 +113,10 @@
                 <input type="text" placeholder="Cari produk..." class="search-bar" name="search">
                 <button type="submit" class="search-button"><i class="bi bi-search"></i></button>
             </form>
-            <h1>Pesanan Selesai</h1>
+            <h1>Pesanan Dibatalkan</h1>
         </div>
         <div style="text-align: right; margin-right:20px">
-            <a href="{{ route('kasir.riwayat.batal') }}" class="riwayat">Pesanan Dibatalkan</i></a>
+            <a href="{{ route('kasir.riwayat') }}" class="riwayat">Pesanan Berhasil</i></a>
         </div>
         <div class="table">
             <table class="order-table">
@@ -125,15 +125,16 @@
                         <th>Invoice ID</th>
                         <th>Nama Pemesan</th>
                         <th>Nomor Telepon</th>
-                        <th>Jumlah Produk</th>
                         <th>Total Harga</th>
                         <th>Opsi Pengantaran</th>
                         <th>Alamat Pengiriman</th>
                         <th>Opsi Pembayaran</th>
+                        <th>Alasan Pembatalan</th>
                         <th>Detail Pesanan</th>
                         <th>Status</th>
                         <th>Cetak Invoice</th>
                         <th>Tanggal Pesan</th>
+                        <th>Tanggal Dibatalkan</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -142,7 +143,6 @@
                             <td>{{ $invoice->InvoiceID }}</td>
                             <td>{{ $invoice->customerName }}</td>
                             <td>{{ $invoice->customerContact }}</td>
-                            <td>{{ $invoice->invoiceDetails->sum('Quantity') }}</td>
                             <td>{{ $invoice->totalAmount ?? 'N/A' }}</td>
                             <td>
                                 @if ($invoice->type == 'delivery')
@@ -155,6 +155,7 @@
                             </td>
                             <td>{{ $invoice->deliveryStatus->alamat ?? 'N/A' }}</td>
                             <td>{{ $invoice->payment_option ?? 'N/A' }}</td>
+                            <td>{{ $invoice->cancelledTransaction->cancellation_reason ?? 'N/A' }}</td>
                             <td><button class="detail-button" data-id="{{ $invoice->InvoiceID }}">Detail</button></td>
                             <td>
                                 @if ($invoice->deliveryStatus)
@@ -167,6 +168,7 @@
                             </td>
                             <td><button class="cetak-button">Cetak</button></td>
                             <td>{{ $invoice->deliveryStatus->created_at ?? ($invoice->pickupStatus->created_at ?? 'N/A') }}</td>
+                            <td>{{ $invoice->cancelledTransaction->cancellation_date ?? 'N/A' }}</td>
                         </tr>
                     @endforeach
                 </tbody>

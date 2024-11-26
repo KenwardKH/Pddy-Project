@@ -106,14 +106,12 @@
                                         </form>
                                     </td>
                                     <td><button class="cetak-button">Cetak</button></td>
-                                    <td>{{ $invoice->InvoiceDate }}</td>
+                                    <td>{{ $invoice->deliveryStatus->created_at ?? ($invoice->pickupStatus->created_at ?? 'N/A') }}</td>
                                     <td>
-                                        <form action="{{ route('pesanan.destroy', $invoice->InvoiceID) }}"
-                                            method="POST"
-                                            onsubmit="return confirm('Apakah Anda yakin ingin menghapus pesanan ini?')">
+                                        <form action="{{ route('kasir.batal', $invoice->InvoiceID) }}" method="POST">
                                             @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="delete-button">Hapus</button>
+                                            <input type="hidden" name="type" value="{{ $invoice->type }}">
+                                            <button type="submit" class="delete-button">Batal</button>
                                         </form>
                                     </td>
                                 </tr>
@@ -145,12 +143,10 @@
                                     <td><button class="cetak-button">Cetak</button></td>
                                     <td>{{ $invoice->InvoiceDate }}</td>
                                     <td>
-                                        <form action="{{ route('pesanan.destroy', $invoice->InvoiceID) }}"
-                                            method="POST"
-                                            onsubmit="return confirm('Apakah Anda yakin ingin menghapus pesanan ini?')">
+                                        <form action="{{ route('kasir.batal', $invoice->InvoiceID) }}" method="POST">
                                             @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="delete-button">Hapus</button>
+                                            <input type="hidden" name="type" value="{{ $invoice->type }}">
+                                            <button type="submit" class="delete-button">Batal</button>
                                         </form>
                                     </td>
                                 </tr>

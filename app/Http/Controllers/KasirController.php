@@ -8,6 +8,7 @@ use App\Models\InvoiceDetail;
 use App\Models\TransactionLog;
 use App\Models\DeliveryOrderStatus;
 use App\Models\PickupOrderStatus;
+use App\Models\CancelledTransaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -24,9 +25,11 @@ class KasirController extends Controller
             $query->whereHas('deliveryStatus', function ($q) {
                 $q->where('status', '!=', 'Selesai');
                 $q->where('status', '!=', 'menunggu pembayaran');
+                $q->where('status', '!=', 'dibatalkan');
             })->orWhereHas('pickupStatus', function ($q) {
                 $q->where('status', '!=', 'Selesai');
                 $q->where('status', '!=', 'menunggu pembayaran');
+                $q->where('status', '!=', 'dibatalkan');
             });
         });
 
@@ -180,13 +183,13 @@ class KasirController extends Controller
     public function riwayat()
 {
     // Ambil semua invoice yang sudah selesai
-    $invoices = Invoice::with(['invoiceDetails', 'deliveryStatus', 'pickupStatus'])
+    $invoices = Invoice::with(['invoiceDetails', 'deliveryStatus', 'pickupStatus', 'cancelledTransaction'])
         ->where(function ($query) {
-            // Kondisi status "Selesai" baik untuk deliveryStatus atau pickupStatus
+            // Kondisi status "Selesai" atau "dibatalkan" untuk deliveryStatus atau pickupStatus
             $query->whereHas('deliveryStatus', function ($q) {
-                $q->where('status', 'Selesai');
+                $q->whereIn('status', ['Selesai']);
             })->orWhereHas('pickupStatus', function ($q) {
-                $q->where('status', 'Selesai');
+                $q->whereIn('status', ['Selesai']);
             });
         })
         ->orderBy('InvoiceID', 'asc')
@@ -203,6 +206,34 @@ class KasirController extends Controller
     });
 
     return view('kasir.kasir_riwayat', compact('invoices'));
+}
+
+    public function riwayatBatal()
+{
+    // Ambil semua invoice yang sudah selesai
+    $invoices = Invoice::with(['invoiceDetails', 'deliveryStatus', 'pickupStatus', 'cancelledTransaction'])
+        ->where(function ($query) {
+            // Kondisi status "Selesai" atau "dibatalkan" untuk deliveryStatus atau pickupStatus
+            $query->whereHas('deliveryStatus', function ($q) {
+                $q->whereIn('status', ['dibatalkan']);
+            })->orWhereHas('pickupStatus', function ($q) {
+                $q->whereIn('status', ['dibatalkan']);
+            });
+        })
+        ->orderBy('InvoiceID', 'asc')
+        ->get();
+    
+    // Add totalAmount calculation for each invoice
+    $invoices = $invoices->map(function ($invoice) {
+        $invoice->totalAmount = $invoice->invoiceDetails->reduce(function ($carry, $detail) {
+            $quantity = (int) $detail->Quantity; 
+            $price = (float) $detail->price;
+            return $carry + ($quantity * $price);
+        }, 0);
+        return $invoice;
+    });
+
+    return view('kasir.kasir_riwayat_batal', compact('invoices'));
 }
 
 public function pembayaran()
@@ -228,9 +259,15 @@ public function pembayaran()
             return $carry + ($quantity * $price);
         }, 0);
 
-        // Hitung lastPay (2 hari setelah InvoiceDate)
-        $invoice->lastPay = \Carbon\Carbon::parse($invoice->InvoiceDate)->addDays(2);
+        // Ambil created_at dari deliveryStatus atau pickupStatus
+        $createdAt = $invoice->deliveryStatus->created_at ?? $invoice->pickupStatus->created_at;
 
+        // Hitung lastPay (2 hari setelah created_at)
+        if ($createdAt) {
+            $invoice->lastPay = \Carbon\Carbon::parse($createdAt)->addDays(2);
+        } else {
+            $invoice->lastPay = null; // Fallback jika created_at tidak tersedia
+        }
         return $invoice;
     });
 
@@ -281,6 +318,70 @@ public function pembayaran()
 
         return redirect()->back()->with('success', 'Status berhasil diperbarui.');
     }
+
+    public function batal($id, Request $request)
+{
+    // Validasi alasan pembatalan
+    $request->validate([
+        'reason' => 'required|string|max:255',
+    ]);
+
+    $invoice = Invoice::find($id);
+
+    if (!$invoice) {
+        return redirect()->back()->with('error', 'Invoice tidak ditemukan.');
+    }
+
+    // Ambil data kasir yang sedang login
+    $kasir = Auth::user()->kasir; // Menggunakan relasi 'kasir'
+    if (!$kasir) {
+        return redirect()->back()->with('error', 'Kasir belum login atau data kasir tidak ditemukan.');
+    }
+
+    // Ambil informasi kasir
+    $cashierId = $kasir->id_kasir ?? null; // ID dari tabel kasir
+    $cashierName = $kasir->nama_kasir ?? null;
+
+    if (!$cashierId || !$cashierName) {
+        return redirect()->back()->with('error', 'Data kasir tidak valid.');
+    }
+
+    // Ambil alasan pembatalan
+    $reason = $request->input('reason');
+
+    // Perbarui status sesuai dengan jenis pengantaran
+    if ($invoice->type === 'delivery') {
+        $deliveryStatus = $invoice->deliveryStatus;
+        if ($deliveryStatus) {
+            $deliveryStatus->status = 'dibatalkan';
+            $deliveryStatus->updated_by = $cashierId;
+            $deliveryStatus->save();
+        } else {
+            return redirect()->back()->with('error', 'Status pengantaran tidak ditemukan.');
+        }
+    } elseif ($invoice->type === 'pickup') {
+        $pickupStatus = $invoice->pickupStatus;
+        if ($pickupStatus) {
+            $pickupStatus->status = 'dibatalkan';
+            $pickupStatus->updated_by = $cashierId;
+            $pickupStatus->save();
+        } else {
+            return redirect()->back()->with('error', 'Status pengambilan tidak ditemukan.');
+        }
+    }
+
+    // Catat pembatalan di tabel CancelledTransaction
+    CancelledTransaction::create([
+        'InvoiceId' => $invoice->InvoiceID,
+        'cancellation_reason' => $reason,
+        'cancelled_by' => 'cashier', // Pembatalan dilakukan oleh kasir
+        'cancellation_date' => now(), // Tanggal pembatalan
+    ]);
+
+    return redirect()->back()->with('success', 'Pesanan berhasil dibatalkan.');
+}
+
+
 
     /**
      * Display the specified resource.

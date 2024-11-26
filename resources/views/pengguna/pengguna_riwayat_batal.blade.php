@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kasir Home</title>
-    <link rel="stylesheet" href="{{ asset('css/kasir_riwayat.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/pengguna_status.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <style>
@@ -23,7 +23,7 @@
             width: 80%;
             max-width: 800px;
             height: auto;
-            max-height: 500px;
+            max-height: 600px;
             border-radius: 10px;
             overflow: auto
         }
@@ -88,16 +88,15 @@
             <img src="{{ asset('images/logo.png') }}" alt="logo">
             <div class="nav">
                 <div class="left">
-                    <a href="{{ route('kasir.home') }}">Home</a>
-                    <a href="{{ route('kasir.profile.show') }}">Profil</a>
+                    <a href="{{ route('pengguna.home') }}">Home</a>
+                    <a href="{{ route('profile.show') }}">Profil</a>
                 </div>
                 <div class="right">
-                    <a href="{{ route('buat-pesanan') }}">Buat Pesanan <i class="bi bi-bag-plus"></i></a>
-                    <a href="{{ route('kasir.cart') }}">Keranjang <i class="bi bi-cart"></i></a>
-                    <a href="{{ route('kasir.pembayaran') }}">Pesanan Online <i class="bi bi-cash-stack"></i></a>
-                    <a href="{{ route('kasir.stock') }}">Stock Barang <i class="bi bi-box-seam"></i></a>
-                    <a href="{{ route('status') }}">Status Pesanan <i class="bi bi-journal-text"></i></a>
-                    <a href="{{ route('kasir.riwayat') }}">Riwayat Pesanan <i class="bi bi-journal-text"></i></a>
+                    <a href="{{ route('pengguna.buat_pesanan') }}">Beli Barang <i class="bi bi-bag-plus"></i></a>
+                    <a href="/keranjang">Keranjang <i class="bi bi-cart"></i></a>
+                    <a href="{{ route('pengguna.pembayaran') }}">Daftar Pembayaran <i class="bi bi-cash-stack"></i></a>
+                    <a href="{{ route('pengguna.status') }}">Status Pesanan <i class="bi bi-journal-text"></i></a>
+                    <a href="{{ route('pengguna.riwayat') }}">Riwayat Pesanan <i class="bi bi-clock-history"></i></a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit" class="btn btn-link"
@@ -113,37 +112,33 @@
                 <input type="text" placeholder="Cari produk..." class="search-bar" name="search">
                 <button type="submit" class="search-button"><i class="bi bi-search"></i></button>
             </form>
-            <h1>Pesanan Selesai</h1>
+            <h1>Pesanan Dibatalkan</h1>
         </div>
-        <div style="text-align: right; margin-right:20px">
-            <a href="{{ route('kasir.riwayat.batal') }}" class="riwayat">Pesanan Dibatalkan</i></a>
+        <div style="text-align: right; margin-right:80px">
+            <a href="{{ route('pengguna.riwayat') }}" class="riwayat">Pesanan Selesai</i></a>
         </div>
         <div class="table">
             <table class="order-table">
                 <thead>
                     <tr>
                         <th>Invoice ID</th>
-                        <th>Nama Pemesan</th>
-                        <th>Nomor Telepon</th>
-                        <th>Jumlah Produk</th>
-                        <th>Total Harga</th>
+                        <th>Detail</th>
                         <th>Opsi Pengantaran</th>
-                        <th>Alamat Pengiriman</th>
+                        <th>Alamat</th>
+                        <th>Total Harga</th>
                         <th>Opsi Pembayaran</th>
-                        <th>Detail Pesanan</th>
+                        <th>Alasan Pembatalan</th>
                         <th>Status</th>
                         <th>Cetak Invoice</th>
                         <th>Tanggal Pesan</th>
+                        <th>Tanggal Dibatalkan</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($invoices as $invoice)
                         <tr>
                             <td>{{ $invoice->InvoiceID }}</td>
-                            <td>{{ $invoice->customerName }}</td>
-                            <td>{{ $invoice->customerContact }}</td>
-                            <td>{{ $invoice->invoiceDetails->sum('Quantity') }}</td>
-                            <td>{{ $invoice->totalAmount ?? 'N/A' }}</td>
+                            <td><button class="detail-button" data-id="{{ $invoice->InvoiceID }}">Detail</button></td>
                             <td>
                                 @if ($invoice->type == 'delivery')
                                     Diantar
@@ -154,8 +149,9 @@
                                 @endif
                             </td>
                             <td>{{ $invoice->deliveryStatus->alamat ?? 'N/A' }}</td>
+                            <td>{{ $invoice->totalAmount ?? 'N/A' }}</td>
                             <td>{{ $invoice->payment_option ?? 'N/A' }}</td>
-                            <td><button class="detail-button" data-id="{{ $invoice->InvoiceID }}">Detail</button></td>
+                            <td>{{ $invoice->cancelledTransaction->cancellation_reason ?? 'N/A' }}</td>
                             <td>
                                 @if ($invoice->deliveryStatus)
                                     {{ $invoice->deliveryStatus->status }}
@@ -167,6 +163,7 @@
                             </td>
                             <td><button class="cetak-button">Cetak</button></td>
                             <td>{{ $invoice->deliveryStatus->created_at ?? ($invoice->pickupStatus->created_at ?? 'N/A') }}</td>
+                            <td>{{ $invoice->cancelledTransaction->cancellation_date ?? 'N/A' }}</td>
                         </tr>
                     @endforeach
                 </tbody>

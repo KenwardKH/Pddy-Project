@@ -130,6 +130,21 @@ body {
     margin-top: 180px;
 }
 
+.riwayat {
+    padding: 10px;
+    background-color: red;
+    color: black;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 10px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.riwayat:hover{
+    background-color: rgb(187, 13, 13);
+    color: white;
+}
+
 .table {
     display: flex;
     justify-content: center;

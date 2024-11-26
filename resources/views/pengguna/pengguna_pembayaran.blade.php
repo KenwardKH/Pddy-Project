@@ -79,7 +79,6 @@
         table.details-table th {
             background-color: #f4f4f4;
         }
-
     </style>
 </head>
 
@@ -109,6 +108,17 @@
             </div>
         </div>
         <h1 class="dashboard">Daftar Pembayaran</h1>
+        @if (session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
+
+        @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
         <!-- Your existing table -->
         <div class="table">
             <table class="order-table">
@@ -141,24 +151,54 @@
                                         src="{{ asset('images/bukti_transfer/' . $invoice->payment->PaymentImage) }}"
                                         alt="bukti_tf">
                                 @else
-                                    <button class="pembayaran">Bayar</button>
+                                    <button class="pembayaran" data-id="{{ $invoice->InvoiceID }}">Bayar</button>
                                 @endif
                             </td>
                             <td>
-                                @if($invoice->payment && $invoice->payment->PaymentImage)
+                                @if ($invoice->payment && $invoice->payment->PaymentImage)
                                     Menunggu Konfirmasi
                                 @else
                                     {{ $invoice->deliveryStatus->status ?? ($invoice->pickupStatus->status ?? 'N/A') }}
                                 @endif
                             </td>
                             <td>{{ $invoice->lastPay }}</td>
-                            <td>{{ $invoice->InvoiceDate }}</td>
-                            <td><button class="batal">Batal</button></td>
+                            <td>{{ $invoice->deliveryStatus->created_at ?? ($invoice->pickupStatus->created_at ?? 'N/A') }}
+                            </td>
+                            <td>
+                                <button class="batal" data-id="{{ $invoice->InvoiceID }}"
+                                    data-type="{{ $invoice->type }}">
+                                    Batal
+                                </button>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
+
+        <!-- Modal untuk Alasan Pembatalan -->
+        <div class="modal-batal">
+            <div class="overlay" id="cancel-overlay"></div>
+            <div class="modal" id="cancel-modal">
+                <div class="modal-header">
+                    <h2>Batalkan Pesanan</h2>
+                    <button class="close-button" title="Tutup">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p class="modal-description">Alasan pesanan dibatalkan:</p>
+                    <form id="cancel-form" method="POST" action="{{ route('pengguna.batal', ['id' => ':id']) }}">
+                        @csrf
+                        <input type="hidden" name="_method" value="POST">
+                        <input type="hidden" name="type" id="cancel-type">
+                        <textarea name="reason" id="cancel-reason" rows="4" placeholder="Masukkan alasan pembatalan..." required></textarea>
+                        <div class="button-group">
+                            <button type="submit" class="submit-button">Konfirmasi Pembatalan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <!-- Modal Pembayaran -->
         <div class="overlay" id="payment-overlay"></div>
         <div class="modal" id="payment-modal">
@@ -195,8 +235,8 @@
                 <form id="payment-form" action="{{ route('pembayaran.upload') }}" class="bukti-transfer" method="POST"
                     enctype="multipart/form-data">
                     @csrf
-                    <input type="hidden" name="InvoiceID" value="{{ $invoice->InvoiceID }}">
-                    <input type="hidden" name="AmountPaid" value="{{ $invoice->totalAmount }}">
+                    <input type="hidden" name="InvoiceID" value="">
+                    <input type="hidden" name="AmountPaid" value="">
                     <div class="form-group">
                         <label for="proof">Unggah Bukti Transfer:</label>
                         <input type="file" id="proof" name="bukti_transfer" accept="image/*" required>
@@ -216,7 +256,8 @@
                 <button class="close-button">&times;</button>
             </div>
             <div class="modal-body">
-                <img id="modal-image" src="" alt="Preview Gambar" style="max-width: 100%; max-height: 100%;">
+                <img id="modal-image" src="" alt="Preview Gambar"
+                    style="max-width: 100%; max-height: 100%;">
             </div>
         </div>
 
@@ -302,6 +343,17 @@
 
         document.querySelectorAll('.pembayaran').forEach(button => {
             button.addEventListener('click', function() {
+                // Get the InvoiceID from the button's data-id attribute
+                const invoiceID = this.dataset.id;
+
+                // Set the hidden input value in the payment form
+                document.querySelector('#payment-form input[name="InvoiceID"]').value = invoiceID;
+
+                // Optionally, set the amount if needed
+                const amountPaid = this.closest('tr').querySelector('td:nth-child(5)').textContent
+                    .trim(); // Assuming total price is in the 5th column
+                document.querySelector('#payment-form input[name="AmountPaid"]').value = amountPaid;
+
                 // Show payment modal
                 document.getElementById('payment-modal').classList.add('show');
                 document.getElementById('payment-overlay').classList.add('show');
@@ -332,6 +384,36 @@
 
         document.getElementById('image-overlay').addEventListener('click', function() {
             document.getElementById('image-modal').classList.remove('show');
+            this.classList.remove('show');
+        });
+
+        // Batal pesanan
+
+        document.querySelectorAll('.batal').forEach(button => {
+            button.addEventListener('click', function() {
+                const invoiceID = this.dataset.id;
+                const type = this.dataset.type;
+
+                // Tampilkan modal pembatalan
+                document.getElementById('cancel-modal').classList.add('show');
+                document.getElementById('cancel-overlay').classList.add('show');
+
+                // Set URL dan tipe untuk form pembatalan
+                const cancelForm = document.getElementById('cancel-form');
+                cancelForm.action = `/pengguna/batal/${invoiceID}`;
+                document.getElementById('cancel-type').value = type;
+            });
+        });
+
+        document.querySelectorAll('.close-button').forEach(button => {
+            button.addEventListener('click', function() {
+                document.getElementById('cancel-modal').classList.remove('show');
+                document.getElementById('cancel-overlay').classList.remove('show');
+            });
+        });
+
+        document.getElementById('cancel-overlay').addEventListener('click', function() {
+            document.getElementById('cancel-modal').classList.remove('show');
             this.classList.remove('show');
         });
     </script>

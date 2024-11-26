@@ -156,12 +156,41 @@
                                 @endif
                             </td>
                             <td>{{ $invoice->lastPay }}</td>
-                            <td>{{ $invoice->InvoiceDate }}</td>
-                            <td><button class="batal">Batal</button></td>
+                            <td>{{ $invoice->deliveryStatus->created_at ?? ($invoice->pickupStatus->created_at ?? 'N/A') }}
+                            </td>
+                            <td>
+                                <button class="batal" data-id="{{ $invoice->InvoiceID }}"
+                                    data-type="{{ $invoice->type }}">
+                                    Batal
+                                </button>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
+        </div>
+
+        <!-- Modal untuk Alasan Pembatalan -->
+        <div class="modal-batal">
+            <div class="overlay" id="cancel-overlay"></div>
+            <div class="modal" id="cancel-modal">
+                <div class="modal-header">
+                    <h2>Batalkan Pesanan</h2>
+                    <button class="close-button" title="Tutup">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p class="modal-description">Alasan pesanan dibatalkan:</p>
+                    <form id="cancel-form" method="POST" action="{{ route('kasir.batal', ['id' => ':id']) }}">
+                        @csrf
+                        <input type="hidden" name="_method" value="POST">
+                        <input type="hidden" name="type" id="cancel-type">
+                        <textarea name="reason" id="cancel-reason" rows="4" placeholder="Masukkan alasan pembatalan..." required></textarea>
+                        <div class="button-group">
+                            <button type="submit" class="submit-button">Konfirmasi Pembatalan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
 
         <!-- Modal Gambar -->
@@ -289,6 +318,37 @@
             document.getElementById('image-modal').classList.remove('show');
             this.classList.remove('show');
         });
+
+        // Batal pesanan
+
+        document.querySelectorAll('.batal').forEach(button => {
+            button.addEventListener('click', function() {
+                const invoiceID = this.dataset.id;
+                const type = this.dataset.type;
+
+                // Tampilkan modal pembatalan
+                document.getElementById('cancel-modal').classList.add('show');
+                document.getElementById('cancel-overlay').classList.add('show');
+
+                // Set URL dan tipe untuk form pembatalan
+                const cancelForm = document.getElementById('cancel-form');
+                cancelForm.action = `/kasir/batal/${invoiceID}`;
+                document.getElementById('cancel-type').value = type;
+            });
+        });
+
+        document.querySelectorAll('.close-button').forEach(button => {
+            button.addEventListener('click', function() {
+                document.getElementById('cancel-modal').classList.remove('show');
+                document.getElementById('cancel-overlay').classList.remove('show');
+            });
+        });
+
+        document.getElementById('cancel-overlay').addEventListener('click', function() {
+            document.getElementById('cancel-modal').classList.remove('show');
+            this.classList.remove('show');
+        });
+
 
         //sweetalert
         document.querySelectorAll('.konfirmasi').forEach(button => {

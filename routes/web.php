@@ -41,15 +41,18 @@ Route::get('/pengguna/home', [PenggunaController::class, 'home'])->name('penggun
 Route::get('/pengguna/pembayaran', [PenggunaController::class, 'pembayaran'])->name('pengguna.pembayaran');
 Route::get('/pengguna/status', [PenggunaController::class, 'status'])->name('pengguna.status');
 Route::get('/pengguna/riwayat', [PenggunaController::class, 'riwayat'])->name('pengguna.riwayat');
+Route::get('/pengguna/riwayat/batal', [PenggunaController::class, 'riwayatBatal'])->name('pengguna.riwayat.batal');
 Route::get('/pengguna/buat_pesanan', [PeralatanKantorController::class, 'index'])->name('pengguna.buat_pesanan');
 Route::get('/addToOrder', [PeralatanKantorController::class, 'addToOrder'])->name('pengguna.addToOrder');
 Route::post('/pembayaran/upload', [PenggunaController::class, 'bukti_transfer'])->name('pembayaran.upload');
+Route::post('/pengguna/batal/{id}', [PenggunaController::class, 'batal'])->name('pengguna.batal');
 
 //profile pengguna
 Route::get('/pengguna/profile', [InformasiPenggunaController::class, 'show'])->name('profile.show');
 Route::patch('/pengguna/profile', [InformasiPenggunaController::class, 'update'])->name('profile.update');
 Route::put('/pengguna/profile/password', [InformasiPenggunaController::class, 'updatePassword'])->name('profile.password.update');
 Route::delete('pengguna/profile', [InformasiPenggunaController::class, 'destroy'])->name('profile.destroy');
+Route::post('/pengguna/{id}/batal', [PenggunaController::class, 'batal'])->name('pengguna.batal');
 
 //keranjang
 Route::get('/keranjang', [CartController::class, 'index'])->name('customer.cart');
@@ -69,6 +72,8 @@ Route::get('/kasir/status/{type?}', [KasirController::class, 'status'])->name('s
 Route::delete('/hapus/pesanan/{id}', [KasirController::class, 'destroy'])->name('pesanan.destroy');
 Route::post('/status/next/{id}', [KasirController::class, 'nextStatus'])->name('status.next');
 Route::get('/kasir/riwayat', [KasirController::class, 'riwayat'])->name('kasir.riwayat');
+Route::get('/kasir/riwayat/batal', [KasirController::class, 'riwayatBatal'])->name('kasir.riwayat.batal');
+Route::post('/kasir/batal/{id}', [KasirController::class, 'batal'])->name('kasir.batal');
 
 //profile kasir
 Route::get('/kasir/profile', [InformasiPenggunaController::class, 'showKasir'])->name('kasir.profile.show');

@@ -12,6 +12,7 @@ use App\Models\Payment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Customer;
+use App\Models\CancelledTransaction;
 
 
 class PenggunaController extends Controller
@@ -48,7 +49,7 @@ class PenggunaController extends Controller
                 $q->where('status', '!=', 'menunggu pembayaran');
             });
         })
-        ->orderBy('InvoiceID', 'asc')
+        ->orderBy('InvoiceDate', 'desc')
         ->get();
     
     // Add totalAmount calculation for each invoice
@@ -97,8 +98,14 @@ class PenggunaController extends Controller
             return $carry + ($detail->Quantity * $detail->price);
         }, 0);
 
-        // Hitung lastPay (2 hari setelah InvoiceDate)
-        $invoice->lastPay = \Carbon\Carbon::parse($invoice->InvoiceDate)->addDays(2);
+        $createdAt = $invoice->deliveryStatus->created_at ?? $invoice->pickupStatus->created_at;
+
+        // Hitung lastPay (2 hari setelah created_at)
+        if ($createdAt) {
+            $invoice->lastPay = \Carbon\Carbon::parse($createdAt)->addDays(2);
+        } else {
+            $invoice->lastPay = null; // Fallback jika created_at tidak tersedia
+        }
 
         return $invoice;
     });
@@ -155,14 +162,14 @@ public function riwayat()
     }
 
     // Ambil semua invoice yang sudah selesai
-    $invoices = Invoice::with(['invoiceDetails', 'deliveryStatus', 'pickupStatus'])
+    $invoices = Invoice::with(['invoiceDetails', 'deliveryStatus', 'pickupStatus', 'cancelledTransaction'])
         ->where('CustomerID', $customerId) // Filter berdasarkan CustomerID
         ->where(function ($query) {
-            // Kondisi status "Selesai" baik untuk deliveryStatus atau pickupStatus
+            // Kondisi status "Selesai" atau "dibatalkan" untuk deliveryStatus atau pickupStatus
             $query->whereHas('deliveryStatus', function ($q) {
-                $q->where('status', 'Selesai');
+                $q->whereIn('status', ['Selesai']);
             })->orWhereHas('pickupStatus', function ($q) {
-                $q->where('status', 'Selesai');
+                $q->whereIn('status', ['Selesai']);
             });
         })
         ->orderBy('InvoiceID', 'asc')
@@ -179,6 +186,44 @@ public function riwayat()
     return view('pengguna.pengguna_riwayat', compact('invoices'));
 }
 
+public function riwayatBatal()
+{
+    $userId = Auth::id();
+
+    // Ambil CustomerID berdasarkan user_id
+    $customerId = DB::table('customers')
+        ->where('user_id', $userId)
+        ->value('CustomerID');
+
+    if (!$customerId) {
+        // Jika tidak ada CustomerID, tampilkan pesan atau halaman kosong
+        return view('pengguna.pengguna_riwayat_batal', ['invoices' => []]);
+    }
+
+    // Ambil semua invoice yang sudah selesai
+    $invoices = Invoice::with(['invoiceDetails', 'deliveryStatus', 'pickupStatus', 'cancelledTransaction'])
+        ->where('CustomerID', $customerId) // Filter berdasarkan CustomerID
+        ->where(function ($query) {
+            // Kondisi status "Selesai" atau "dibatalkan" untuk deliveryStatus atau pickupStatus
+            $query->whereHas('deliveryStatus', function ($q) {
+                $q->whereIn('status', ['dibatalkan']);
+            })->orWhereHas('pickupStatus', function ($q) {
+                $q->whereIn('status', ['dibatalkan']);
+            });
+        })
+        ->orderBy('InvoiceID', 'asc')
+        ->get();
+    
+    // Add totalAmount calculation for each invoice
+    $invoices = $invoices->map(function ($invoice) {
+        $invoice->totalAmount = $invoice->invoiceDetails->reduce(function ($carry, $detail) {
+            return $carry + ($detail->Quantity * $detail->price);
+        }, 0);
+        return $invoice;
+    });
+
+    return view('pengguna.pengguna_riwayat_batal', compact('invoices'));
+}
 
     public function getInvoiceDetails($id)
     {
@@ -210,6 +255,44 @@ public function riwayat()
             'totalAmount' => $totalAmount, // Menyertakan totalAmount ke dalam respons
         ]);
     }
+
+    public function batal($id, Request $request)
+{
+    $invoice = Invoice::find($id);
+
+    if (!$invoice) {
+        return redirect()->back()->with('error', 'Invoice tidak ditemukan.');
+    }
+
+    // Ambil alasan pembatalan
+    $reason = $request->input('reason');
+
+    // Perbarui status sesuai dengan jenis pengantaran
+    if ($invoice->type === 'delivery') {
+        $deliveryStatus = $invoice->deliveryStatus;
+        if ($deliveryStatus) {
+            $deliveryStatus->status = 'dibatalkan';
+            $deliveryStatus->save();
+        }
+    } elseif ($invoice->type === 'pickup') {
+        $pickupStatus = $invoice->pickupStatus;
+        if ($pickupStatus) {
+            $pickupStatus->status = 'dibatalkan';
+            $pickupStatus->save();
+        }
+    }
+
+    // Catat pembatalan di tabel CancelledTransaction
+    CancelledTransaction::create([
+        'InvoiceId' => $invoice->InvoiceID,
+        'cancellation_reason' => $reason,
+        'cancelled_by' => 'customer', // Pembatalan dilakukan oleh kasir
+        'cancellation_date' => now(), // Tanggal pembatalan
+    ]);
+
+    return redirect()->back()->with('success', 'Pesanan berhasil dibatalkan.');
+}
+
     
 
 

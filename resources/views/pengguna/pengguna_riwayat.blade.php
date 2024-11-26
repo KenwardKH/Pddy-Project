@@ -112,8 +112,10 @@
                 <input type="text" placeholder="Cari produk..." class="search-bar" name="search">
                 <button type="submit" class="search-button"><i class="bi bi-search"></i></button>
             </form>
-            <h1>Riwayat Pesanan</h1>
-
+            <h1>Pesanan Selesai</h1>
+        </div>
+        <div style="text-align: right; margin-right:80px">
+            <a href="{{ route('pengguna.riwayat.batal') }}" class="riwayat">Pesanan Dibatalkan</i></a>
         </div>
         <div class="table">
             <table class="order-table">
@@ -159,7 +161,7 @@
                                 @endif
                             </td>
                             <td><button class="cetak-button">Cetak</button></td>
-                            <td>{{ $invoice->InvoiceDate }}</td>
+                            <td>{{ $invoice->deliveryStatus->created_at ?? ($invoice->pickupStatus->created_at ?? 'N/A') }}</td>
                         </tr>
                     @endforeach
                 </tbody>

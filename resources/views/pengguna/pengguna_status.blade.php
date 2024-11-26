@@ -144,7 +144,7 @@
                             <td>{{ $invoice->deliveryStatus->status ?? ($invoice->pickupStatus->status ?? 'N/A') }}
                             </td>
                             <td><button class="cetak-button">Cetak</button></td>
-                            <td>{{ $invoice->InvoiceDate }}</td>
+                            <td>{{ $invoice->deliveryStatus->created_at ?? ($invoice->pickupStatus->created_at ?? 'N/A') }}</td>
                         </tr>
                     @endforeach
                 </tbody>
