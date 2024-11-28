@@ -6,25 +6,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class Supplier extends Model
 {
-    // Nama tabel yang sesuai dengan database
+    // Nama tabel
     protected $table = 'suppliers';
 
-    // Menentukan kolom primary key jika menggunakan nama selain id
+    // Primary key
     protected $primaryKey = 'SupplierID';
 
-    // Menentukan apakah timestamps harus diaktifkan (laravel default: created_at dan updated_at)
-    public $timestamps = false;  // Karena di tabel tidak ada kolom timestamps (created_at, updated_at)
+    // Apakah menggunakan timestamps (created_at, updated_at)
+    public $timestamps = false;
 
-    // Menentukan kolom mana yang bisa diisi secara mass-assignment
+    // Mass assignable attributes
     protected $fillable = [
         'SupplierName',
         'SupplierAddress',
         'SupplierContact',
     ];
-
-    // Relasi ke tabel supplierproducts (One-to-Many)
-    public function supplierProducts()
-    {
-        return $this->hasMany(SupplierProduct::class, 'SupplierID', 'SupplierID');
-    }
 }

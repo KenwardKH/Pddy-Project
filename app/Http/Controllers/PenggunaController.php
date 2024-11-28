@@ -287,7 +287,7 @@ public function riwayatBatal()
         'InvoiceId' => $invoice->InvoiceID,
         'cancellation_reason' => $reason,
         'cancelled_by' => 'customer', // Pembatalan dilakukan oleh kasir
-        'cancellation_date' => now(), // Tanggal pembatalan
+        'cancellation_date' => now()->timezone('Asia/Jakarta')->format('Y-m-d H:i:s') // Tanggal pembatalan
     ]);
 
     return redirect()->back()->with('success', 'Pesanan berhasil dibatalkan.');

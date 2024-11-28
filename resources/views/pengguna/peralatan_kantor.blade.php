@@ -54,7 +54,7 @@
                     <h3>{{ $product->ProductName }}</h3>
 
                     <!-- Display product price if available -->
-                    <p><strong>Rp{{ number_format($product->pricing->UnitPrice ?? 0, 0, ',', '.') }}/{{ $product->productUnit }}</strong>
+                    <p><strong>Rp{{ number_format($product->pricing->UnitPrice ?? 0, 0, ',', '.') }}/{{ $product->ProductUnit }}</strong>
                     </p>
                     <b>Detail:</b>
                     <p>{{ $product->Description }}</p>

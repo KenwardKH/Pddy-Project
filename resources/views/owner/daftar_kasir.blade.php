@@ -23,7 +23,7 @@
                 <div class="right">
                     <a href="#">Produk <i class="bi bi-box-seam"></i></a>
                     <a href="#">Riwayat Kasir<i class="bi bi-cash-coin"></i></a>
-                    <a href="{{ route('owner.user') }}">User<i class="bi bi-person"></i></a>
+                    <a href="{{ route('owner.daftar-costumer') }}">User<i class="bi bi-person"></i></a>
                     <a href="{{ route('owner.log-transaksi') }}">Transaksi <i class="bi bi-receipt-cutoff"></i></a>
                     <a href="#">Laporan<i class="bi bi-journal-text"></i></a>
                     <a href="{{ route('owner.daftar-supplier') }}">Supplier<i class="bi bi-shop"></i></a>
@@ -37,6 +37,17 @@
                 </div>
             </div>
         </div>
+        <div class="button-container">
+            <a href="{{ route('owner.daftar-costumer') }}"
+                class="toggle-button {{ request()->routeIs('owner.daftar-costumer') ? 'active' : '' }}">
+                Daftar Pelanggan
+            </a>
+            <a href="{{ route('owner.daftar-kasir') }}"
+                class="toggle-button {{ request()->routeIs('owner.daftar-kasir') ? 'active' : '' }}">
+                Daftar Kasir
+            </a>
+        </div>
+
 
         <!-- Judul Daftar Kasir -->
         <div class="table-title">Daftar Kasir</div>
@@ -50,8 +61,8 @@
         </div>
 
         <!-- Tambahkan di atas tabel -->
-        <div class="button-container">
-            <button class="add-button" id="add-supplier-button">+ Tambah Kasir</button>
+        <div class="button-add">
+            <button class="add-button" id="add-kasir-button">+ Tambah Kasir</button>
         </div>
 
         <!-- Tabel -->
@@ -63,6 +74,8 @@
                     <th>No HP</th>
                     <th>Email</th>
                     <th>Alamat</th>
+                    <th>Edit</th>
+                    <th>Hapus</th>
                 </tr>
             </thead>
             <tbody>
@@ -73,17 +86,33 @@
                         <td>{{ $kasir->kontak_kasir }}</td>
                         <td>{{ $kasir->user->email }}</td>
                         <td>{{ $kasir->alamat_kasir }}</td>
+                        <td class="edit">
+                            <button type="button" class="btn btn-primary edit-btn" data-id="{{ $kasir->id_kasir }}"
+                                data-nama="{{ $kasir->nama_kasir }}" data-kontak="{{ $kasir->kontak_kasir }}"
+                                data-email="{{ $kasir->user->email }}" data-alamat="{{ $kasir->alamat_kasir }}">
+                                <i class="bi bi-pencil btn-edit"></i>
+                            </button>
+                        </td>
+
+                        <td class="hapus">
+                            <button type="button" class="btn btn-danger delete-btn" data-id="{{ $kasir->id_kasir }}">
+                                <i class="bi bi-trash btn-danger"></i>
+                            </button>
+                            <form id="delete-form-{{ $kasir->id_kasir }}"
+                                action="{{ route('owner.kasir.destroy', $kasir->id_kasir) }}" method="POST"
+                                style="display: none;">
+                                @csrf
+                                @method('DELETE')
+                            </form>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
     </div>
 
-
-
-
     <!-- Form Pop-up -->
-    <div id="add-supplier-modal" class="modal" style="display: none;">
+    <div id="add-kasir-modal" class="modal" style="display: none;">
         <div class="modal-content">
             <span class="close-button" id="close-modal">&times;</span>
             <h2>Tambah Kasir Baru</h2>
@@ -98,7 +127,7 @@
                 </div>
             @endif
 
-            <form id="add-supplier-form" method="POST" action="{{ route('owner.add-kasir') }}">
+            <form id="add-kasir-form" method="POST" action="{{ route('owner.add-kasir') }}">
                 @csrf
                 <div class="form-group">
                     <label for="NamaKasir">Nama Kasir</label>
@@ -129,6 +158,49 @@
         </div>
     </div>
 
+    <!-- Update Kasir Modal -->
+    <div id="update-kasir-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-button" id="close-update-modal">&times;</span>
+            <h2>Update Kasir</h2>
+
+            <!-- Menampilkan pesan error jika ada -->
+            @if ($errors->any())
+                <div class="error-messages">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <form id="update-kasir-form" method="POST" action="">
+                @csrf
+                @method('PUT')
+                <input type="hidden" name="id_kasir" id="update-id-kasir">
+                <div class="form-group">
+                    <label for="UpdateNamaKasir">Nama Kasir</label>
+                    <input type="text" name="nama_kasir" id="UpdateNamaKasir" required>
+                </div>
+                <div class="form-group">
+                    <label for="UpdateNoHP">No HP</label>
+                    <input type="text" name="kontak_kasir" id="UpdateNoHP" required>
+                </div>
+                <div class="form-group">
+                    <label for="UpdateEmailKasir">Email</label>
+                    <input type="email" name="email" id="UpdateEmailKasir" required>
+                </div>
+                <div class="form-group">
+                    <label for="UpdateAlamatKasir">Alamat</label>
+                    <input type="text" name="alamat_kasir" id="UpdateAlamatKasir" required>
+                </div>
+                <button type="submit" class="submit-button">Update</button>
+            </form>
+        </div>
+    </div>
+
+
 
     <!-- Pop-up Success Modal -->
     <div id="success-modal" class="modal" style="display: none;">
@@ -141,44 +213,102 @@
         </div>
     </div>
 
-
-
-
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const deleteButtons = document.querySelectorAll('.delete-btn');
+
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const kasirId = this.getAttribute('data-id');
+                    const form = document.getElementById(`delete-form-${kasirId}`);
+
+                    Swal.fire({
+                        title: 'Yakin ingin menghapus?',
+                        text: "Data kasir akan dihapus secara permanen!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ya, Hapus!',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
+                });
+            });
+        });
+
         document.addEventListener('DOMContentLoaded', function() {
             // Cek apakah ada pesan error dari server
             @if ($errors->any())
-                document.getElementById('add-supplier-modal').style.display = 'flex';
+                document.getElementById('add-kasir-modal').style.display = 'flex';
             @endif
         });
 
-        document.getElementById('add-supplier-button').addEventListener('click', function() {
-            document.getElementById('add-supplier-modal').style.display = 'flex';
+        document.getElementById('add-kasir-button').addEventListener('click', function() {
+            document.getElementById('add-kasir-modal').style.display = 'flex';
         });
 
         document.getElementById('close-modal').addEventListener('click', function() {
-            document.getElementById('add-supplier-modal').style.display = 'none';
+            document.getElementById('add-kasir-modal').style.display = 'none';
         });
 
+        //Edit Kasir
         document.addEventListener('DOMContentLoaded', function() {
-            // Cek apakah ada pesan sukses dari server
-            @if (session('success'))
+            const editButtons = document.querySelectorAll('.edit-btn');
+            const updateModal = document.getElementById('update-kasir-modal');
+            const closeUpdateModal = document.getElementById('close-update-modal');
+            const updateForm = document.getElementById('update-kasir-form');
+
+            editButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const kasirId = this.getAttribute('data-id');
+                    const namaKasir = this.getAttribute('data-nama');
+                    const kontakKasir = this.getAttribute('data-kontak');
+                    const emailKasir = this.getAttribute('data-email');
+                    const alamatKasir = this.getAttribute('data-alamat');
+
+                    // Populate form fields
+                    document.getElementById('update-id-kasir').value = kasirId;
+                    document.getElementById('UpdateNamaKasir').value = namaKasir;
+                    document.getElementById('UpdateNoHP').value = kontakKasir;
+                    document.getElementById('UpdateEmailKasir').value = emailKasir;
+                    document.getElementById('UpdateAlamatKasir').value = alamatKasir;
+
+                    // Update the form action
+                    updateForm.action = `/owner/kasir/${kasirId}`;
+
+                    // Show the modal
+                    updateModal.style.display = 'flex';
+                });
+            });
+
+            closeUpdateModal.addEventListener('click', function() {
+                updateModal.style.display = 'none';
+            });
+        });
+    </script>
+    @if (session('success'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
                 const successModal = document.getElementById('success-modal');
                 successModal.style.display = 'flex';
+
+                const successMessage = @json(session('success')); // Ambil pesan dari session
+                document.querySelector('#success-modal h2').innerText = successMessage; // Tampilkan sesuai
 
                 // Tutup modal setelah 3 detik
                 setTimeout(() => {
                     successModal.style.display = 'none';
                 }, 3000);
+            });
+        </script>
+    @endif
 
-                // Tombol tutup manual
-                document.getElementById('close-success-modal').addEventListener('click', function() {
-                    successModal.style.display = 'none';
-                });
-            @endif
-        });
-    </script>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 
 </html>

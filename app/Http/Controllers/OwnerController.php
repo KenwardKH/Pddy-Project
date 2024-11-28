@@ -116,5 +116,57 @@ class OwnerController extends Controller
         return redirect()->route('owner.daftar-kasir')->with('success', 'Kasir berhasil ditambahkan.');
     }
 
+    public function updateKasir(Request $request, $id)
+    {
+        // Cari data kasir
+        $kasir = Kasir::findOrFail($id);
+        $user = $kasir->user;
+
+        // Validasi input
+        $validated = $request->validate([
+            'nama_kasir' => 'required|string|max:255',
+            'kontak_kasir' => 'required|string|max:20',
+            'alamat_kasir' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id . ',id', // Abaikan email user ini
+        ]);
+
+        // Update user dan kasir
+        $user->update(['email' => $validated['email']]);
+        $kasir->update([
+            'nama_kasir' => $validated['nama_kasir'],
+            'alamat_kasir' => $validated['alamat_kasir'],
+            'kontak_kasir' => $validated['kontak_kasir'],
+        ]);
+
+        return redirect()->route('owner.daftar-kasir')->with('success', 'Kasir berhasil diperbarui.');
+    }
+
+
+
+    public function destroyCustomer($id)
+    {
+        // Cari data pelanggan berdasarkan ID
+        $customer = Customer::findOrFail($id);
+
+        // Hapus data pelanggan
+        $customer->delete();
+        $customer->user()->delete();
+
+        // Redirect dengan pesan sukses
+        return redirect()->route('owner.daftar-costumer')->with('success', 'Pelanggan berhasil dihapus.');
+    }
+
+    public function destroyKasir($id)
+    {
+        // Cari data kasir berdasarkan ID
+        $kasir = Kasir::findOrFail($id);
+
+        // Hapus data kasir
+        $kasir->delete();
+        $kasir->user()->delete();
+
+        // Redirect dengan pesan sukses
+        return redirect()->route('owner.daftar-kasir')->with('success', 'Kasir berhasil dihapus.');
+    }
 
 }

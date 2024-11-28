@@ -96,5 +96,8 @@ Route::post('/tambah-kasir', [OwnerController::class, 'tambahKasir'])->name('own
 Route::get('/owner/daftar-supplier', [OwnerController::class, 'supplier'])->name('owner.daftar-supplier');
 Route::post('/add-supplier', [OwnerController::class, 'addSupplier'])->name('owner.add-supplier');
 Route::get('/owner/log-transaksi', [OwnerController::class, 'transaksi'])->name('owner.log-transaksi');
+Route::delete('/owner/customers/{id}', [OwnerController::class, 'destroyCustomer'])->name('owner.customer.destroy');
+Route::delete('/owner/kasir/{id}', [OwnerController::class, 'destroyKasir'])->name('owner.kasir.destroy');
+Route::put('/owner/kasir/{id}', [OwnerController::class, 'updateKasir'])->name('owner.kasir.update');
 
 require __DIR__.'/auth.php';

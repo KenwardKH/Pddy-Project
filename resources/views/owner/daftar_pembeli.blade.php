@@ -20,7 +20,7 @@
                 <div class="right">
                     <a href="#">Produk <i class="bi bi-box-seam"></i></a>
                     <a href="#">Riwayat Kasir<i class="bi bi-cash-coin"></i></a>
-                    <a href="{{ route('owner.user') }}">User<i class="bi bi-person"></i></a>
+                    <a href="{{ route('owner.daftar-costumer') }}">User<i class="bi bi-person"></i></a>
                     <a href="{{ route('owner.log-transaksi') }}">Transaksi <i class="bi bi-receipt-cutoff"></i></a>
                     <a href="#">Laporan<i class="bi bi-journal-text"></i></a>
                     <a href="{{ route('owner.daftar-supplier') }}">Suplllier<i class="bi bi-shop"></i></a>
@@ -33,9 +33,20 @@
                 </div>
             </div>
         </div>
+        <div class="button-container">
+            <a href="{{ route('owner.daftar-costumer') }}"
+               class="toggle-button {{ request()->routeIs('owner.daftar-costumer') ? 'active' : '' }}">
+                Daftar Pelanggan
+            </a>
+            <a href="{{ route('owner.daftar-kasir') }}"
+               class="toggle-button {{ request()->routeIs('owner.daftar-kasir') ? 'active' : '' }}">
+                Daftar Kasir
+            </a>
+        </div>
+        
 
         <!-- Judul Daftar Kasir -->
-        <div class="table-title">Daftar Pembeli</div>
+        <div class="table-title">Daftar Pelanggan</div>
 
         <!-- Search Bar -->
         <div class="search-container">
@@ -54,6 +65,7 @@
                     <th>Email</th>
                     <th>No HP</th>
                     <th>Alamat</th>
+                    <th>Hapus</th>
                 </tr>
             </thead>
             <tbody>
@@ -64,10 +76,49 @@
                         <td>{{ $customer->user->email ?? 'Tidak ada email' }}</td>
                         <td>{{ $customer->CustomerContact }}</td>
                         <td>{{ $customer->CustomerAddress }}</td>
+                        <td class="hapus">
+                            <button type="button" class="btn btn-danger delete-btn" data-id="{{ $customer->CustomerID }}">
+                                <i class="bi bi-trash btn-danger"></i>
+                            </button>
+                            <form id="delete-form-{{ $customer->CustomerID }}" action="{{ route('owner.customer.destroy', $customer->CustomerID) }}" method="POST" style="display: none;">
+                                @csrf
+                                @method('DELETE')
+                            </form>
+                        </td>
+                        
                     </tr>
                 @endforeach
             </tbody>
         </table>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const deleteButtons = document.querySelectorAll('.delete-btn');
+    
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const customerId = this.getAttribute('data-id');
+                    const form = document.getElementById(`delete-form-${customerId}`);
+    
+                    Swal.fire({
+                        title: 'Yakin ingin menghapus?',
+                        text: "Data pelanggan akan dihapus secara permanen!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ya, Hapus!',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 </html>

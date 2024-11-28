@@ -21,7 +21,6 @@ class TransactionList extends Model
         'CustomerName',
         'CustomerContact',
         'InvoiceDate',
-        'DueDate',
         'PaymentOption',
         'CashierName',
         'TotalAmount',

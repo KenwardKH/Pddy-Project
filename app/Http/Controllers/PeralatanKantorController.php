@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use App\Models\CustomerCart;
 use App\Models\Customer;
+use App\Models\Pricing;
 // namespace App\Http\Controllers\pengguna;
 
 use Illuminate\Http\Request;

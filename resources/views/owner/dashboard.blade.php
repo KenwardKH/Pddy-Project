@@ -20,7 +20,7 @@
                 <div class="right">
                     <a href="#">Produk <i class="bi bi-box-seam"></i></a>
                     <a href="#">Riwayat Kasir<i class="bi bi-cash-coin"></i></a>
-                    <a href="{{ route('owner.user') }}">User<i class="bi bi-person"></i></a>
+                    <a href="{{ route('owner.daftar-costumer') }}">User<i class="bi bi-person"></i></a>
                     <a href="{{ route('owner.log-transaksi') }}">Transaksi <i class="bi bi-receipt-cutoff"></i></a>
                     <a href="#">Laporan<i class="bi bi-journal-text"></i></a>
                     <a href="{{ route('owner.daftar-supplier') }}">Suplllier<i class="bi bi-shop"></i></a>
