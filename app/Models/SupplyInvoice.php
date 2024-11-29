@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Supplier extends Model
+class SupplyInvoice extends Model
 {
     // Nama tabel yang sesuai dengan database
     protected $table = 'supply_invoices';

@@ -12,6 +12,7 @@ use App\Http\Controllers\PulpenDanPensilController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CartKasirController;
 use App\Http\Controllers\OwnerController;
+use App\Http\Controllers\StockController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -100,4 +101,18 @@ Route::delete('/owner/customers/{id}', [OwnerController::class, 'destroyCustomer
 Route::delete('/owner/kasir/{id}', [OwnerController::class, 'destroyKasir'])->name('owner.kasir.destroy');
 Route::put('/owner/kasir/{id}', [OwnerController::class, 'updateKasir'])->name('owner.kasir.update');
 
+//owner stock
+Route::get('/owner/produk', [StockController::class, 'product'])->name('owner.product');
+Route::post('/owner/product/store', [StockController::class, 'store'])->name('owner.store-product');
+Route::get('/owner/produk/{id}/edit', [StockController::class, 'edit'])->name('owner.edit-product');
+Route::post('/owner/produk/{id}', [StockController::class, 'update'])->name('owner.update-product');
+Route::delete('/owner/produk/{id}', [StockController::class, 'destroyProduct'])->name('owner.product.destroy');
+Route::get('/owner/product/search', [StockController::class, 'search'])->name('owner.product.search');
+Route::get('/owner/produk', [StockController::class, 'product'])->name('owner.product');
+Route::get('/owner/daftar-supplier', [StockController::class, 'supplier'])->name('owner.daftar-supplier');
+Route::post('/owner/supplier/store', [StockController::class, 'storeSupplier'])->name('owner.store-supplier');
+Route::get('/owner/supplier/{id}/edit', [StockController::class, 'editSupplier'])->name('owner.edit-supplier');
+Route::post('/owner/supplier/{id}', [StockController::class, 'updateSupplier'])->name('owner.update-supplier');
+Route::delete('/owner/supplier/{id}', [StockController::class, 'destroySupplier'])->name('owner.supplier.destroy');
+Route::get('/owner/supplier/search', [StockController::class, 'searchSupplier'])->name('owner.supplier.search');
 require __DIR__.'/auth.php';

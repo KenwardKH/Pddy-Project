@@ -3,7 +3,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class SupplierProduct extends Model
+class SupplyInvoiceDetail extends Model
 {
     protected $table = 'supply_invoice_details';
     protected $primaryKey = 'SupplyInvoiceDetailId';

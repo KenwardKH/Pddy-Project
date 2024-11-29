@@ -49,7 +49,7 @@ class PenggunaController extends Controller
                 $q->where('status', '!=', 'menunggu pembayaran');
             });
         })
-        ->orderBy('InvoiceDate', 'desc')
+        ->orderBy('InvoiceId', 'desc')
         ->get();
     
     // Add totalAmount calculation for each invoice

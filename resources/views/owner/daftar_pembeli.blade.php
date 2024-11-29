@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Daftar Pembeli</title>
+    <link rel="stylesheet" href="{{ asset('css/owner_nav.css') }}">
     <link rel="stylesheet" href="{{ asset('css/daftar_kasir.css') }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css" rel="stylesheet">
 </head>
@@ -18,12 +19,12 @@
                     <a href="{{ route('owner.home') }}">Home</a>
                 </div>
                 <div class="right">
-                    <a href="#">Produk <i class="bi bi-box-seam"></i></a>
-                    <a href="#">Riwayat Kasir<i class="bi bi-cash-coin"></i></a>
+                    <a href="{{ route('owner.product') }}">Produk <i class="bi bi-box-seam"></i></a>
+                    <a href="{{ route('owner.daftar-supplier') }}">Supplier<i class="bi bi-shop"></i></a>
+                    <a href="#">Stock Baru <i class="bi bi-bag-plus"></i></a>
                     <a href="{{ route('owner.daftar-costumer') }}">User<i class="bi bi-person"></i></a>
-                    <a href="{{ route('owner.log-transaksi') }}">Transaksi <i class="bi bi-receipt-cutoff"></i></a>
-                    <a href="#">Laporan<i class="bi bi-journal-text"></i></a>
-                    <a href="{{ route('owner.daftar-supplier') }}">Suplllier<i class="bi bi-shop"></i></a>
+                    <a href="{{ route('owner.log-transaksi') }}">Riwayat Transaksi <i class="bi bi-receipt-cutoff"></i></a>
+                    <a href="#">Laporan Keuangan<i class="bi bi-journal-text"></i></a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit" class="btn-link" style="background: none; border: none; padding: 0; margin: 0; cursor: pointer;">

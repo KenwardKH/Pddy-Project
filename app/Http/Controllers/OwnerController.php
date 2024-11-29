@@ -61,15 +61,6 @@ class OwnerController extends Controller
         return view('owner.daftar_kasir', compact('kasirs'));
     }
 
-    public function supplier()
-    {
-        // Mengambil semua data customer
-        $suppliers = Supplier::all();
-
-        // Mengirim data customers ke view
-        return view('owner.supplier', compact('suppliers'));
-    }
-
     public function addSupplier(Request $request)
     {
         // Validasi input

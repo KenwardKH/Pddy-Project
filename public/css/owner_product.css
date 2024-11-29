@@ -1,0 +1,156 @@
+.table tbody, td, tfoot, th, thead, tr {
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+.table {
+    margin-top: 20px;
+    overflow-x: auto; /* Menangani overflow untuk tabel yang lebar */
+    box-sizing: revert;
+}
+
+.container {
+    max-width: 100%;
+}
+
+.table table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: auto;
+    border-radius: 10px;
+}
+
+.table thead tr {
+    background-color: #80f4ac; /* Warna header tabel */
+    color: white;
+}
+
+.table th, .table td {
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+.table th {
+    font-weight: bold;
+}
+
+.table td img {
+    border-radius: 5px;
+}
+
+/* Hover efek pada baris tabel */
+
+.table tbody tr:nth-child(even) {
+    background-color: #f7f2f2b5;
+}
+
+.table tbody tr:hover {
+    background-color: #ece7e7db;
+}
+/* Kolom deskripsi lebih lebar */
+.table .deskripsi {
+    max-width: 250px;
+    word-wrap: break-word;
+    text-align: left;
+}
+
+/* Kolom tombol */
+.table .edit button, .hapus button {
+    font-size: 14px;
+    padding: 6px 10px;
+    border-radius: 5px;
+}
+
+.table .edit button {
+    background-color: #ffc107;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+.table .edit button:hover {
+    background-color: #e0a800;
+}
+
+/* Modal styling */
+.table .modal-content {
+    border-radius: 10px;
+    padding: 20px;
+    background-color: #fefefe;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.table .modal-header {
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 15px;
+}
+
+.table .modal-title {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.table .modal-footer {
+    border-top: 1px solid #ddd;
+    padding-top: 15px;
+}
+
+.table .form-control {
+    font-size: 14px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+/* Tombol modal */
+.table .modal-footer .btn-secondary {
+    background-color: #6c757d;
+    border: none;
+}
+
+.table .modal-footer .btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+.table .modal-footer .btn-primary {
+    background-color: #80f4ac;
+    border: none;
+    color: white;
+}
+
+.table .modal-footer .btn-primary:hover {
+    background-color: #4fd894;
+}
+
+/* Responsif */
+@media screen and (max-width: 768px) {
+    .nav .right {
+        flex-wrap: wrap;
+    }
+
+    .search-container {
+        justify-content: center;
+        margin-bottom: 10px;
+    }
+
+    .search-input {
+        width: 100%;
+        margin-right: 0;
+    }
+
+    .search-button {
+        width: 100%;
+        margin-top: 5px;
+    }
+
+    table th, table td {
+        font-size: 12px;
+        padding: 8px;
+    }
+
+    .edit button, .hapus button {
+        font-size: 12px;
+        padding: 4px 8px;
+    }
+}
