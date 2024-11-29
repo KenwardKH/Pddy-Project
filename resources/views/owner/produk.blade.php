@@ -70,7 +70,7 @@
 
             <div style="display: flex; justify-content:right; margin:10px ;margin-right:30px">
                 <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#addProductModal">
-                    Tambah Produk
+                    + Tambah Produk
                 </button>
             </div>
 
