@@ -21,14 +21,16 @@
                 <div class="right">
                     <a href="{{ route('owner.product') }}">Produk <i class="bi bi-box-seam"></i></a>
                     <a href="{{ route('owner.daftar-supplier') }}">Supplier<i class="bi bi-shop"></i></a>
-                    <a href="#">Stock Baru <i class="bi bi-bag-plus"></i></a>
+                    <a href="{{ route('owner.daftarSupply') }}">Riwayat Pembelian Supply <i class="bi bi-bag-plus"></i></a>
                     <a href="{{ route('owner.daftar-costumer') }}">User<i class="bi bi-person"></i></a>
-                    <a href="{{ route('owner.log-transaksi') }}">Riwayat Transaksi <i class="bi bi-receipt-cutoff"></i></a>
+                    <a href="{{ route('owner.log-transaksi') }}">Riwayat Transaksi <i
+                            class="bi bi-receipt-cutoff"></i></a>
                     <a href="#">Laporan Keuangan<i class="bi bi-journal-text"></i></a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <button type="submit" class="btn-link" style="background: none; border: none; padding: 0; margin: 0; cursor: pointer;">
-                            <a>Keluar <i class="bi bi-box-arrow-right"></i></a> 
+                        <button type="submit" class="btn-link"
+                            style="background: none; border: none; padding: 0; margin: 0; cursor: pointer;">
+                            <a>Keluar <i class="bi bi-box-arrow-right"></i></a>
                         </button>
                     </form>
                 </div>

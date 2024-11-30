@@ -39,7 +39,7 @@
                 <div class="right">
                     <a href="{{ route('owner.product') }}">Produk <i class="bi bi-box-seam"></i></a>
                     <a href="{{ route('owner.daftar-supplier') }}">Supplier<i class="bi bi-shop"></i></a>
-                    <a href="#">Stock Baru <i class="bi bi-bag-plus"></i></a>
+                    <a href="{{ route('owner.daftarSupply') }}">Riwayat Pembelian Supply <i class="bi bi-bag-plus"></i></a>
                     <a href="{{ route('owner.daftar-costumer') }}">User<i class="bi bi-person"></i></a>
                     <a href="{{ route('owner.log-transaksi') }}">Riwayat Transaksi <i
                             class="bi bi-receipt-cutoff"></i></a>
@@ -55,7 +55,7 @@
             </div>
         </div>
         <div class="dashboard">
-            <h1>Daftar Supplier</h1>
+            <h1 style="font-weight: bold">Daftar Supplier</h1>
 
             <!-- Search Bar -->
             <div class="search-container">

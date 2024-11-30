@@ -108,10 +108,6 @@
             </div>
         </div>
         <div class="dashboard">
-            <form action="" method="GET" class="search-container">
-                <input type="text" placeholder="Cari produk..." class="search-bar" name="search">
-                <button type="submit" class="search-button"><i class="bi bi-search"></i></button>
-            </form>
             <h1>Pesanan Dibatalkan</h1>
         </div>
         <div style="text-align: right; margin-right:80px">

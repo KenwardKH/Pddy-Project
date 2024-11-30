@@ -1,53 +1,59 @@
-/* General Styles */
-body {
-    font-family: 'Roboto', sans-serif;
-    background-color: white;
+/* * {
     margin: 0;
-}
+    padding: 0;
+    box-sizing: border-box;
+} */
 
-/* Container for Header */
-.header {
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-    border-bottom: rgb(136, 243, 193) solid 2px;
-    position: fixed;
-    width: 100%;
-    top: 0;
-    left: 0;
+body {
+    font-family: "Roboto", sans-serif;
     background-color: white;
-    z-index: 1000;
 }
 
 .container {
-    margin-top: 160px; /* Offset content for the fixed header height */
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
+    margin: auto;
+    text-align: center;
 }
 
-/* Header Logo */
+.header {
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+    border-bottom: rgb(136, 243, 193) solid 2px;
+}
 .header img {
     width: 350px;
-    margin-bottom: 10px;
 }
 
-/* Navbar */
+.header h1 {
+    font-size: 24px;
+    color: #333;
+}
+
 .nav {
     display: flex;
-    justify-content: space-between;
     width: 100%;
+    justify-content: space-between;
 }
-
-.nav .left a,
-.nav .right a {
-    text-decoration: none;
-    color: #333;
-    font-weight: bold;
-    font-size: 16px;
-    margin-right: 20px;
+.nav a {
     display: inline-flex;
     align-items: center;
+    font-size: 16px; /* Adjust the size as needed */
+}
+
+.nav i {
+    font-size: 18px; /* Adjust this to match the text size */
+    line-height: 1; /* Ensures the icon height aligns properly */
+    margin-left: 4px;
+}
+
+.nav a:hover {
+    color: #80f4ac;
+}
+
+.nav .left {
+    display: flex;
+    justify-content: space-around;
+    width: 10%;
 }
 
 .nav .right {
@@ -57,17 +63,12 @@ body {
     margin-right: 20px;
 }
 
-.nav .right a {
-    margin-left: 10px;
+.nav a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
 }
 
-.nav a:hover {
-    color: #80f4AC;
-}
-
-.nav i {
-    margin-left: 4px;
-}
 
 /* Title and underline styling */
 h1.header-title {

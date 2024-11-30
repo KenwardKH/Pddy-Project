@@ -107,10 +107,6 @@
             </div>
         </div>
         <div class="dashboard">
-            <form action="" method="GET" class="search-container">
-                <input type="text" placeholder="Cari produk..." class="search-bar" name="search">
-                <button type="submit" class="search-button"><i class="bi bi-search"></i></button>
-            </form>
             <h1>Daftar Pesanan</h1>
         </div>
         <!-- Your existing table -->

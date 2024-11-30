@@ -115,4 +115,11 @@ Route::get('/owner/supplier/{id}/edit', [StockController::class, 'editSupplier']
 Route::post('/owner/supplier/{id}', [StockController::class, 'updateSupplier'])->name('owner.update-supplier');
 Route::delete('/owner/supplier/{id}', [StockController::class, 'destroySupplier'])->name('owner.supplier.destroy');
 Route::get('/owner/supplier/search', [StockController::class, 'searchSupplier'])->name('owner.supplier.search');
+Route::get('/supply-invoice/create', [StockController::class, 'supplyCreate'])->name('supplyInvoice.create');
+Route::post('/supply-invoice/store', [StockController::class, 'supplyStore'])->name('supplyInvoice.store');
+
+Route::get('/api/supplyInvoice/{id}', [StockController::class, 'getSupplyInvoiceDetails']);
+Route::get('/owner/daftar-supply', [StockController::class, 'daftarSupply'])->name('owner.daftarSupply');
+Route::get('/owner/searchSupply', [StockController::class, 'searchSupply'])->name('owner.searchSupply');
+
 require __DIR__.'/auth.php';

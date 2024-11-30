@@ -44,9 +44,11 @@ class PenggunaController extends Controller
             $query->whereHas('deliveryStatus', function ($q) {
                 $q->where('status', '!=', 'Selesai');
                 $q->where('status', '!=', 'menunggu pembayaran');
+                $q->where('status', '!=', 'dibatalkan');
             })->orWhereHas('pickupStatus', function ($q) {
                 $q->where('status', '!=', 'Selesai');
                 $q->where('status', '!=', 'menunggu pembayaran');
+                $q->where('status', '!=', 'dibatalkan');
             });
         })
         ->orderBy('InvoiceId', 'desc')

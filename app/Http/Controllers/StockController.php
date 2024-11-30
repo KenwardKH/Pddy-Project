@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Pricing;
 use App\Models\Supplier;
+use App\Models\SupplyInvoice;
 use App\Models\SupplyInvoiceDetail;
 use Illuminate\Support\Facades\DB;
 
@@ -222,4 +223,118 @@ class StockController extends Controller
         return redirect()->route('owner.daftar-supplier')->with('success', 'Supplier berhasil dihapus.');
     }
 
+    public function supplyCreate()
+    {
+        $suppliers = Supplier::all();
+        $products = Product::all();
+        return view('owner.tambah_supply', compact('suppliers', 'products'));
+    }
+
+    public function supplyStore(Request $request)
+    {
+        $request->validate([
+            'SupplierID' => 'required|exists:suppliers,SupplierID',
+            'SupplyDate' => 'required|date',
+            'SupplyInvoiceNumber' => 'nullable|string',
+            'ProductID' => 'required|array',
+            'Quantity' => 'required|array',
+            'SupplyPrice' => 'required|array',
+        ]);
+
+        // Buat array untuk JSON Invoice Details
+        $invoiceDetails = [];
+        foreach ($request->ProductID as $index => $productID) {
+            $invoiceDetails[] = [
+                'ProductID' => (int) $productID,
+                'Quantity' => (int) $request->Quantity[$index],
+                'SupplyPrice' => (float) $request->SupplyPrice[$index],
+            ];
+        }
+
+        // Panggil stored procedure dengan 4 parameter
+        DB::statement('CALL CreateSupplyInvoice(?, ?, ?, ?)', [
+            $request->SupplierID,
+            $request->SupplyDate,
+            $request->SupplyInvoiceNumber ?? 'NULL',
+            json_encode($invoiceDetails),
+        ]);
+
+        return redirect()->route('supplyInvoice.create')->with('success', 'Supply Invoice berhasil dibuat.');
+    }
+
+    public function getSupplyInvoiceDetails($id)
+    {
+        $invoice = supplyInvoice::with(['supplyInvoiceDetail'])
+            ->findOrFail($id);
+        
+        // Hitung totalAmount
+        $totalAmount = $invoice->supplyInvoiceDetail->reduce(function ($carry, $detail) {
+            return $carry + ($detail->Quantity * $detail->SupplyPrice);
+        }, 0);
+    
+        // Map the invoice details
+        $details = $invoice->supplyInvoiceDetail->map(function ($detail) {
+            return [
+                'product' => $detail->ProductName, // Mengambil langsung nama produk dari InvoiceDetail
+                'price' => $detail->SupplyPrice,        // Mengambil harga dari InvoiceDetail
+                'Quantity' => $detail->Quantity, // Mengambil jumlah dari InvoiceDetail
+                'productUnit' => $detail->productUnit, // Mengambil satuan dari InvoiceDetail
+                'total' => $detail->Quantity * $detail->SupplyPrice, // Menghitung total
+            ];
+        });
+    
+        // Log data for debugging
+        \Log::info(['details' => $details, 'totalAmount' => $totalAmount]);
+
+        return response()->json([
+            'details' => $details,
+            'totalAmount' => $totalAmount, // Menyertakan totalAmount ke dalam respons
+        ]);
+    }
+
+    public function daftarSupply()
+    {
+        $invoices = supplyInvoice::with(['supplyInvoiceDetail'])
+            ->orderBy('SupplyDate', 'desc')
+            ->get();
+
+        // Hitung `totalAmount` untuk setiap invoice
+        $invoices = $invoices->map(function ($invoice) {
+            $invoice->totalAmount = $invoice->supplyInvoiceDetail->reduce(function ($carry, $detail) {
+                return $carry + ($detail->Quantity * $detail->SupplyPrice);
+            }, 0);
+            return $invoice;
+        });
+  
+        return view('owner.daftar_pembelian', compact('invoices'));
+    }
+
+    public function searchSupply(Request $request)
+{
+    // Ambil data filter
+    $supplierName = $request->input('supplierName');
+    $startDate = $request->input('startDate');
+    $endDate = $request->input('endDate');
+
+    // Query dasar
+    $query = SupplyInvoice::query();
+
+    // Tambahkan filter berdasarkan nama supplier
+    if ($supplierName) {
+        $query->where('SupplierName', 'LIKE', '%' . $supplierName . '%');
+    }
+
+    // Tambahkan filter berdasarkan tanggal
+    if ($startDate) {
+        $query->whereDate('SupplyDate', '>=', $startDate);
+    }
+    if ($endDate) {
+        $query->whereDate('SupplyDate', '<=', $endDate);
+    }
+
+    // Dapatkan data
+    $invoices = $query->with('supplyInvoiceDetail')->get();
+
+    return view('owner.daftar_pembelian', compact('invoices'));
+}
 }

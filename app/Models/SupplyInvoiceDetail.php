@@ -10,11 +10,6 @@ class SupplyInvoiceDetail extends Model
     public $timestamps = false;
     protected $fillable = ['SupplyInvoiceId', 'ProductID', 'ProductName', 'Quantity', 'SupplyPrice'];
 
-    public function product()
-    {
-        return $this->belongsTo(Product::class, 'ProductID');
-    }
-
     public function supplyInvoice()
     {
         return $this->belongsTo(SupplyInvoice::class, 'SupplyInvoiceId');
