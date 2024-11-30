@@ -47,6 +47,9 @@ Route::get('/pengguna/buat_pesanan', [PeralatanKantorController::class, 'index']
 Route::get('/addToOrder', [PeralatanKantorController::class, 'addToOrder'])->name('pengguna.addToOrder');
 Route::post('/pembayaran/upload', [PenggunaController::class, 'bukti_transfer'])->name('pembayaran.upload');
 Route::post('/pengguna/batal/{id}', [PenggunaController::class, 'batal'])->name('pengguna.batal');
+//untuk print invoice
+Route::get('/invoices/{id}/print', [PenggunaController::class, 'printInvoice']);
+
 
 //profile pengguna
 Route::get('/pengguna/profile', [InformasiPenggunaController::class, 'show'])->name('profile.show');

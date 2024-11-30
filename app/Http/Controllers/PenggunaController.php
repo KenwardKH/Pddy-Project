@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Customer;
 use App\Models\CancelledTransaction;
-
+use PDF;
 
 class PenggunaController extends Controller
 {
@@ -22,49 +22,60 @@ class PenggunaController extends Controller
         return view('pengguna.pengguna_home');
     }
 
-    public function status()
-{
-    $userId = Auth::id();
-
-    // Ambil CustomerID berdasarkan user_id
-    $customerId = DB::table('customers')
-        ->where('user_id', $userId)
-        ->value('CustomerID');
-
-    if (!$customerId) {
-        // Jika tidak ada CustomerID, tampilkan pesan error atau halaman kosong
-        return view('pengguna.pengguna_status', ['invoices' => []]);
-    }
-
-    // Ambil semua invoice yang terkait dengan CustomerID
-    $invoices = Invoice::with(['invoiceDetails', 'deliveryStatus', 'pickupStatus'])
-        ->where('CustomerID', $customerId) // Filter berdasarkan CustomerID
-        ->where(function ($query) {
-            // Kondisi status "belum selesai" baik untuk deliveryStatus atau pickupStatus
-            $query->whereHas('deliveryStatus', function ($q) {
-                $q->where('status', '!=', 'Selesai');
-                $q->where('status', '!=', 'menunggu pembayaran');
-                $q->where('status', '!=', 'dibatalkan');
-            })->orWhereHas('pickupStatus', function ($q) {
-                $q->where('status', '!=', 'Selesai');
-                $q->where('status', '!=', 'menunggu pembayaran');
-                $q->where('status', '!=', 'dibatalkan');
-            });
-        })
-        ->orderBy('InvoiceId', 'desc')
-        ->get();
-    
-    // Add totalAmount calculation for each invoice
-    $invoices = $invoices->map(function ($invoice) {
+    public function printInvoice($id)
+    {
+        $invoice = Invoice::with(['deliveryStatus', 'pickupStatus', 'invoiceDetails'])->findOrFail($id);
         $invoice->totalAmount = $invoice->invoiceDetails->reduce(function ($carry, $detail) {
             return $carry + ($detail->Quantity * $detail->price);
         }, 0);
-        return $invoice;
-    });
+
+        $pdf = PDF::loadView('invoices.print', compact('invoice'));
+
+        return $pdf->stream("Invoice_$id.pdf"); 
+    }
+    public function status()
+    {
+        $userId = Auth::id();
+
+        // Ambil CustomerID berdasarkan user_id
+        $customerId = DB::table('customers')
+            ->where('user_id', $userId)
+            ->value('CustomerID');
+
+        if (!$customerId) {
+            // Jika tidak ada CustomerID, tampilkan pesan error atau halaman kosong
+            return view('pengguna.pengguna_status', ['invoices' => []]);
+        }
+
+        // Ambil semua invoice yang terkait dengan CustomerID
+        $invoices = Invoice::with(['invoiceDetails', 'deliveryStatus', 'pickupStatus'])
+            ->where('CustomerID', $customerId) // Filter berdasarkan CustomerID
+            ->where(function ($query) {
+                // Kondisi status "belum selesai" baik untuk deliveryStatus atau pickupStatus
+                $query->whereHas('deliveryStatus', function ($q) {
+                    $q->where('status', '!=', 'Selesai');
+                    $q->where('status', '!=', 'menunggu pembayaran');
+                    $q->where('status', '!=', 'dibatalkan');
+                })->orWhereHas('pickupStatus', function ($q) {
+                    $q->where('status', '!=', 'Selesai');
+                    $q->where('status', '!=', 'menunggu pembayaran');
+                    $q->where('status', '!=', 'dibatalkan');
+                });
+            })
+            ->orderBy('InvoiceId', 'desc')
+            ->get();
+        
+        // Add totalAmount calculation for each invoice
+        $invoices = $invoices->map(function ($invoice) {
+            $invoice->totalAmount = $invoice->invoiceDetails->reduce(function ($carry, $detail) {
+                return $carry + ($detail->Quantity * $detail->price);
+            }, 0);
+            return $invoice;
+        });
 
 
-    return view('pengguna.pengguna_status', compact('invoices'));
-}
+        return view('pengguna.pengguna_status', compact('invoices'));
+    }
 
     public function pembayaran()
 {

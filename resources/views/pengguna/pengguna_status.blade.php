@@ -225,6 +225,15 @@
                 document.querySelector('.overlay').classList.remove('show');
             });
         });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.cetak-button').forEach(button => {
+                button.addEventListener('click', function () {
+                    const invoiceId = this.closest('tr').querySelector('td:first-child').textContent.trim();
+                    window.open(`/invoices/${invoiceId}/print`, '_blank');
+                });
+            });
+        });
     </script>
 </body>
 
