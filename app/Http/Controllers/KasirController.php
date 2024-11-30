@@ -311,7 +311,7 @@ public function pembayaran()
             $pickupStatus = $invoice->pickupStatus;
             if ($pickupStatus) {
                 $pickupStatus->status = 'Diproses';
-                $pickUpStatus->updated_by = $cashierId;
+                $pickupStatus->updated_by = $cashierId;
                 $pickupStatus->save();
             }
         }
