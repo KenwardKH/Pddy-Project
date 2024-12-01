@@ -8,7 +8,7 @@ class SupplyInvoiceDetail extends Model
     protected $table = 'supply_invoice_details';
     protected $primaryKey = 'SupplyInvoiceDetailId';
     public $timestamps = false;
-    protected $fillable = ['SupplyInvoiceId', 'ProductID', 'ProductName', 'Quantity', 'SupplyPrice'];
+    protected $fillable = ['SupplyInvoiceId', 'ProductID', 'ProductName', 'Quantity', 'productUnit','SupplyPrice'];
 
     public function supplyInvoice()
     {

@@ -13,6 +13,7 @@ body {
     flex-direction: column;
     padding: 8px;
     border-bottom: rgb(136, 243, 193) solid 2px;
+    margin-bottom: 10px;
 }
 .header img {
     width: 350px;

@@ -38,7 +38,7 @@
     </div>
 
     <!-- Main Content Section -->
-    <div class="container">
+    <div class="main">
         <h1 class="header-title">Keranjang Belanja</h1>
         <div class="header-line"></div>
 

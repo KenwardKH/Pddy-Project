@@ -116,6 +116,7 @@
                     <div class="total-order">
                         <h3>Total Pesanan: Rp{{ number_format($total, 0, ',', '.') }}</h3>
                     </div>
+                    <input type="hidden" name="total" value="{{ $total }}">
                     <button type="submit" class="checkout-btn">Check Out</button>
                 </div>
             </form>

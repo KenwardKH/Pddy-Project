@@ -15,6 +15,7 @@
 <body>
     <div class="container">
         <!-- Header -->
+        <!-- Header -->
         <div class="header">
             <img src="{{ asset('images/logo.png') }}" alt="logo" class="logo">
             <div class="nav">
@@ -24,11 +25,13 @@
                 <div class="right">
                     <a href="{{ route('owner.product') }}">Produk <i class="bi bi-box-seam"></i></a>
                     <a href="{{ route('owner.daftar-supplier') }}">Supplier<i class="bi bi-shop"></i></a>
-                    <a href="{{ route('owner.daftarSupply') }}">Riwayat Pembelian Supply <i class="bi bi-bag-plus"></i></a>
+                    <a href="{{ route('owner.daftarSupply') }}">Riwayat Pembelian Supply <i
+                            class="bi bi-bag-plus"></i></a>
                     <a href="{{ route('owner.daftar-costumer') }}">User<i class="bi bi-person"></i></a>
-                    <a href="{{ route('owner.log-transaksi') }}">Riwayat Transaksi <i
+                    <a href="{{ route('owner.riwayatTransaksi') }}">Riwayat Transaksi <i
                             class="bi bi-receipt-cutoff"></i></a>
-                    <a href="#">Laporan Keuangan<i class="bi bi-journal-text"></i></a>
+                    <a href="{{ route('owner.laporanPenjualan') }}">Laporan Penjualan<i
+                            class="bi bi-journal-text"></i></a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit" class="btn-link"
@@ -64,6 +67,7 @@
 
         <!-- Tambahkan di atas tabel -->
         <div class="button-add">
+            <a href="{{ route('owner.history-kasir') }}" class="btn-riwayat">Riwayat Kasir</a>
             <button class="add-button" id="add-kasir-button">+ Tambah Kasir</button>
         </div>
 

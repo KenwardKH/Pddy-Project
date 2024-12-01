@@ -259,6 +259,15 @@
                 });
             });
         });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.cetak-button').forEach(button => {
+                button.addEventListener('click', function () {
+                    const invoiceId = this.closest('tr').querySelector('td:first-child').textContent.trim();
+                    window.open(`/invoices/${invoiceId}/print`, '_blank');
+                });
+            });
+        });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>

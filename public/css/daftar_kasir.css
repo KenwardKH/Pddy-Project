@@ -76,6 +76,8 @@ tbody tr:hover {
 
 /* Posisi dan Tampilan Tombol */
 .button-add {
+    display: flex;
+    justify-content: space-between;
     text-align: right;
     margin: 20px 0; /* Jarak tombol ke elemen lain */
     margin-right: 20px;
@@ -117,6 +119,21 @@ tbody tr:hover {
 .btn-edit:active {
     color: rgb(85, 16, 16); /* Warna lebih gelap saat tombol ditekan */
     transform: scale(0.95); /* Efek sedikit mengecil */
+}
+
+.btn-riwayat {
+    padding: 10px 20px;
+    color: #555;
+    text-decoration: none;
+    font-weight: bold;
+    border: 1px solid #ccc;
+    background-color: yellow;
+    border-radius: 10px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-riwayat:hover {
+    background-color: gold;
 }
 
 /* Tombol Hapus */

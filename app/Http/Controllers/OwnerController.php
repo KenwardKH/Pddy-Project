@@ -8,6 +8,7 @@ use App\Models\Kasir;
 use App\Models\Customer;
 use App\Models\Supplier;
 use App\Models\User;
+use App\Models\OrderStatusLog;
 
 use Illuminate\Http\Request;
 
@@ -46,7 +47,8 @@ class OwnerController extends Controller
     public function customer()
     {
         // Mengambil semua data customer
-        $customers = Customer::all();
+        $customers = Customer::orderBy('CustomerName','asc')
+        ->get();
 
         // Mengirim data customers ke view
         return view('owner.daftar_pembeli', compact('customers'));
@@ -55,7 +57,8 @@ class OwnerController extends Controller
     public function kasir()
     {
         // Mengambil semua data customer
-        $kasirs = Kasir::all();
+        $kasirs = Kasir::orderBy('nama_kasir','asc')
+        ->get();
 
         // Mengirim data customers ke view
         return view('owner.daftar_kasir', compact('kasirs'));
@@ -159,5 +162,47 @@ class OwnerController extends Controller
         // Redirect dengan pesan sukses
         return redirect()->route('owner.daftar-kasir')->with('success', 'Kasir berhasil dihapus.');
     }
+
+    public function aktivitasKasir()
+    {
+        // Ambil data dari tabel order_status_logs
+        $logs = OrderStatusLog::whereNotNull('cashier_name')
+        ->orderBy('updated_at', 'desc') // Urutkan berdasarkan tanggal terbaru
+        ->get();
+
+        // Return view dengan data
+        return view('owner.history_kasir', ['logs' => $logs]);
+    }
+
+    public function searchCashierHistory(Request $request)
+{
+    // Ambil data filter
+    $cashierName = $request->input('cashierName');
+    $startDate = $request->input('startDate');
+    $endDate = $request->input('endDate');
+
+    // Query dasar
+    $query = OrderStatusLog::query()->whereNotNull('cashier_name');;
+
+    // Tambahkan filter berdasarkan nama kasir
+    if ($cashierName) {
+        $query->where('cashier_name', 'LIKE', '%' . $cashierName . '%');
+    }
+
+    // Tambahkan filter berdasarkan tanggal (gunakan updated_at)
+    if ($startDate) {
+        $query->whereDate('updated_at', '>=', $startDate);
+    }
+    if ($endDate) {
+        $query->whereDate('updated_at', '<=', $endDate);
+    }
+
+    // Dapatkan data dengan paginasi
+    $logs = $query->orderBy('updated_at', 'desc')->get();
+
+    // Return view dengan data
+    return view('owner.history_kasir', compact('logs'));
+}
+
 
 }

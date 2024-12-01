@@ -15,6 +15,7 @@
 <body>
     <div class="container">
         <!-- Header -->
+        <!-- Header -->
         <div class="header">
             <img src="{{ asset('images/logo.png') }}" alt="logo" class="logo">
             <div class="nav">
@@ -24,11 +25,13 @@
                 <div class="right">
                     <a href="{{ route('owner.product') }}">Produk <i class="bi bi-box-seam"></i></a>
                     <a href="{{ route('owner.daftar-supplier') }}">Supplier<i class="bi bi-shop"></i></a>
-                    <a href="{{ route('owner.daftarSupply') }}">Riwayat Pembelian Supply <i class="bi bi-bag-plus"></i></a>
+                    <a href="{{ route('owner.daftarSupply') }}">Riwayat Pembelian Supply <i
+                            class="bi bi-bag-plus"></i></a>
                     <a href="{{ route('owner.daftar-costumer') }}">User<i class="bi bi-person"></i></a>
-                    <a href="{{ route('owner.log-transaksi') }}">Riwayat Transaksi <i
+                    <a href="{{ route('owner.riwayatTransaksi') }}">Riwayat Transaksi <i
                             class="bi bi-receipt-cutoff"></i></a>
-                    <a href="#">Laporan Keuangan<i class="bi bi-journal-text"></i></a>
+                    <a href="{{ route('owner.laporanPenjualan') }}">Laporan Penjualan<i
+                            class="bi bi-journal-text"></i></a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit" class="btn-link"
@@ -41,6 +44,12 @@
         </div>
         <div class="main">
             <h2>Tambah Stock Barang</h2>
+            <!-- Pesan Sukses -->
+            @if (session('success'))
+                <div class="alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
             <form action="{{ route('supplyInvoice.store') }}" method="POST">
                 @csrf
                 <div class="form-group">

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Dashboard</title>
+    <title>Daftar Produk</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
@@ -24,11 +24,16 @@
             font-size: medium;
             line-height: normal;
         }
+
+        .btn-link:hover {
+            color: #80f4ac;
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
+        <!-- Header -->
         <!-- Header -->
         <div class="header">
             <img src="{{ asset('images/logo.png') }}" alt="logo" class="logo">
@@ -39,11 +44,13 @@
                 <div class="right">
                     <a href="{{ route('owner.product') }}">Produk <i class="bi bi-box-seam"></i></a>
                     <a href="{{ route('owner.daftar-supplier') }}">Supplier<i class="bi bi-shop"></i></a>
-                    <a href="{{ route('owner.daftarSupply') }}">Riwayat Pembelian Supply <i class="bi bi-bag-plus"></i></a>
+                    <a href="{{ route('owner.daftarSupply') }}">Riwayat Pembelian Supply <i
+                            class="bi bi-bag-plus"></i></a>
                     <a href="{{ route('owner.daftar-costumer') }}">User<i class="bi bi-person"></i></a>
-                    <a href="{{ route('owner.log-transaksi') }}">Riwayat Transaksi <i
+                    <a href="{{ route('owner.riwayatTransaksi') }}">Riwayat Transaksi <i
                             class="bi bi-receipt-cutoff"></i></a>
-                    <a href="#">Laporan Keuangan<i class="bi bi-journal-text"></i></a>
+                    <a href="{{ route('owner.laporanPenjualan') }}">Laporan Penjualan<i
+                            class="bi bi-journal-text"></i></a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit" class="btn-link"
@@ -61,7 +68,7 @@
             <div class="search-container">
                 <form action="{{ route('owner.product.search') }}" method="GET">
                     <input type="text" name="query" placeholder="Cari..." class="search-input"
-                        style="width: 200px;" value="{{ request('query') }}" required>
+                        style="width: 200px;" value="{{ request('query') }}">
                     <button type="submit" class="search-button">
                         <i class="bi bi-search"></i>
                     </button>
@@ -137,7 +144,6 @@
                             <th>No.</th>
                             <th>Gambar Produk</th>
                             <th>Nama Produk</th>
-                            <th>Harga Beli</th>
                             <th>Harga Jual</th>
                             <th>Stock</th>
                             <th>Satuan</th>
@@ -159,12 +165,6 @@
                                     @endif
                                 </td>
                                 <td>{{ $product->ProductName }}</td>
-                                <td>
-                                    @php
-                                        $supplyPrice = $product->supplyInvoiceDetail->last()->SupplyPrice ?? 'N/A';
-                                    @endphp
-                                    {{ is_numeric($supplyPrice) ? number_format($supplyPrice, 0, ',', '.') : $supplyPrice }}
-                                </td>
                                 <td>
                                     {{ $product->pricing ? number_format($product->pricing->UnitPrice, 0, ',', '.') : 'N/A' }}
                                 </td>
@@ -263,7 +263,7 @@
         </div>
     </div>
     <script>
-        function img_pathUrl(input){
+        function img_pathUrl(input) {
             $('#img_url')[0].src = (window.URL ? URL : webkitURL).createObjectURL(input.files[0]);
         }
         // Menampilkan modal

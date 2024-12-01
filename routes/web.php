@@ -13,6 +13,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CartKasirController;
 use App\Http\Controllers\OwnerController;
 use App\Http\Controllers\StockController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -103,6 +104,8 @@ Route::get('/owner/log-transaksi', [OwnerController::class, 'transaksi'])->name(
 Route::delete('/owner/customers/{id}', [OwnerController::class, 'destroyCustomer'])->name('owner.customer.destroy');
 Route::delete('/owner/kasir/{id}', [OwnerController::class, 'destroyKasir'])->name('owner.kasir.destroy');
 Route::put('/owner/kasir/{id}', [OwnerController::class, 'updateKasir'])->name('owner.kasir.update');
+Route::get('/owner/history-kasir', [OwnerController::class, 'aktivitasKasir'])->name('owner.history-kasir');
+Route::get('/owner/searchCashier', [OwnerController::class, 'searchCashierHistory'])->name('owner.searchCashierHistory');
 
 //owner stock
 Route::get('/owner/produk', [StockController::class, 'product'])->name('owner.product');
@@ -124,5 +127,10 @@ Route::post('/supply-invoice/store', [StockController::class, 'supplyStore'])->n
 Route::get('/api/supplyInvoice/{id}', [StockController::class, 'getSupplyInvoiceDetails']);
 Route::get('/owner/daftar-supply', [StockController::class, 'daftarSupply'])->name('owner.daftarSupply');
 Route::get('/owner/searchSupply', [StockController::class, 'searchSupply'])->name('owner.searchSupply');
+
+Route::get('/owner/laporanPenjualan', [TransactionController::class, 'index'])->name('owner.laporanPenjualan');
+Route::get('/owner/searchCustomer', [TransactionController::class, 'searchCustomer'])->name('owner.searchCustomer');
+Route::get('/owner/riwayatTransaksi', [TransactionController::class, 'transaction'])->name('owner.riwayatTransaksi');
+Route::get('/owner/filterTransaksi', [TransactionController::class, 'filterTransaksi'])->name('owner.filterTransaksi');
 
 require __DIR__.'/auth.php';

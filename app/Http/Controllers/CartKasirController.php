@@ -7,6 +7,7 @@ use App\Models\Customer;
 use App\Models\Invoice;
 use App\Models\DeliveryOrderStatus;
 use App\Models\PickupOrderStatus;
+use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -150,6 +151,7 @@ class CartKasirController extends Controller
         $shippingOption = $request->input('shipping_option');
         $paymentOption = $request->input('payment_option');
         $alamat = $request->input('alamat', null);  // Address if delivery option selected
+        $total = $request->input('total'); // Ambil total dari hidden input atau request
 
         try {
             // Call the stored procedure with additional parameters
@@ -161,6 +163,17 @@ class CartKasirController extends Controller
                 $shippingOption,
                 $paymentOption,
                 $alamat
+            ]);
+
+             // Assume we get InvoiceID after the stored procedure execution
+            $invoiceId = DB::table('invoices')->latest('InvoiceID')->value('InvoiceID'); 
+
+            // Insert payment data
+            $payment = Payment::create([
+                'InvoiceID' => $invoiceId,
+                'PaymentDate' => now(),
+                'AmountPaid' => $total, // Gunakan total pesanan sebagai jumlah dibayar
+                'PaymentImage' => null // Jika bukti pembayaran tidak diperlukan
             ]);
 
             return redirect()->route('kasir.cart');

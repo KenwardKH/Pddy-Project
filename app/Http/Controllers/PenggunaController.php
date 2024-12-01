@@ -264,6 +264,8 @@ public function riwayatBatal()
         \Log::info(['details' => $details, 'totalAmount' => $totalAmount]);
 
         return response()->json([
+            'customerName' => $invoice->customerName,     // Nama pelanggan
+            'customerContact' => $invoice->customerContact,
             'details' => $details,
             'totalAmount' => $totalAmount, // Menyertakan totalAmount ke dalam respons
         ]);

@@ -16,11 +16,6 @@ class Product extends Model
         return $this->hasOne(Pricing::class, 'ProductID');
     }
 
-    public function supplyInvoiceDetail()
-    {
-        return $this->hasMany(SupplyInvoiceDetail::class, 'ProductID');
-    }
-
     public function customerCart()
     {
         return $this->hasMany(CustomerCart::class, 'ProductID');

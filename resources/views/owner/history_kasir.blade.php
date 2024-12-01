@@ -34,7 +34,34 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .modal-header h2 {
+            font-size: 1.5rem;
+            margin: 0;
+        }
+
+        .modal-header .close-button {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #555;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .modal-info{
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+            margin-left: 20px
+        }
+        .modal-info p {
+            margin: 0;
+            margin-top: 10px
         }
 
 
@@ -90,21 +117,6 @@
             background-color: #ddcbcbdb;
         }
 
-        .btn-baru {
-            padding: 10px;
-            background-color: green;
-            margin-right: 60px;
-            font-size: 16px;
-            color: white;
-            font-weight: bold;
-            border-radius: 10px
-        }
-
-        .btn-baru:hover {
-            background-color: rgba(0, 172, 0, 0.841);
-            cursor: pointer;
-        }
-
         /* Styling untuk form filter */
         .filter {
             display: flex;
@@ -157,6 +169,7 @@
         .filter .btn-secondary:hover {
             background-color: #565e64;
         }
+
     </style>
 </head>
 
@@ -191,100 +204,86 @@
             </div>
         </div>
         <div class="dashboard">
-            <h1 style="margin: 0;">Daftar Pembelian Supply</h1>
+            <h1 style="margin: 0;">Riwayat Aktivitas Kasir</h1>
         </div>
         <div style="margin: 20px; display: flex; justify-content: center;">
-            <form method="GET" action="{{ route('owner.searchSupply') }}" class="filter">
+            <form method="GET" action="{{ route('owner.searchCashierHistory') }}" class="filter">
                 <div style="column-gap: 20px; display:flex">
                     <div>
-                        <label for="supplierName">Nama Supplier:</label>
-                        <input type="text" id="supplierName" name="supplierName"
-                            value="{{ request('supplierName') }}" placeholder="Cari Supplier...">
+                    <label for="cashierName">Nama Kasir:</label>
+                    <input type="text" id="cashierName" name="cashierName" value="{{ request('cashierName') }}"
+                        placeholder="Cari Kasir...">
                     </div>
                     <div>
-                        <label for="startDate">Tanggal Mulai:</label>
-                        <input type="date" id="startDate" name="startDate" value="{{ request('startDate') }}">
+                    <label for="startDate">Tanggal Mulai:</label>
+                    <input type="date" id="startDate" name="startDate" value="{{ request('startDate') }}">
                     </div>
                     <div>
-                        <label for="endDate">Tanggal Akhir:</label>
-                        <input type="date" id="endDate" name="endDate" value="{{ request('endDate') }}">
+                    <label for="endDate">Tanggal Akhir:</label>
+                    <input type="date" id="endDate" name="endDate" value="{{ request('endDate') }}">
                     </div>
                 </div>
                 <div>
                     <button type="submit" class="btn">Filter</button>
-                    <a href="{{ route('owner.daftarSupply') }}" class="btn">Reset</a>
+                    <a href="{{ route('owner.history-kasir') }}" class="btn">Reset</a>
                 </div>
             </form>
         </div>
-        <div style="display: flex; justify-content:right; margin:10px ;margin-right:30px">
-            <form action="{{ route('supplyInvoice.create') }}" method="get">
-                <button class="btn btn-baru">
-                    + Stock Baru
-                </button>
-            </form>
-
-        </div>
-        <!-- Your existing table -->
         <div class="table">
             <table class="order-table">
                 <thead>
                     <tr>
-                        <th>ID Invoice Supply</th>
-                        <th>Nomor Invoice</th>
-                        <th>Nama Supplier</th>
-                        <th>Produk</th>
-                        <th>Total</th>
+                        <th>Invoice ID</th>
+                        <th>Opsi Pengantaran</th>
+                        <th>Status Sebelum</th>
+                        <th>Status Sesudah</th>
+                        <th>Nama Kasir</th>
                         <th>Detail</th>
-                        <th>Tanggal Invoice</th>
+                        <th>Tanggal Diubah</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($invoices as $invoice)
+                    @foreach ($logs as $log)
                         <tr>
-                            <td>{{ $invoice->SupplyInvoiceId }}</td>
-                            <td>{{ $invoice->SupplyInvoiceNumber }}</td>
-                            <td>{{ $invoice->SupplierName }}</td>
-                            <td>{{ $invoice->supplyInvoiceDetail->count('Quantity') }}</td>
-                            <td>{{ $invoice->totalAmount ?? 'N/A' }}</td>
-                            <td><button class="detail-button" data-id="{{ $invoice->SupplyInvoiceId }}">Detail</button>
+                            <td>{{ $log->invoice_id }}</td>
+                            <td>
+                                @if ($log->order_type == 'delivery')
+                                    Diantar
+                                @elseif ($log->order_type == 'pickup')
+                                    Ambil Sendiri
+                                @else
+                                    N/A
+                                @endif
                             </td>
-                            <td>{{ $invoice->SupplyDate }}</td>
+                            <td>{{ $log->previous_status ?? 'N/A' }}</td>
+                            <td>{{ $log->new_status ?? 'N/A' }}</td>
+                            <td>{{ $log->cashier_name }}</td>
+                            <td><button class="detail-button" data-id="{{ $log->invoice_id }}">Detail</button>
+                            <td>{{ $log->updated_at }}</td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
-
         <!-- Modal -->
         <div class="overlay"></div>
         <div class="modal" id="order-modal">
             <div class="modal-header">
-                <h2>Detail Pesanan</h2>
+                <div id="modal-header" class="modal-info"></div>
                 <button class="close-button">&times;</button>
             </div>
-            <div class="modal-body">
-                <table class="details-table">
-                    <thead>
-                        <tr>
-                            <th>Nama Produk</th>
-                            <th>Harga</th>
-                            <th>Jumlah</th>
-                            <th>Subtotal</th>
-                        </tr>
-                    </thead>
-                    <tbody id="modal-content">
-                        <!-- Data dynamically inserted here -->
-                    </tbody>
-                </table>
+            <div class="modal-body cart-items">
+                <h2>Detail Pesanan</h2>
+                <div id="modal-content">
+                    <!-- Data dynamically inserted here -->
+                </div>
             </div>
             <div class="modal-footer">
                 <h3 id="total-amount"></h3>
                 <button class="close-button">Tutup</button>
             </div>
         </div>
-
     </div>
-
     <script>
         function formatRupiah(number) {
             return new Intl.NumberFormat('id-ID', {
@@ -298,37 +297,56 @@
                 const invoiceID = this.dataset.id;
 
                 // Fetch data from the server
-                fetch(`/api/supplyInvoice/${invoiceID}`)
+                fetch(`/api/invoice/${invoiceID}`)
                     .then(response => response.json())
                     .then(data => {
+                        const modalHeader = document.getElementById('modal-header');
                         const modalContent = document.getElementById('modal-content');
-                        modalContent.innerHTML = ''; // Clear existing content
 
+                        // Tambahkan informasi pemesan di modal-header
+                        modalHeader.innerHTML = `
+                    <h2>Informasi Pemesan</h2>
+                    <p><strong>Nama Pemesan:</strong> ${data.customerName}</p>
+                    <p><strong>Kontak Pemesan:</strong> ${data.customerContact}</p>
+                `;
+
+                        // Reset modal-content
+                        modalContent.innerHTML = '';
+
+                        // Tambahkan detail pesanan
                         data.details.forEach(detail => {
                             modalContent.innerHTML += `
-                        <tr>
-                            <td>${detail.product}</td>
-                            <td>${formatRupiah(detail.price)}</td>
-                            <td>${detail.Quantity} ${detail.productUnit}</td>
-                            <td>${formatRupiah(detail.total)}</td>
-                        </tr>`;
+                    <div class="cart-item">
+                        <div class="item-image">
+                            <img src="/images/produk/${detail.productImage}" alt="${detail.productImage}">
+                        </div>
+                        <div class="item-details">
+                            <h2>${detail.product}</h2>
+                            <p>Harga: ${formatRupiah(detail.price)}</p>
+                        </div>
+                        <div class="quantity-control">
+                            <h4>Jumlah: </h4>
+                            <p style="color: #FFA500; width: 70px;"><b>${detail.Quantity}</b> ${detail.productUnit}</p>
+                        </div>
+                        <div class="subtotal">
+                            Subtotal:
+                            ${formatRupiah(detail.total)}.00
+                        </div>
+                    </div>`;
                         });
 
                         // Set the total amount in the footer
                         document.getElementById('total-amount').innerHTML =
-                            `Total Pesanan: ${formatRupiah(data.totalAmount)}`;
-
-                        // Show the modal and overlay
+                            `Total Pesanan: ${formatRupiah(data.totalAmount)}.00`;
                         document.getElementById('order-modal').classList.add('show');
                         document.querySelector('.overlay').classList.add('show');
                     })
                     .catch(error => {
                         console.error("Error fetching order details:", error);
                     });
+
             });
         });
-
-
         document.querySelectorAll('.close-button').forEach(button => {
             button.addEventListener('click', () => {
                 document.getElementById('order-modal').classList.remove('show');
