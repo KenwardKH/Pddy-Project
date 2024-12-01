@@ -14,10 +14,22 @@ class AuthenticatedSessionController extends Controller
     /**
      * Display the login view.
      */
-    public function create(): View
+    public function create()
     {
+        if (Auth::check()) {
+            // Redirect based on the user's role
+            if (Auth::user()->role === 'kasir') {
+                return redirect()->route('kasir.home');
+            } elseif (Auth::user()->role === 'pemilik') {
+                return redirect()->route('owner.home');
+            } else {
+                return redirect('/pengguna/home');
+            }
+        }
+
         return view('auth.login');
     }
+
 
     /**
      * Handle an incoming authentication request.
@@ -31,10 +43,9 @@ class AuthenticatedSessionController extends Controller
             return redirect()->intended(route('kasir.home', absolute: false));
         } else if (Auth::check() && Auth::user()->role === 'pemilik'){
             return redirect()->intended(route('owner.home', absolute: false));
-        }
-
+        } else{ 
         return redirect()->intended('/pengguna/home');
-
+        }
     }
 
     /**

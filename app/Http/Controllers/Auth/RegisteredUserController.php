@@ -18,10 +18,22 @@ class RegisteredUserController extends Controller
     /**
      * Display the registration view.
      */
-    public function create(): View
+    public function create()
     {
+        if (Auth::check()) {
+            // Redirect based on the user's role
+            if (Auth::user()->role === 'kasir') {
+                return redirect()->route('kasir.home');
+            } elseif (Auth::user()->role === 'pemilik') {
+                return redirect()->route('owner.home');
+            } else {
+                return redirect('/pengguna/home');
+            }
+        }
+
         return view('auth.register');
     }
+
 
     /**
      * Handle an incoming registration request.
