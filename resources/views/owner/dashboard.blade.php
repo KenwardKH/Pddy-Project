@@ -8,8 +8,57 @@
     <title>Dashboard</title>
     <link rel="stylesheet" href="{{ asset('css/owner_nav.css') }}">
     <link rel="stylesheet" href="{{ asset('css/dashboard_owner.css') }}">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css"
-        rel="stylesheet">
+    <style>
+        .produk-populer {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f8ffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 60%;
+            margin: 20px auto;
+        }
+    
+        .produk-populer h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+    
+        .styled-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 18px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    
+        .styled-table th, .styled-table td {
+            text-align: center;
+            padding: 12px 15px;
+        }
+    
+        .styled-table thead tr {
+            background-color: #009879;
+            color: #ffffff;
+            text-align: center;
+        }
+    
+        .styled-table tbody tr {
+            border-bottom: 1px solid #dddddd;
+        }
+    
+        .styled-table tbody tr:nth-of-type(even) {
+            background-color: #f3f3f3;
+        }
+    
+        .styled-table tbody tr:hover {
+            background-color: #f1f1f1;
+            cursor: pointer;
+        }
+    </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
@@ -71,31 +120,82 @@
             </div>
         </div>
 
-        <!-- Produk Populer -->
         <div class="produk-populer">
             <h2>Produk Populer</h2>
             <div class="produk-list">
                 <div class="produk-item">
-                    <p></p>
-                    <p></p>
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Bulan</th>
+                                <th>Produk</th>
+                                <th>Terjual</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($popular_products as $popular_product)
+                                <tr>
+                                    <td>{{$popular_product->month}}</td>
+                                    <td>{{$popular_product->productName}}</td>
+                                    <td>{{$popular_product->sold}}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
-
             </div>
         </div>
 
         <!-- Laporan Penjualan -->
         <div class="laporan">
-            <h2>Laporan Penjualan</h2>
+            <h2>Transaksi Bulanan</h2>
             <div class="lap">
                 <div class="laporan-item">
-                    <p></p>
-                    <p></p>
+                    <canvas id="transactionsChart" width="400" height="200"></canvas>
                 </div>
 
             </div>
         </div>
 
     </div>
+    <script>
+        const ctx = document.getElementById('transactionsChart').getContext('2d');
+        const transactionsChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: {!! json_encode($reports->pluck('ReportMonth')) !!}, // X-axis (months)
+                datasets: [
+                    {
+                        label: 'Total Transactions',
+                        data: {!! json_encode($reports->pluck('TotalTransactions')) !!}, // Y-axis (number of transactions)
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        tension: 0.4, // Curve for the line
+                        fill: true,
+                        borderWidth: 2,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Transactions',
+                        },
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Report Month',
+                        },
+                    },
+                },
+            },
+        });
+    </script>
 </body>
 
 </html>

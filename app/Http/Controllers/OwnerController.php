@@ -9,7 +9,7 @@ use App\Models\Customer;
 use App\Models\Supplier;
 use App\Models\User;
 use App\Models\OrderStatusLog;
-
+use DB;
 use Illuminate\Http\Request;
 
 class OwnerController extends Controller
@@ -24,7 +24,14 @@ class OwnerController extends Controller
 
         // Mengambil produk populer (misalnya berdasarkan jumlah stok)
         $produkPopuler = Product::orderBy('CurrentStock', 'desc')->take(5)->get();
-
+        $reports = DB::table('financial_report')
+            ->select('ReportMonth', 'TotalTransactions')
+            ->orderBy('ReportMonth', 'asc')
+            ->get();
+        $popular_products = DB::table('popular_products')
+            ->select('month', 'productName','sold')
+            ->orderBy('month', 'asc')
+            ->get();
         // Laporan penjualan (misalnya dalam 1 minggu terakhir)
         // $laporanPenjualan = Product::where('created_at', '>=', now()->subWeek())->get();
 
@@ -35,7 +42,8 @@ class OwnerController extends Controller
             'pembeliCount', 
             'suplierCount', 
             'produkPopuler',
-            // 'laporanPenjualan'
+            'reports',
+            'popular_products'
         ));
     }
 
