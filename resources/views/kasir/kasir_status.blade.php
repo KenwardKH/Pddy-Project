@@ -8,6 +8,30 @@
     <link rel="stylesheet" href="{{ asset('css/kasir_status.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .modal.show,
+        .overlay.show {
+            display: block;
+        }
+
+        .close-button {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body>
@@ -37,10 +61,6 @@
             </div>
         </div>
         <div class="dashboard">
-            <form action="" method="GET" class="search-container">
-                <input type="text" placeholder="Cari produk..." class="search-bar" name="search">
-                <button type="submit" class="search-button"><i class="bi bi-search"></i></button>
-            </form>
             <h1>Status Pesanan</h1>
 
             <!-- Toggle Buttons -->
@@ -106,13 +126,13 @@
                                         </form>
                                     </td>
                                     <td><button class="cetak-button">Cetak</button></td>
-                                    <td>{{ $invoice->deliveryStatus->created_at ?? ($invoice->pickupStatus->created_at ?? 'N/A') }}</td>
+                                    <td>{{ $invoice->deliveryStatus->created_at ?? ($invoice->pickupStatus->created_at ?? 'N/A') }}
+                                    </td>
                                     <td>
-                                        <form action="{{ route('kasir.batal', $invoice->InvoiceID) }}" method="POST">
-                                            @csrf
-                                            <input type="hidden" name="type" value="{{ $invoice->type }}">
-                                            <button type="submit" class="delete-button">Batal</button>
-                                        </form>
+                                        <button class="batal" data-id="{{ $invoice->InvoiceID }}"
+                                            data-type="{{ $invoice->type }}">
+                                            Batal
+                                        </button>
                                     </td>
                                 </tr>
                             @elseif ($invoice->type === 'pickup')
@@ -143,11 +163,10 @@
                                     <td><button class="cetak-button">Cetak</button></td>
                                     <td>{{ $invoice->InvoiceDate }}</td>
                                     <td>
-                                        <form action="{{ route('kasir.batal', $invoice->InvoiceID) }}" method="POST">
-                                            @csrf
-                                            <input type="hidden" name="type" value="{{ $invoice->type }}">
-                                            <button type="submit" class="delete-button">Batal</button>
-                                        </form>
+                                        <button class="batal" data-id="{{ $invoice->InvoiceID }}"
+                                            data-type="{{ $invoice->type }}">
+                                            Batal
+                                        </button>
                                     </td>
                                 </tr>
                             @endif
@@ -157,6 +176,30 @@
                 </table>
             </div>
         </div>
+
+        <!-- Modal untuk Alasan Pembatalan -->
+        <div class="modal-batal">
+            <div class="overlay" id="cancel-overlay"></div>
+            <div class="modal" id="cancel-modal">
+                <div class="modal-header">
+                    <h2>Batalkan Pesanan</h2>
+                    <button class="close-button" title="Tutup">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p class="modal-description">Alasan pesanan dibatalkan:</p>
+                    <form id="cancel-form" method="POST" action="{{ route('kasir.batal', ['id' => ':id']) }}">
+                        @csrf
+                        <input type="hidden" name="_method" value="POST">
+                        <input type="hidden" name="type" id="cancel-type">
+                        <textarea name="reason" id="cancel-reason" rows="4" placeholder="Masukkan alasan pembatalan..." required></textarea>
+                        <div class="button-group">
+                            <button type="submit" class="submit-button">Konfirmasi Pembatalan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <!-- Modal -->
         <div class="overlay"></div>
         <div class="modal" id="order-modal">
@@ -260,14 +303,54 @@
             });
         });
 
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.cetak-button').forEach(button => {
-                button.addEventListener('click', function () {
-                    const invoiceId = this.closest('tr').querySelector('td:first-child').textContent.trim();
+                button.addEventListener('click', function() {
+                    const invoiceId = this.closest('tr').querySelector('td:first-child').textContent
+                        .trim();
                     window.open(`/invoices/${invoiceId}/print`, '_blank');
                 });
             });
         });
+
+        // Batal pesanan
+
+        document.querySelectorAll('.batal').forEach(button => {
+            button.addEventListener('click', function() {
+                const invoiceID = this.dataset.id;
+                const type = this.dataset.type;
+
+                // Tampilkan modal pembatalan
+                document.getElementById('cancel-modal').classList.add('show');
+                document.getElementById('cancel-overlay').classList.add('show');
+
+                // Set URL dan tipe untuk form pembatalan
+                const cancelForm = document.getElementById('cancel-form');
+                cancelForm.action = `/kasir/batal/${invoiceID}`;
+                document.getElementById('cancel-type').value = type;
+            });
+        });
+
+        document.querySelectorAll('.close-button').forEach(button => {
+            button.addEventListener('click', function() {
+                document.getElementById('cancel-modal').classList.remove('show');
+                document.getElementById('cancel-overlay').classList.remove('show');
+            });
+        });
+
+        document.getElementById('cancel-overlay').addEventListener('click', function() {
+            document.getElementById('cancel-modal').classList.remove('show');
+            this.classList.remove('show');
+        });
+
+        // Menutup modal jika area di luar modal (overlay) diklik
+        document.querySelectorAll('.overlay').forEach(overlay => {
+            overlay.addEventListener('click', function() {
+                document.querySelectorAll('.modal.show').forEach(modal => modal.classList.remove('show'));
+                this.classList.remove('show'); // Hapus class "show" pada overlay
+            });
+        });
+
     </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>

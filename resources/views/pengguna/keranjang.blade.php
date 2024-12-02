@@ -59,7 +59,7 @@
                             </div>
                             <div class="quantity-control">
                                 <h4>Jumlah: </h4>
-                                <p style="color: #FFA500"><b>{{ $item->Quantity }}</b></p>
+                                <p style="color: #FFA500; width: 60px"><b>{{ $item->Quantity }} {{ $item->product->ProductUnit }}</b></p>
                             </div>
                             <div class="subtotal">
                                 Subtotal:

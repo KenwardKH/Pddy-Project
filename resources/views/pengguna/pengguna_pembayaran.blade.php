@@ -412,8 +412,27 @@
             });
         });
 
+        // Menutup modal order ketika overlay diklik
+        document.querySelector('.overlay').addEventListener('click', function() {
+            document.getElementById('order-modal').classList.remove('show');
+            this.classList.remove('show');
+        });
+
+        // Menutup modal pembayaran ketika overlay diklik
+        document.getElementById('payment-overlay').addEventListener('click', function() {
+            document.getElementById('payment-modal').classList.remove('show');
+            this.classList.remove('show');
+        });
+
+        // Menutup modal pembatalan ketika overlay diklik
         document.getElementById('cancel-overlay').addEventListener('click', function() {
             document.getElementById('cancel-modal').classList.remove('show');
+            this.classList.remove('show');
+        });
+
+        // Menutup modal gambar ketika overlay diklik
+        document.getElementById('image-overlay').addEventListener('click', function() {
+            document.getElementById('image-modal').classList.remove('show');
             this.classList.remove('show');
         });
     </script>

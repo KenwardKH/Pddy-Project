@@ -28,6 +28,10 @@
         .btn-link:hover {
             color: #80f4ac;
         }
+
+        .bg-warning {
+            background-color: #fff3cd !important;
+        }
     </style>
 </head>
 
@@ -154,7 +158,7 @@
                     </thead>
                     <tbody>
                         @foreach ($products as $index => $product)
-                            <tr>
+                            <tr class="{{ $product->CurrentStock < 100 ? 'bg-warning' : '' }}">
                                 <td>{{ $index + 1 }}</td>
                                 <td>
                                     @if ($product->image)
@@ -172,7 +176,6 @@
                                 <td>{{ $product->ProductUnit }}</td>
                                 <td class="deskripsi">{{ $product->Description }}</td>
                                 <td class="edit">
-                                    <!-- Tombol untuk membuka modal -->
                                     <button class="btn btn-warning btn-sm" data-bs-toggle="modal"
                                         data-bs-target="#editProductModal{{ $product->ProductID }}">
                                         <i class="bi bi-pencil btn-edit"></i>

@@ -16,14 +16,16 @@ class StockController extends Controller
 
     public function product()
     {
-        // Ambil data produk beserta relasi ke pricing dan supply_invoice_details
+        // Ambil data produk beserta relasi ke pricing
         $products = Product::with(['pricing'])
-        ->orderBy('ProductName', 'asc')
-        ->get();
-
+            ->orderByRaw('CASE WHEN CurrentStock < 100 THEN 0 ELSE 1 END') // Prioritaskan stok < 100
+            ->orderBy('ProductName', 'asc') // Urutkan alfabetis untuk lainnya
+            ->get();
+    
         // Return view dengan data
         return view('owner.produk', compact('products'));
     }
+    
 
     public function search(Request $request)
     {

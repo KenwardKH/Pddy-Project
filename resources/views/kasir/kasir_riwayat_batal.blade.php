@@ -109,9 +109,18 @@
             </div>
         </div>
         <div class="dashboard">
-            <form action="" method="GET" class="search-container">
-                <input type="text" placeholder="Cari produk..." class="search-bar" name="search">
-                <button type="submit" class="search-button"><i class="bi bi-search"></i></button>
+            <form action="{{ route('kasir.riwayat.batal') }}" method="GET" class="search-container">
+                <div>
+                    <input type="text" name="name" placeholder="Cari Nama" value="{{ request('name') }}"
+                        class="search-bar">
+                    <input type="date" name="start_date" value="{{ request('start_date') }}" class="search-bar">
+                    <input type="date" name="end_date" value="{{ request('end_date') }}" class="search-bar">
+                </div>
+
+                <div>
+                    <a href="{{ route('kasir.riwayat.batal') }}" class="btn-reset" style="text-decoration: none;">Reset</a>
+                    <button type="submit" class="search-button"><i class="bi bi-filter"></i> Filter</button>
+                </div>
             </form>
             <h1>Pesanan Dibatalkan</h1>
         </div>
@@ -167,7 +176,8 @@
                                 @endif
                             </td>
                             <td><button class="cetak-button">Cetak</button></td>
-                            <td>{{ $invoice->deliveryStatus->created_at ?? ($invoice->pickupStatus->created_at ?? 'N/A') }}</td>
+                            <td>{{ $invoice->deliveryStatus->created_at ?? ($invoice->pickupStatus->created_at ?? 'N/A') }}
+                            </td>
                             <td>{{ $invoice->cancelledTransaction->cancellation_date ?? 'N/A' }}</td>
                         </tr>
                     @endforeach
@@ -253,10 +263,11 @@
             });
         });
 
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.cetak-button').forEach(button => {
-                button.addEventListener('click', function () {
-                    const invoiceId = this.closest('tr').querySelector('td:first-child').textContent.trim();
+                button.addEventListener('click', function() {
+                    const invoiceId = this.closest('tr').querySelector('td:first-child').textContent
+                        .trim();
                     window.open(`/invoices/${invoiceId}/print`, '_blank');
                 });
             });

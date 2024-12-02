@@ -38,10 +38,11 @@
             </div>
         </div>
         <div class="dashboard">
-            <form action="" method="GET" class="search-container">
-                <input type="text" placeholder="Cari produk..." class="search-bar" name="search">
+            <form action="{{ route('kasir.stock') }}" method="GET" class="search-container">
+                <input type="text" placeholder="Cari produk..." class="search-bar" name="search" value="{{ request('search') }}">
                 <button type="submit" class="search-button"><i class="bi bi-search"></i></button>
             </form>
+            
             <h1>Stock Barang</h1>
             <div class="table">
                 <table>
@@ -66,7 +67,7 @@
                                 <td>{{ $product->ProductName }}</td>
                                 <td>{{ $product->pricing->UnitPrice ?? '-' }}</td>
                                 <td>{{ $product->CurrentStock }}</td>
-                                <td>{{ $product->productUnit }}</td>
+                                <td>{{ $product->ProductUnit }}</td>
                                 <td>{{ $product->Description }}</td>
                             </tr>
                         @endforeach

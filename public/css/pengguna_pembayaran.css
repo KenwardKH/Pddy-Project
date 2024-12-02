@@ -515,7 +515,7 @@ button.batal:hover {
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
     display: none;
-    z-index: 9998;
+    z-index: 998;
 }
 
 /* Modal Container */

@@ -53,8 +53,14 @@
                     <h3>{{ $product->ProductName }}</h3>
 
                     <!-- Display product price if available -->
-                    <p><strong>Rp{{ number_format($product->pricing->UnitPrice ?? 0, 0, ',', '.') }}/{{ $product->ProductUnit }}</strong>
+                    <p>
+                        <strong>Rp{{ number_format($product->pricing->UnitPrice ?? 0, 0, ',', '.') }}</strong> /
+                        <span
+                            style="color: #ff5722; font-weight: bold; background-color: #ffe6cc; padding: 2px 6px; border-radius: 4px;">
+                            {{ $product->ProductUnit }}
+                        </span>
                     </p>
+
                     <b>Detail:</b>
                     <p>{{ $product->Description }}</p>
                     <p>Tersedia: {{ $product->CurrentStock }}</p>
@@ -89,7 +95,7 @@
             // Function to toggle "Masukkan ke Keranjang" button based on input values
             const togglePesanButton = () => {
                 const anyQuantitySelected = $('.quantity-input').toArray().some(input => parseInt($(input)
-                .val()) > 0);
+                    .val()) > 0);
                 $('.order-button').toggle(anyQuantitySelected);
             };
 

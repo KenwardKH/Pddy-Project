@@ -134,14 +134,22 @@ class KasirController extends Controller
             'productTypes' => $productTypes,
         ]);
     }
-    public function stock()
+    public function stock(Request $request)
     {
-        $products = Product::with('pricing')->get();
+        $query = Product::with('pricing');
 
-        return view('kasir.kasir_stock_barang',[
+        // Logika pencarian berdasarkan nama produk
+        if ($request->has('search') && !empty($request->search)) {
+            $query->where('ProductName', 'like', '%' . $request->search . '%');
+        }
+
+        $products = $query->get();
+
+        return view('kasir.kasir_stock_barang', [
             'products' => $products
         ]);
     }
+
 
     public function profile()
     {
@@ -180,61 +188,103 @@ class KasirController extends Controller
         ]);
     }
 
-    public function riwayat()
-{
-    // Ambil semua invoice yang sudah selesai
-    $invoices = Invoice::with(['invoiceDetails', 'deliveryStatus', 'pickupStatus', 'cancelledTransaction'])
-        ->where(function ($query) {
-            // Kondisi status "Selesai" atau "dibatalkan" untuk deliveryStatus atau pickupStatus
-            $query->whereHas('deliveryStatus', function ($q) {
-                $q->whereIn('status', ['Selesai']);
-            })->orWhereHas('pickupStatus', function ($q) {
-                $q->whereIn('status', ['Selesai']);
-            });
-        })
-        ->orderBy('InvoiceID', 'asc')
-        ->get();
+    public function riwayat(Request $request)
+    {
+        // Ambil parameter filter dari request
+        $nameFilter = $request->input('name');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
     
-    // Add totalAmount calculation for each invoice
-    $invoices = $invoices->map(function ($invoice) {
-        $invoice->totalAmount = $invoice->invoiceDetails->reduce(function ($carry, $detail) {
-            $quantity = (int) $detail->Quantity; 
-            $price = (float) $detail->price;
-            return $carry + ($quantity * $price);
-        }, 0);
-        return $invoice;
-    });
-
-    return view('kasir.kasir_riwayat', compact('invoices'));
-}
-
-    public function riwayatBatal()
-{
-    // Ambil semua invoice yang sudah selesai
-    $invoices = Invoice::with(['invoiceDetails', 'deliveryStatus', 'pickupStatus', 'cancelledTransaction'])
-        ->where(function ($query) {
-            // Kondisi status "Selesai" atau "dibatalkan" untuk deliveryStatus atau pickupStatus
-            $query->whereHas('deliveryStatus', function ($q) {
-                $q->whereIn('status', ['dibatalkan']);
-            })->orWhereHas('pickupStatus', function ($q) {
-                $q->whereIn('status', ['dibatalkan']);
+        // Query dasar
+        $query = Invoice::with(['invoiceDetails', 'deliveryStatus', 'pickupStatus', 'cancelledTransaction'])
+            ->where(function ($query) {
+                $query->whereHas('deliveryStatus', function ($q) {
+                    $q->whereIn('status', ['Selesai']);
+                })->orWhereHas('pickupStatus', function ($q) {
+                    $q->whereIn('status', ['Selesai']);
+                });
             });
-        })
-        ->orderBy('InvoiceID', 'asc')
-        ->get();
     
-    // Add totalAmount calculation for each invoice
-    $invoices = $invoices->map(function ($invoice) {
-        $invoice->totalAmount = $invoice->invoiceDetails->reduce(function ($carry, $detail) {
-            $quantity = (int) $detail->Quantity; 
-            $price = (float) $detail->price;
-            return $carry + ($quantity * $price);
-        }, 0);
-        return $invoice;
-    });
+        // Filter berdasarkan nama
+        if ($nameFilter) {
+            $query->where('customerName', 'like', '%' . $nameFilter . '%');
+        }
+    
+        // Filter berdasarkan rentang tanggal
+        if ($startDate && $endDate) {
+            $query->whereBetween('InvoiceDate', [$startDate, $endDate]);
+        } elseif ($startDate) {
+            $query->whereDate('InvoiceDate', '>=', $startDate);
+        } elseif ($endDate) {
+            $query->whereDate('InvoiceDate', '<=', $endDate);
+        }
+    
+        // Dapatkan hasil query
+        $invoices = $query->orderBy('InvoiceID', 'asc')->get();
+    
+        // Hitung totalAmount untuk setiap invoice
+        $invoices = $invoices->map(function ($invoice) {
+            $invoice->totalAmount = $invoice->invoiceDetails->reduce(function ($carry, $detail) {
+                $quantity = (int) $detail->Quantity; 
+                $price = (float) $detail->price;
+                return $carry + ($quantity * $price);
+            }, 0);
+            return $invoice;
+        });
+    
+        return view('kasir.kasir_riwayat', compact('invoices'));
+    }
+    
 
-    return view('kasir.kasir_riwayat_batal', compact('invoices'));
-}
+
+    public function riwayatBatal(Request $request)
+    {
+        // Ambil parameter filter dari request
+        $nameFilter = $request->input('name');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        // Query dasar untuk pesanan dibatalkan
+        $query = Invoice::with(['invoiceDetails', 'deliveryStatus', 'pickupStatus', 'cancelledTransaction'])
+            ->where(function ($query) {
+                $query->whereHas('deliveryStatus', function ($q) {
+                    $q->whereIn('status', ['dibatalkan']);
+                })->orWhereHas('pickupStatus', function ($q) {
+                    $q->whereIn('status', ['dibatalkan']);
+                });
+            });
+
+        // Filter berdasarkan nama
+        if ($nameFilter) {
+            $query->where('customerName', 'like', '%' . $nameFilter . '%');
+        }
+
+        // Filter berdasarkan rentang tanggal
+        if ($startDate && $endDate) {
+            $query->whereBetween('InvoiceDate', [$startDate, $endDate]);
+        } elseif ($startDate) {
+            $query->whereDate('InvoiceDate', '>=', $startDate);
+        } elseif ($endDate) {
+            $query->whereDate('InvoiceDate', '<=', $endDate);
+        }
+
+        // Ambil hasil query
+        $invoices = $query->orderBy('InvoiceID', 'asc')->get();
+
+        // Hitung totalAmount untuk setiap invoice
+        $invoices = $invoices->map(function ($invoice) {
+            $invoice->totalAmount = $invoice->invoiceDetails->reduce(function ($carry, $detail) {
+                $quantity = (int) $detail->Quantity; 
+                $price = (float) $detail->price;
+                return $carry + ($quantity * $price);
+            }, 0);
+            return $invoice;
+        });
+
+        // Return ke view dengan data
+        return view('kasir.kasir_riwayat_batal', compact('invoices'));
+    }
+
 
 public function pembayaran()
 {

@@ -18,7 +18,7 @@ body {
 }
 
 .container {
-    margin-top: 160px; /* Offset content for the fixed header height */
+    margin-top: 210px; /* Offset content for the fixed header height */
 }
         
 .header { 
@@ -76,7 +76,6 @@ body {
     font-weight: bold; 
 }
 
-/* Search container styling */
 .search-container {
     display: flex;
     align-items: center;
@@ -89,32 +88,37 @@ body {
     padding: 10px 0; /* Optional: add padding for spacing */
     z-index: 999; /* Ensure it stays on top */
     left: 0;
+    flex-direction: column;
 }
 
+/* Search container styling */
 .search-bar {
-    width: 250px;
-    padding: 8px;
-    border: 1px solid #ccc;
+    padding: 5px;
+    margin-right: 10px;
+    border: 1px solid #ddd;
     border-radius: 5px;
-    font-size: 16px;
 }
-
 
 .search-button {
-    padding: 8px 12px;
-    background-color: #28a745; /* Customize the color */
+    padding: 5px 10px;
+    background-color: #007BFF;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
 }
 
-.search-button i {
-    font-size: 18px;
+.btn-reset {
+    font-size: 0.9rem;
+    cursor: pointer;
+    background-color: brown;
+    padding: 5px 10px;
+    color: white;
+    border-radius: 5px;
 }
 
-.search-button:hover {
-    background-color: #218838; /* Darker green for hover */
+.btn-reset:hover {
+    text-decoration: underline;
 }
 
 .dashboard{
@@ -122,7 +126,7 @@ body {
 }
 
 .dashboard h1 {
-    margin-top: 180px;
+    margin-top: 200px;
 }
 
 .table {

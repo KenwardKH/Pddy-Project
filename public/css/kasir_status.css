@@ -1,13 +1,13 @@
-body { 
-    font-family: 'Roboto', sans-serif; 
-    background-color: white; 
+body {
+    font-family: "Roboto", sans-serif;
+    background-color: white;
     background-color: #e8f5e9;
 }
 
 .header {
-    display: flex; 
+    display: flex;
     flex-direction: column;
-    padding: 10px; 
+    padding: 10px;
     border-bottom: orange solid 2px;
     position: fixed;
     width: 100%;
@@ -18,30 +18,30 @@ body {
 }
 
 .container {
-    margin-top: 160px; /* Offset content for the fixed header height */
+    margin-top: 130px; /* Offset content for the fixed header height */
 }
-        
-.header { 
-    display: flex; 
+
+.header {
+    display: flex;
     flex-direction: column;
-    padding: 10px; 
+    padding: 10px;
     border-bottom: orange solid 2px;
 }
 .header img {
     width: 400px;
 }
-        
-.header h1 { 
-    font-size: 24px; 
-    color: #333; 
+
+.header h1 {
+    font-size: 24px;
+    color: #333;
 }
-        
-.nav { 
+
+.nav {
     display: flex;
     width: 100%;
-    justify-content: space-between;  
+    justify-content: space-between;
 }
-.nav a{
+.nav a {
     display: inline-flex;
     align-items: center;
     font-size: 16px; /* Adjust the size as needed */
@@ -69,11 +69,11 @@ body {
     column-gap: 20px;
     margin-right: 20px;
 }
-        
-.nav a { 
-    text-decoration: none; 
-    color: #333; 
-    font-weight: bold; 
+
+.nav a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
 }
 
 /* Search container styling */
@@ -123,12 +123,12 @@ body {
     background-color: #218838; /* Darker green for hover */
 }
 
-.dashboard{
+.dashboard {
     text-align: center;
 }
 
 .dashboard h1 {
-    margin-top: 180px;
+    margin-top: 130px;
 }
 
 .table {
@@ -147,7 +147,6 @@ table {
     box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1);
 }
 
-
 .toggle-button {
     padding: 10px 20px;
     color: #555;
@@ -165,12 +164,13 @@ table {
 
 /* Gaya untuk tombol yang aktif */
 .toggle-button.active {
-    background-color: #4CAF50; /* Warna hijau untuk menandakan pilihan aktif */
+    background-color: #4caf50; /* Warna hijau untuk menandakan pilihan aktif */
     color: white;
-    border-color: #4CAF50;
+    border-color: #4caf50;
 }
 
-th, td {
+th,
+td {
     padding: 14px;
     text-align: center;
     vertical-align: middle;
@@ -222,7 +222,6 @@ tbody tr:hover {
     background-color: #2980b9;
 }
 
-
 .cetak-button {
     background-color: #4caf50;
     color: #ffffff;
@@ -252,7 +251,7 @@ tbody tr:hover {
     background-color: #d32f2f;
 }
 
-td{
+td {
     font-size: 0.9em;
     color: #555;
     font-weight: 500;
@@ -266,15 +265,15 @@ td{
     text-align: center;
 }
 
-.modal-header .close-button{
+.modal-header .close-button {
     font-size: 30px;
 }
 
-.modal-footer h3{
+.modal-footer h3 {
     text-align: left;
 }
 
-.modal-footer .close-button{
+.modal-footer .close-button {
     padding: 5px 10px;
     margin: 2px;
     background-color: rgb(255, 0, 0);
@@ -284,8 +283,8 @@ td{
     text-decoration: none;
 }
 
-.modal-footer .close-button:hover{
-    background-color: rgb(194, 25, 25)
+.modal-footer .close-button:hover {
+    background-color: rgb(194, 25, 25);
 }
 
 .modal {
@@ -303,7 +302,7 @@ td{
     height: auto;
     max-height: 600px;
     border-radius: 10px;
-    overflow: auto
+    overflow: auto;
 }
 
 .modal-header {
@@ -312,7 +311,6 @@ td{
     align-items: center;
     margin-bottom: 10px;
 }
-
 
 .modal-footer {
     text-align: right;
@@ -421,4 +419,133 @@ table.details-table th {
     justify-content: center; /* Menjaga kontrol tetap berada di tengah */
     flex: 1; /* Membuat kontrol kuantitas mengambil ruang yang cukup */
     margin: 0 20px;
+}
+
+/* Tombol Batal */
+button.batal{
+    background-color: #dc3545; /* Merah */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 15px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+}
+
+button.batal:hover {
+    background-color: #a71d2a; /* Merah gelap saat hover */
+}
+
+/* Overlay */
+.modal-batal .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    z-index: 998;
+}
+
+/* Modal Container */
+.modal-batal .modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 500px;
+    z-index: 9999;
+    display: none;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Header */
+.modal-batal .modal-header {
+    padding: 16px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0;
+}
+
+.modal-batal .modal-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.modal-batal .close-button {
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.modal-batal .close-button:hover {
+    color: #ffcccc;
+}
+
+/* Body */
+.modal-batal .modal-body {
+    padding: 16px;
+    padding-top: 0;
+}
+
+.modal-batal .modal-description {
+    font-size: 0.95rem;
+    margin-bottom: 12px;
+    color: #555;
+}
+
+.modal-batal textarea {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px;
+    font-size: 0.9rem;
+    resize: none;
+}
+
+/* Buttons */
+.modal-batal .button-group {
+    display: flex;
+    justify-content: right;
+    margin-top: 16px;
+}
+
+.modal-batal .submit-button {
+    background: #f44336;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.modal-batal .submit-button:hover {
+    background: #d32f2f;
+}
+
+.modal-batal .cancel-button:hover {
+    background: #bbb;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -55%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
 }

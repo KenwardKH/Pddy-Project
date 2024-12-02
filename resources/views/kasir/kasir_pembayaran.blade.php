@@ -349,6 +349,14 @@
             this.classList.remove('show');
         });
 
+        // Menutup modal jika area di luar modal (overlay) diklik
+        document.querySelectorAll('.overlay').forEach(overlay => {
+            overlay.addEventListener('click', function() {
+                document.querySelectorAll('.modal.show').forEach(modal => modal.classList.remove('show'));
+                this.classList.remove('show'); // Hapus class "show" pada overlay
+            });
+        });
+
 
         //sweetalert
         document.querySelectorAll('.konfirmasi').forEach(button => {
