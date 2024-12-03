@@ -168,7 +168,7 @@
                     {
                         label: 'Total Transactions',
                         data: {!! json_encode($reports->pluck('TotalTransactions')) !!}, // Y-axis (number of transactions)
-                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderColor: 'blue',
                         backgroundColor: 'rgba(75, 192, 192, 0.2)',
                         tension: 0.4, // Curve for the line
                         fill: true,
