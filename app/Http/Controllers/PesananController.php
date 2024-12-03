@@ -13,7 +13,7 @@ class PesananController extends Controller
     /**
      * Menampilkan halaman Buat Pesanan.
      */
-    public function buatPesanan()
+    public function buatPesanan(Request $request)
     {
         $userId = Auth::id();
 
@@ -24,7 +24,13 @@ class PesananController extends Controller
             return redirect()->route('login')->with('error', 'Anda harus login sebagai kasir.');
         }
 
-        $products = Product::with('pricing')->get();
+        $search = $request->input('search');
+
+        $products = Product::with('pricing')
+        ->when($search, function ($query, $search) {
+            return $query->where('ProductName', 'like', '%' . $search . '%');
+        })
+        ->get();
 
         // Retrieve the cart items for the current customer
         $cartItems = CashierCart::where('CashierID', $kasir->id_kasir)
@@ -32,7 +38,6 @@ class PesananController extends Controller
                     ->get()
                     ->keyBy('ProductID'); // Index by ProductID for easier access
 
-        // Pass both products and cartItems to the view
-        return view('kasir.kasir_buat_pesanan', compact('products', 'cartItems'));
+        return view('kasir.kasir_buat_pesanan', compact('products', 'cartItems', 'search'));
     }
 }

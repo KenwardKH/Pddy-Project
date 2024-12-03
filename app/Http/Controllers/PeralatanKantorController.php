@@ -15,7 +15,7 @@ use App\Models\Product;
 class PeralatanKantorController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
         // Get the UserID of the currently authenticated user
         $userId = Auth::id();
@@ -30,7 +30,15 @@ class PeralatanKantorController extends Controller
         }
 
         // Retrieve all products with their pricing
-        $products = Product::with('pricing')->get();
+        $query = Product::with('pricing');
+
+        // If there's a search query, filter the products by name
+        if ($request->has('search') && !empty($request->search)) {
+            $query->where('ProductName', 'like', '%' . $request->search . '%');
+        }
+
+        // Get the filtered products
+        $products = $query->get();
 
         // Retrieve the cart items for the current customer
         $cartItems = CustomerCart::where('CustomerID', $customer->CustomerID)
@@ -41,4 +49,5 @@ class PeralatanKantorController extends Controller
         // Pass both products and cartItems to the view
         return view('pengguna.peralatan_kantor', compact('products', 'cartItems'));
     }
+
 }

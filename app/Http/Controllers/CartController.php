@@ -85,7 +85,7 @@ class CartController extends Controller
             }
         }
 
-        return redirect()->route('customer.cart')->with('success', 'Keranjang berhasil diperbarui!');
+        return redirect()->back()->with('success', 'Keranjang berhasil diperbarui!');
     }
 
     // Menghapus item dari keranjang

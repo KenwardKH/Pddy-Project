@@ -91,7 +91,7 @@ body {
     gap: 10px;
     position: fixed;
     width: calc(100% - 20px);
-    top: 120px;
+    top: 105px;
     background-color: white;
     padding: 10px 20px;
     z-index: 999;
@@ -218,7 +218,7 @@ input[type="number"]::-webkit-inner-spin-button {
     margin: 0;
 }
 
-.product-list button.order-button {
+.product-list .order-button {
     position: fixed;
     bottom: 20px;
     left: 50%;

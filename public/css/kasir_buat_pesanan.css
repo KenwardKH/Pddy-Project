@@ -121,6 +121,11 @@ body {
     background-color: #218838; /* Darker green for hover */
 }
 
+.page-title {
+    text-align: center;
+    margin-top: 180px; /* Jarak cukup dari header dan search bar */
+}
+
 /* Styling for Product Grid */
 .product-list {
     display: grid;

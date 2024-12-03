@@ -18,7 +18,7 @@ class RoleMiddleware
             DB::setDefaultConnection('cashier'); 
             return $next($request);
         }
-        else if(Auth::check() && Auth::user()->role === 'owner'){
+        else if(Auth::check() && Auth::user()->role === 'pemilik'){
             DB::setDefaultConnection('owner'); 
             return $next($request);
         }
