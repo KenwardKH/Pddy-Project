@@ -111,10 +111,13 @@
         <div class="dashboard">
             <form action="{{ route('kasir.riwayat') }}" method="GET" class="search-container">
                 <div>
-                    <input type="text" name="name" placeholder="Cari Nama" value="{{ request('name') }}"
-                        class="search-bar">
-                    <input type="date" name="start_date" value="{{ request('start_date') }}" class="search-bar">
-                    <input type="date" name="end_date" value="{{ request('end_date') }}" class="search-bar">
+                    <label for="customerName">Nama Pelanggan:</label>
+                    <input type="text" name="name" id="customerName" placeholder="Cari Nama"
+                        value="{{ request('name') }}" class="search-bar">
+                    <label for="startDate">Tanggal Mulai:</label>
+                    <input type="date" id="startDate" name="start_date" value="{{ request('start_date') }}" class="search-bar">
+                    <label for="endDate">Tanggal Akhir:</label>
+                    <input type="date" id="endDate" name="end_date" value="{{ request('end_date') }}" class="search-bar">
                 </div>
 
                 <div>
