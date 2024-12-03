@@ -17,8 +17,7 @@ use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Middleware\RoleMiddleware;
-
-
+use App\Http\Middleware\SetDatabaseConnection;
 use App\Http\Controllers\GoogleAuthController;
 
 Route::get('/', function () {
