@@ -250,31 +250,66 @@ class StockController extends Controller
             'SupplierID' => 'required|exists:suppliers,SupplierID',
             'SupplyDate' => 'required|date',
             'SupplyInvoiceNumber' => 'nullable|string',
+            'SupplyInvoiceImage' => 'nullable|required|image|mimes:jpeg,png,jpg,gif',
             'ProductID' => 'required|array',
             'Quantity' => 'required|array',
             'SupplyPrice' => 'required|array',
+            'Discount' => 'required|array',
         ]);
 
+        $imageName = null;
+        if ($request->hasFile('SupplyInvoiceImage')) {
+            $image = $request->file('SupplyInvoiceImage');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+
+            // Tentukan path untuk menyimpan file
+            $destinationPath = public_path('images/supply_invoice_image');
+            // Pindahkan file ke folder tujuan
+            $image->move($destinationPath, $imageName);
+        }
+    
         // Buat array untuk JSON Invoice Details
         $invoiceDetails = [];
         foreach ($request->ProductID as $index => $productID) {
+            $subtotal = (float) $request->Quantity[$index] * (float) $request->SupplyPrice[$index]; // Harga sebelum diskon
+            $discount = $request->Discount[$index] ? $request->Discount[$index] : '0';
+            $finalPrice = $subtotal * (1 - (float)$this->parseDiscount($discount) / 100); // Harga setelah diskon
+    
             $invoiceDetails[] = [
                 'ProductID' => (int) $productID,
                 'Quantity' => (int) $request->Quantity[$index],
                 'SupplyPrice' => (float) $request->SupplyPrice[$index],
+                'Discount' => $discount,
             ];
         }
-
-        // Panggil stored procedure dengan 4 parameter
-        DB::statement('CALL CreateSupplyInvoice(?, ?, ?, ?)', [
-            $request->SupplierID,
-            $request->SupplyDate,
-            $request->SupplyInvoiceNumber ?? 'NULL',
-            json_encode($invoiceDetails),
-        ]);
-
+    
+        // Panggil stored procedure dengan 5 parameter
+        try {
+            DB::statement('CALL CreateSupplyInvoice(?, ?, ?, ?, ?)', [
+                $request->SupplierID,
+                $request->SupplyDate,
+                $request->SupplyInvoiceNumber ?? 'NULL',
+                json_encode($invoiceDetails),
+                $imageName,
+            ]);
+        } catch (\Exception $e) {
+            // Logging error ke file log Laravel
+            \Log::error('Error inserting supply invoice: ' . $e->getMessage());
+            
+            // Kembalikan pesan kesalahan ke halaman
+            return redirect()->back()->withInput()->withErrors(['error' => 'Gagal menyimpan data: ' . $e->getMessage()]);
+        }
+        
+    
         return redirect()->route('supplyInvoice.create')->with('success', 'Supply berhasil ditambahkan.');
     }
+    
+    // Fungsi untuk menghitung diskon (di Controller)
+    function parseDiscount($discountStr)
+    {
+        return array_sum(array_map('floatval', explode('+', $discountStr)));
+    }
+    
 
     public function getSupplyInvoiceDetails($id)
     {

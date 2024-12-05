@@ -284,13 +284,6 @@
             });
         });
 
-        document.querySelectorAll('.pembayaran').forEach(button => {
-            button.addEventListener('click', function() {
-                // Show payment modal
-                document.getElementById('payment-modal').classList.add('show');
-                document.getElementById('payment-overlay').classList.add('show');
-            });
-        });
 
         document.querySelectorAll('.close-button').forEach(button => {
             button.addEventListener('click', function() {
@@ -356,7 +349,6 @@
                 this.classList.remove('show'); // Hapus class "show" pada overlay
             });
         });
-
 
         //sweetalert
         document.querySelectorAll('.konfirmasi').forEach(button => {

@@ -58,6 +58,11 @@ tbody tr:hover {
     background-color: #f1f1f1;
 }
 
+#image-modal.show,
+#image-overlay.show {
+    display: block;
+}
+
 .detail-link {
     color: #ff6f00;
     text-decoration: none;

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Riwayat Supply</title>
+    <title>Riwayat Pembelian Supply</title>
     <link rel="stylesheet" href="{{ asset('css/owner_nav.css') }}">
     <link rel="stylesheet" href="{{ asset('css/owner_pembelian.css') }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css"
@@ -230,6 +230,7 @@
                 <thead>
                     <tr>
                         <th>ID Invoice Supply</th>
+                        <th>Gambar Invoice Supply</th>
                         <th>Nomor Invoice</th>
                         <th>Nama Supplier</th>
                         <th>Produk</th>
@@ -242,6 +243,15 @@
                     @foreach ($invoices as $invoice)
                         <tr>
                             <td>{{ $invoice->SupplyInvoiceId }}</td>
+                            <td>
+                                @if ($invoice->SupplyInvoiceImage)
+                                    <img class="invoice_image"
+                                        src="{{ asset('images/supply_invoice_image/' . $invoice->SupplyInvoiceImage) }}"
+                                        alt="Gambar Invoice" width="200">
+                                @else
+                                    <span>Tidak ada gambar</span>
+                                @endif
+                            </td>
                             <td>{{ $invoice->SupplyInvoiceNumber }}</td>
                             <td>{{ $invoice->SupplierName }}</td>
                             <td>{{ $invoice->supplyInvoiceDetail->count('Quantity') }}</td>
@@ -253,6 +263,17 @@
                     @endforeach
                 </tbody>
             </table>
+        </div>
+
+        <!-- Modal Gambar -->
+        <div class="overlay" id="image-overlay"></div>
+        <div class="modal" id="image-modal" style="width: 56%; height: 80%; max-width: 1200px;">
+            <div class="modal-header">
+                <button class="close-button">&times;</button>
+            </div>
+            <div class="modal-body">
+                <img id="modal-image" src="" alt="Preview Gambar" style="max-width: 100%; max-height: 100%;">
+            </div>
         </div>
 
         <!-- Modal -->
@@ -284,6 +305,7 @@
         </div>
 
     </div>
+
 
     <script>
         function formatRupiah(number) {
@@ -328,11 +350,32 @@
             });
         });
 
+        // Show image modal when an image is clicked
+        document.querySelectorAll('.invoice_image').forEach(img => {
+            img.addEventListener('click', function() {
+                const modalImage = document.getElementById('modal-image');
+                modalImage.src = this.src; // Set src gambar modal ke gambar yang diklik
+                document.getElementById('image-modal').classList.add('show');
+                document.getElementById('image-overlay').classList.add('show');
+            });
+        });
 
+        // Close modal when close button or overlay is clicked
         document.querySelectorAll('.close-button').forEach(button => {
             button.addEventListener('click', () => {
+                // Close both modals and overlays
                 document.getElementById('order-modal').classList.remove('show');
-                document.querySelector('.overlay').classList.remove('show');
+                document.getElementById('image-modal').classList.remove('show');
+                document.querySelectorAll('.overlay').forEach(overlay => overlay.classList.remove('show'));
+            });
+        });
+
+        // Close modal if overlay is clicked
+        document.querySelectorAll('.overlay').forEach(overlay => {
+            overlay.addEventListener('click', () => {
+                document.getElementById('order-modal').classList.remove('show');
+                document.getElementById('image-modal').classList.remove('show');
+                overlay.classList.remove('show');
             });
         });
     </script>

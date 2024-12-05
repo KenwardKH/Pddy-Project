@@ -79,6 +79,51 @@
         table.details-table th {
             background-color: #f4f4f4;
         }
+
+        /* pesan sukses */
+        .alert-success {
+            background-color: #d4edda;
+            /* Light green background */
+            color: #155724;
+            /* Dark green text */
+            border: 1px solid #c3e6cb;
+            /* Light green border */
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .alert-success i {
+            margin-right: 10px;
+        }
+
+        /* pesan error */
+        .alert-danger {
+            background-color: #f8d7da;
+            /* Light red background */
+            color: #721c24;
+            /* Dark red text */
+            border: 1px solid #f5c6cb;
+            /* Light red border */
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .alert-danger i {
+            margin-right: 10px;
+        }
+
     </style>
 </head>
 
@@ -119,6 +164,7 @@
                 {{ session('success') }}
             </div>
         @endif
+
         <!-- Your existing table -->
         <div class="table">
             <table class="order-table">

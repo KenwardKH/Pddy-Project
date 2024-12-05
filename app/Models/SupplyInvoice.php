@@ -21,6 +21,7 @@ class SupplyInvoice extends Model
         'SupplierId',
         'SupplierName',
         'SupplyDate',
+        'SupplyInvoiceImage',
     ];
 
     // Relasi ke tabel supplierproducts (One-to-Many)
