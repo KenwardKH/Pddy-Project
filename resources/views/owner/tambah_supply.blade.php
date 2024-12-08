@@ -123,7 +123,7 @@
                             <td>
                                 <div class="form-group-input">
                                     <input type="text" name="Discount[]" class="form-control discount"
-                                        placeholder="0" required>
+                                        placeholder="10+5" required>
                                 </div>
                             </td>
                             <td class="final-price">0.00</td>

@@ -290,6 +290,7 @@
                             <th>Nama Produk</th>
                             <th>Harga</th>
                             <th>Jumlah</th>
+                            <th>Diskon</th>
                             <th>Subtotal</th>
                         </tr>
                     </thead>
@@ -332,6 +333,7 @@
                             <td>${detail.product}</td>
                             <td>${formatRupiah(detail.price)}</td>
                             <td>${detail.Quantity} ${detail.productUnit}</td>
+                            <td>${detail.disc}</td>
                             <td>${formatRupiah(detail.total)}</td>
                         </tr>`;
                         });

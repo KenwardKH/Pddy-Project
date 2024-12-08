@@ -33,6 +33,8 @@ class StockController extends Controller
 
         // Cari produk berdasarkan nama, deskripsi, atau atribut lainnya
         $products = Product::where('ProductName', 'like', "%{$query}%")
+            ->orderByRaw('CASE WHEN CurrentStock < 100 THEN 0 ELSE 1 END') // Prioritaskan stok < 100
+            ->orderBy('ProductName', 'asc') // Urutkan alfabetis untuk lainnya
             ->get();
 
         return view('owner.produk', compact('products', 'query'));
@@ -318,7 +320,7 @@ class StockController extends Controller
         
         // Hitung totalAmount
         $totalAmount = $invoice->supplyInvoiceDetail->reduce(function ($carry, $detail) {
-            return $carry + ($detail->Quantity * $detail->SupplyPrice);
+            return $carry + ($detail->Quantity * $detail->FinalPrice);
         }, 0);
     
         // Map the invoice details
@@ -328,7 +330,8 @@ class StockController extends Controller
                 'price' => $detail->SupplyPrice,        // Mengambil harga dari InvoiceDetail
                 'Quantity' => $detail->Quantity, // Mengambil jumlah dari InvoiceDetail
                 'productUnit' => $detail->productUnit, // Mengambil satuan dari InvoiceDetail
-                'total' => $detail->Quantity * $detail->SupplyPrice, // Menghitung total
+                'disc' => $detail->discount,
+                'total' => $detail->Quantity * $detail->FinalPrice, // Menghitung total
             ];
         });
     
@@ -350,7 +353,7 @@ class StockController extends Controller
         // Hitung `totalAmount` untuk setiap invoice
         $invoices = $invoices->map(function ($invoice) {
             $invoice->totalAmount = $invoice->supplyInvoiceDetail->reduce(function ($carry, $detail) {
-                return $carry + ($detail->Quantity * $detail->SupplyPrice);
+                return $carry + ($detail->Quantity * $detail->FinalPrice);
             }, 0);
             return $invoice;
         });

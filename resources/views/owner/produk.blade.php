@@ -20,7 +20,7 @@
         select,
         textarea {
             margin: 0;
-            font-family: initial;
+            font-family: 'Roboto', sans-serif;
             font-size: medium;
             line-height: normal;
         }
