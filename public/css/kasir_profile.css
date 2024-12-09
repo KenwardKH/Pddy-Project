@@ -24,7 +24,7 @@ body {
     display: flex; 
     flex-direction: column;
     padding: 10px; 
-    border-bottom: orange solid 2px;
+    border-bottom: rgb(136, 243, 193) solid 2px;
 }
 .header img {
     width: 400px;
@@ -67,6 +67,7 @@ body {
     justify-content: space-around;
     column-gap: 20px;
     margin-right: 20px;
+    width: 950px;
 }
         
 .nav a { 
