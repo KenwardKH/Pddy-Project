@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kasir Home</title>
     <link rel="stylesheet" href="{{ asset('css/pengguna_status.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/custom-pagination.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <style>
@@ -158,12 +159,17 @@
                                 @endif
                             </td>
                             <td><button class="cetak-button">Cetak</button></td>
-                            <td>{{ $invoice->deliveryStatus->created_at ?? ($invoice->pickupStatus->created_at ?? 'N/A') }}</td>
+                            <td>{{ $invoice->deliveryStatus->created_at ?? ($invoice->pickupStatus->created_at ?? 'N/A') }}
+                            </td>
                             <td>{{ $invoice->cancelledTransaction->cancellation_date ?? 'N/A' }}</td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
+        </div>
+        {{-- Pagination --}}
+        <div style="margin-top: 20px; text-align: center;">
+            {{ $invoices->appends(request()->query())->links('vendor.pagination.custom') }}
         </div>
     </div>
     <!-- Modal -->
@@ -244,15 +250,15 @@
             });
         });
 
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.cetak-button').forEach(button => {
-                button.addEventListener('click', function () {
-                    const invoiceId = this.closest('tr').querySelector('td:first-child').textContent.trim();
+                button.addEventListener('click', function() {
+                    const invoiceId = this.closest('tr').querySelector('td:first-child').textContent
+                        .trim();
                     window.open(`/invoices/${invoiceId}/print`, '_blank');
                 });
             });
         });
-
     </script>
 </body>
 

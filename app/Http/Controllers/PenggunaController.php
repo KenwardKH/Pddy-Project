@@ -186,10 +186,9 @@ public function riwayat()
             });
         })
         ->orderBy('InvoiceID', 'asc')
-        ->get();
-    
+        ->paginate(10);
     // Add totalAmount calculation for each invoice
-    $invoices = $invoices->map(function ($invoice) {
+    $invoices->getCollection()->transform(function ($invoice){
         $invoice->totalAmount = $invoice->invoiceDetails->reduce(function ($carry, $detail) {
             return $carry + ($detail->Quantity * $detail->price);
         }, 0);
@@ -225,10 +224,10 @@ public function riwayatBatal()
             });
         })
         ->orderBy('InvoiceID', 'asc')
-        ->get();
+        ->paginate(10);
     
     // Add totalAmount calculation for each invoice
-    $invoices = $invoices->map(function ($invoice) {
+    $invoices->getCollection()->transform(function($invoice){
         $invoice->totalAmount = $invoice->invoiceDetails->reduce(function ($carry, $detail) {
             return $carry + ($detail->Quantity * $detail->price);
         }, 0);
