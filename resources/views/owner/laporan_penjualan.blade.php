@@ -8,6 +8,7 @@
     <title>Laporan Penjualan</title>
     <link rel="stylesheet" href="{{ asset('css/owner_nav.css') }}">
     <link rel="stylesheet" href="{{ asset('css/owner_pembelian.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/custom-pagination.css') }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css"
         rel="stylesheet">
     <style>
@@ -207,7 +208,7 @@
             <h1 style="margin: 0;">Laporan Penjualan</h1>
         </div>
         <div style="margin: 20px; display: flex; justify-content: center;">
-            <form method="GET" action="{{ route('owner.searchCustomer') }}" class="filter">
+            <form method="GET" action="{{ route('owner.laporanPenjualan') }}" class="filter">
                 <div style="column-gap: 20px; display:flex">
                     <div>
                         <label for="customerName">Nama Pemesan:</label>
@@ -270,6 +271,9 @@
                     @endforeach
                 </tbody>
             </table>
+        </div>
+        <div style="margin-top: 20px; text-align: center;">
+            {{ $transaction->appends(request()->query())->links('vendor.pagination.custom') }}
         </div>
         <!-- Modal -->
         <div class="overlay"></div>

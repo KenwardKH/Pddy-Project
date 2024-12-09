@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kasir Home</title>
     <link rel="stylesheet" href="{{ asset('css/kasir_riwayat.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/custom-pagination.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <style>
@@ -112,12 +113,14 @@
             <form action="{{ route('kasir.riwayat.batal') }}" method="GET" class="search-container">
                 <div>
                     <label for="customerName">Nama Pelanggan:</label>
-                    <input type="text" id="customerName" name="name" placeholder="Cari Nama" value="{{ request('name') }}"
-                        class="search-bar">
+                    <input type="text" id="customerName" name="name" placeholder="Cari Nama"
+                        value="{{ request('name') }}" class="search-bar">
                     <label for="startDate">Tanggal Mulai:</label>
-                    <input type="date" id="startDate" name="start_date" value="{{ request('start_date') }}" class="search-bar">
+                    <input type="date" id="startDate" name="start_date" value="{{ request('start_date') }}"
+                        class="search-bar">
                     <label for="endDate">Tanggal Akhir:</label>
-                    <input type="date" id="endDate" name="end_date" value="{{ request('end_date') }}" class="search-bar">
+                    <input type="date" id="endDate" name="end_date" value="{{ request('end_date') }}"
+                        class="search-bar">
                 </div>
 
                 <div>
@@ -187,6 +190,10 @@
                     @endforeach
                 </tbody>
             </table>
+        </div>
+        {{-- Pagination --}}
+        <div style="margin-top: 20px; text-align: center;">
+            {{ $invoices->appends(request()->query())->links('vendor.pagination.custom') }}
         </div>
     </div>
     <!-- Modal -->

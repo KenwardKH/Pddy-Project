@@ -194,7 +194,7 @@ class KasirController extends Controller
         $nameFilter = $request->input('name');
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
-    
+        
         // Query dasar
         $query = Invoice::with(['invoiceDetails', 'deliveryStatus', 'pickupStatus', 'cancelledTransaction'])
             ->where(function ($query) {
@@ -219,11 +219,11 @@ class KasirController extends Controller
             $query->whereDate('InvoiceDate', '<=', $endDate);
         }
     
-        // Dapatkan hasil query
-        $invoices = $query->orderBy('InvoiceID', 'asc')->get();
+        // Dapatkan hasil query dan paginate
+        $invoices = $query->orderBy('InvoiceID', 'asc')->paginate(10);
     
         // Hitung totalAmount untuk setiap invoice
-        $invoices = $invoices->map(function ($invoice) {
+        $invoices->getCollection()->transform(function ($invoice) {
             $invoice->totalAmount = $invoice->invoiceDetails->reduce(function ($carry, $detail) {
                 $quantity = (int) $detail->Quantity; 
                 $price = (float) $detail->price;
@@ -232,8 +232,10 @@ class KasirController extends Controller
             return $invoice;
         });
     
+        // Mengembalikan view dengan hasil pagination yang terappends
         return view('kasir.kasir_riwayat', compact('invoices'));
     }
+    
     
 
 
@@ -243,7 +245,7 @@ class KasirController extends Controller
         $nameFilter = $request->input('name');
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
-
+    
         // Query dasar untuk pesanan dibatalkan
         $query = Invoice::with(['invoiceDetails', 'deliveryStatus', 'pickupStatus', 'cancelledTransaction'])
             ->where(function ($query) {
@@ -253,12 +255,12 @@ class KasirController extends Controller
                     $q->whereIn('status', ['dibatalkan']);
                 });
             });
-
+    
         // Filter berdasarkan nama
         if ($nameFilter) {
             $query->where('customerName', 'like', '%' . $nameFilter . '%');
         }
-
+    
         // Filter berdasarkan rentang tanggal
         if ($startDate && $endDate) {
             $query->whereBetween('InvoiceDate', [$startDate, $endDate]);
@@ -267,12 +269,12 @@ class KasirController extends Controller
         } elseif ($endDate) {
             $query->whereDate('InvoiceDate', '<=', $endDate);
         }
-
-        // Ambil hasil query
-        $invoices = $query->orderBy('InvoiceID', 'asc')->get();
-
+    
+        // Ambil hasil query dengan pagination
+        $invoices = $query->orderBy('InvoiceID', 'asc')->paginate(10);
+    
         // Hitung totalAmount untuk setiap invoice
-        $invoices = $invoices->map(function ($invoice) {
+        $invoices->getCollection()->transform(function ($invoice) {
             $invoice->totalAmount = $invoice->invoiceDetails->reduce(function ($carry, $detail) {
                 $quantity = (int) $detail->Quantity; 
                 $price = (float) $detail->price;
@@ -280,10 +282,11 @@ class KasirController extends Controller
             }, 0);
             return $invoice;
         });
-
+    
         // Return ke view dengan data
         return view('kasir.kasir_riwayat_batal', compact('invoices'));
     }
+    
 
 
 public function pembayaran()

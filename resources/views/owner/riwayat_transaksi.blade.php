@@ -2,12 +2,13 @@
 <html lang="en">
 
 <head>
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Riwayat Transaksi</title>
     <link rel="stylesheet" href="{{ asset('css/owner_nav.css') }}">
     <link rel="stylesheet" href="{{ asset('css/owner_pembelian.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/custom-pagination.css') }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css"
         rel="stylesheet">
     <style>
@@ -206,7 +207,7 @@
             <h1 style="margin: 0;">Riwayat Transaksi</h1>
         </div>
         <div style="margin: 20px; display: flex; justify-content: center;">
-            <form method="GET" action="{{ route('owner.filterTransaksi') }}" class="filter">
+            <form method="GET" action="{{ route('owner.riwayatTransaksi') }}" class="filter">
                 <div style="column-gap: 20px; display:flex">
                     <div>
                         <label for="customerName">Nama Pemesan:</label>
@@ -225,12 +226,20 @@
                         <label for="orderStatus">Status Pesanan:</label>
                         <select id="orderStatus" name="orderStatus">
                             <option value="">Pilih Status</option>
-                            <option value="menunggu pembayaran" {{ request('orderStatus') == 'menunggu pembayaran' ? 'selected' : '' }}>Menunggu Pembayaran</option>
-                            <option value="diproses" {{ request('orderStatus') == 'diproses' ? 'selected' : '' }}>Diproses</option>
-                            <option value="diantar" {{ request('orderStatus') == 'diantar' ? 'selected' : '' }}>Diantar</option>
-                            <option value="menunggu pengambilan" {{ request('orderStatus') == 'menunggu pengambilan' ? 'selected' : '' }}>Menunggu Pengambilan</option>
-                            <option value="selesai" {{ request('orderStatus') == 'selesai' ? 'selected' : '' }}>Selesai</option>
-                            <option value="dibatalkan" {{ request('orderStatus') == 'dibatalkan' ? 'selected' : '' }}>Dibatalkan</option>
+                            <option value="menunggu pembayaran"
+                                {{ request('orderStatus') == 'menunggu pembayaran' ? 'selected' : '' }}>Menunggu
+                                Pembayaran</option>
+                            <option value="diproses" {{ request('orderStatus') == 'diproses' ? 'selected' : '' }}>
+                                Diproses</option>
+                            <option value="diantar" {{ request('orderStatus') == 'diantar' ? 'selected' : '' }}>Diantar
+                            </option>
+                            <option value="menunggu pengambilan"
+                                {{ request('orderStatus') == 'menunggu pengambilan' ? 'selected' : '' }}>Menunggu
+                                Pengambilan</option>
+                            <option value="selesai" {{ request('orderStatus') == 'selesai' ? 'selected' : '' }}>Selesai
+                            </option>
+                            <option value="dibatalkan" {{ request('orderStatus') == 'dibatalkan' ? 'selected' : '' }}>
+                                Dibatalkan</option>
                         </select>
                     </div>
                 </div>
@@ -283,6 +292,9 @@
                     @endforeach
                 </tbody>
             </table>
+        </div>
+        <div style="margin-top: 20px; text-align: center;">
+            {{ $transaction->appends(request()->query())->links('vendor.pagination.custom') }}
         </div>
         <!-- Modal -->
         <div class="overlay"></div>

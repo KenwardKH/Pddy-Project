@@ -8,6 +8,7 @@
     <title>Riwayat Pembelian Supply</title>
     <link rel="stylesheet" href="{{ asset('css/owner_nav.css') }}">
     <link rel="stylesheet" href="{{ asset('css/owner_pembelian.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/custom-pagination.css') }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css"
         rel="stylesheet">
     <style>
@@ -194,7 +195,7 @@
             <h1 style="margin: 0;">Daftar Pembelian Supply</h1>
         </div>
         <div style="margin: 20px; display: flex; justify-content: center;">
-            <form method="GET" action="{{ route('owner.searchSupply') }}" class="filter">
+            <form method="GET" action="{{ route('owner.daftarSupply') }}" class="filter">
                 <div style="column-gap: 20px; display:flex">
                     <div>
                         <label for="supplierName">Nama Supplier:</label>
@@ -263,6 +264,12 @@
                     @endforeach
                 </tbody>
             </table>
+
+        </div>
+
+        {{-- Pagination --}}
+        <div style="margin-top: 20px; text-align: center;">
+            {{ $invoices->appends(request()->query())->links('vendor.pagination.custom') }}
         </div>
 
         <!-- Modal Gambar -->

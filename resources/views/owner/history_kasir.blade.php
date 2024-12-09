@@ -8,6 +8,7 @@
     <title>Riwayat Kasir</title>
     <link rel="stylesheet" href="{{ asset('css/owner_nav.css') }}">
     <link rel="stylesheet" href="{{ asset('css/owner_pembelian.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/custom-pagination.css') }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css"
         rel="stylesheet">
     <style>
@@ -53,12 +54,13 @@
             transition: color 0.2s;
         }
 
-        .modal-info{
+        .modal-info {
             display: flex;
             flex-direction: column;
             align-items: start;
             margin-left: 20px
         }
+
         .modal-info p {
             margin: 0;
             margin-top: 10px
@@ -169,7 +171,6 @@
         .filter .btn-secondary:hover {
             background-color: #565e64;
         }
-
     </style>
 </head>
 
@@ -207,20 +208,20 @@
             <h1 style="margin: 0;">Riwayat Aktivitas Kasir</h1>
         </div>
         <div style="margin: 20px; display: flex; justify-content: center;">
-            <form method="GET" action="{{ route('owner.searchCashierHistory') }}" class="filter">
+            <form method="GET" action="{{ route('owner.history-kasir') }}" class="filter">
                 <div style="column-gap: 20px; display:flex">
                     <div>
-                    <label for="cashierName">Nama Kasir:</label>
-                    <input type="text" id="cashierName" name="cashierName" value="{{ request('cashierName') }}"
-                        placeholder="Cari Kasir...">
+                        <label for="cashierName">Nama Kasir:</label>
+                        <input type="text" id="cashierName" name="cashierName" value="{{ request('cashierName') }}"
+                            placeholder="Cari Kasir...">
                     </div>
                     <div>
-                    <label for="startDate">Tanggal Mulai:</label>
-                    <input type="date" id="startDate" name="startDate" value="{{ request('startDate') }}">
+                        <label for="startDate">Tanggal Mulai:</label>
+                        <input type="date" id="startDate" name="startDate" value="{{ request('startDate') }}">
                     </div>
                     <div>
-                    <label for="endDate">Tanggal Akhir:</label>
-                    <input type="date" id="endDate" name="endDate" value="{{ request('endDate') }}">
+                        <label for="endDate">Tanggal Akhir:</label>
+                        <input type="date" id="endDate" name="endDate" value="{{ request('endDate') }}">
                     </div>
                 </div>
                 <div>
@@ -264,6 +265,10 @@
                     @endforeach
                 </tbody>
             </table>
+        </div>
+        {{-- Pagination --}}
+        <div style="margin-top: 20px; text-align: center;">
+            {{ $logs->appends(request()->query())->links('vendor.pagination.custom') }}
         </div>
         <!-- Modal -->
         <div class="overlay"></div>

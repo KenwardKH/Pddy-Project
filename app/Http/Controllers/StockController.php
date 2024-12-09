@@ -14,20 +14,7 @@ class StockController extends Controller
 {
     //Daftar Product
 
-    public function product()
-    {
-        // Ambil data produk beserta relasi ke pricing
-        $products = Product::with(['pricing'])
-            ->orderByRaw('CASE WHEN CurrentStock < 100 THEN 0 ELSE 1 END') // Prioritaskan stok < 100
-            ->orderBy('ProductName', 'asc') // Urutkan alfabetis untuk lainnya
-            ->get();
-    
-        // Return view dengan data
-        return view('owner.produk', compact('products'));
-    }
-    
-
-    public function search(Request $request)
+    public function product(Request $request)
     {
         $query = $request->input('query'); // Ambil kata kunci pencarian dari input
 
@@ -35,7 +22,7 @@ class StockController extends Controller
         $products = Product::where('ProductName', 'like', "%{$query}%")
             ->orderByRaw('CASE WHEN CurrentStock < 100 THEN 0 ELSE 1 END') // Prioritaskan stok < 100
             ->orderBy('ProductName', 'asc') // Urutkan alfabetis untuk lainnya
-            ->get();
+            ->paginate(10);
 
         return view('owner.produk', compact('products', 'query'));
     }
@@ -162,15 +149,26 @@ class StockController extends Controller
 
     // Daftar Supplier
 
-    public function supplier()
+    public function supplier(Request $request)
     {
-        // Mengambil semua data customer
-        $suppliers = Supplier::orderBy('SupplierName', 'asc')
-        ->get();
-
-        // Mengirim data customers ke view
-        return view('owner.supplier', compact('suppliers'));
+        // Ambil input pencarian dari form
+        $query = $request->input('query');
+    
+        // Query dasar untuk mengambil data supplier
+        $suppliers = Supplier::orderBy('SupplierName', 'asc');
+    
+        // Tambahkan kondisi pencarian jika ada input pencarian
+        if ($query) {
+            $suppliers = $suppliers->where('SupplierName', 'like', "%{$query}%");
+        }
+    
+        // Ambil data suppliers dengan atau tanpa pencarian
+        $suppliers = $suppliers->paginate(1);
+    
+        // Mengirim data suppliers ke view
+        return view('owner.supplier', compact('suppliers', 'query'));
     }
+    
 
     public function storeSupplier(Request $request)
     {
@@ -235,15 +233,6 @@ class StockController extends Controller
         $suppliers = Supplier::all();
         $products = Product::all();
         return view('owner.tambah_supply', compact('suppliers', 'products'));
-    }
-
-    public function searchSupplier(Request $request)
-    {
-        $query = $request->input('query'); // Ambil input pencarian dari form
-        $suppliers = Supplier::where('SupplierName', 'like', "%{$query}%")
-            ->get();
-
-        return view('owner.supplier', compact('suppliers', 'query'));
     }
 
     public function supplyStore(Request $request)
@@ -343,39 +332,21 @@ class StockController extends Controller
             'totalAmount' => $totalAmount, // Menyertakan totalAmount ke dalam respons
         ]);
     }
-
-    public function daftarSupply()
+    public function daftarSupply(Request $request)
     {
-        $invoices = supplyInvoice::with(['supplyInvoiceDetail'])
-            ->orderBy('SupplyDate', 'desc')
-            ->get();
-
-        // Hitung `totalAmount` untuk setiap invoice
-        $invoices = $invoices->map(function ($invoice) {
-            $invoice->totalAmount = $invoice->supplyInvoiceDetail->reduce(function ($carry, $detail) {
-                return $carry + ($detail->Quantity * $detail->FinalPrice);
-            }, 0);
-            return $invoice;
-        });
-  
-        return view('owner.daftar_pembelian', compact('invoices'));
-    }
-
-    public function searchSupply(Request $request)
-    {
-        // Ambil data filter
+        // Ambil data filter dari request
         $supplierName = $request->input('supplierName');
         $startDate = $request->input('startDate');
         $endDate = $request->input('endDate');
-
+    
         // Query dasar
         $query = SupplyInvoice::query();
-
+    
         // Tambahkan filter berdasarkan nama supplier
         if ($supplierName) {
             $query->where('SupplierName', 'LIKE', '%' . $supplierName . '%');
         }
-
+    
         // Tambahkan filter berdasarkan tanggal
         if ($startDate) {
             $query->whereDate('SupplyDate', '>=', $startDate);
@@ -383,10 +354,22 @@ class StockController extends Controller
         if ($endDate) {
             $query->whereDate('SupplyDate', '<=', $endDate);
         }
-
-        // Dapatkan data
-        $invoices = $query->with('supplyInvoiceDetail')->get();
-
+    
+        // Ambil data dengan detail dan urutkan
+        $invoices = $query->with(['supplyInvoiceDetail'])
+            ->orderBy('SupplyDate', 'desc')
+            ->paginate(10); // Tampilkan 10 data per halaman
+    
+        // Hitung `totalAmount` untuk setiap invoice
+        $invoices->getCollection()->transform(function ($invoice) {
+            $invoice->totalAmount = $invoice->supplyInvoiceDetail->reduce(function ($carry, $detail) {
+                return $carry + ($detail->Quantity * $detail->FinalPrice);
+            }, 0);
+            return $invoice;
+        });
+    
+        // Tampilkan view dengan data invoice
         return view('owner.daftar_pembelian', compact('invoices'));
     }
+    
 }
