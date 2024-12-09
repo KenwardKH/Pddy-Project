@@ -15,10 +15,6 @@ body {
     background-color: white;
     z-index: 1000; /* Ensures the header stays on top */
 }
-
-.container {
-    margin-top: 160px; /* Offset content for the fixed header height */
-}
         
 .header { 
     display: flex; 
@@ -79,7 +75,7 @@ body {
     text-align: center;
     font-size: 25px;
     font-weight: bold;
-    margin-top: 200px; /* Jarak cukup dari header dan search bar */
+    margin-top: 160px; /* Jarak cukup dari header dan search bar */
     color: #333;
 }
 
@@ -128,12 +124,6 @@ body {
 .search-button:hover {
     background-color: #64f59c; /* Warna hijau gelap saat hover */
 }
-
-/* Product List Styling */
-.container {
-    margin-top: 160px; /* Offset content for the fixed header height */
-}
-
 
 /* Styling for Product Grid */
 .product-list {

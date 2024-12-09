@@ -3,7 +3,6 @@
     padding: 0;
     box-sizing: border-box;
 } */
-
 body {
     font-family: "Roboto", sans-serif;
     background-color: white;
@@ -18,7 +17,13 @@ body {
     display: flex;
     flex-direction: column;
     padding: 8px;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background-color: white;
     border-bottom: rgb(136, 243, 193) solid 2px;
+    z-index: 1000;
 }
 .header img {
     width: 350px;
