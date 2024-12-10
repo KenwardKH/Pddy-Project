@@ -74,29 +74,29 @@
 }
 
 /* Modal styling */
-.table .modal-content {
+.modal-content {
     border-radius: 10px;
     padding: 20px;
-    background-color: #fefefe;
+    background-color: #fefefe !important;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.table .modal-header {
+.modal-header {
     border-bottom: 1px solid #ddd;
     margin-bottom: 15px;
 }
 
-.table .modal-title {
+.modal-title {
     font-size: 20px;
     font-weight: bold;
 }
 
-.table .modal-footer {
+.modal-footer {
     border-top: 1px solid #ddd;
     padding-top: 15px;
 }
 
-.table .form-control {
+.form-control {
     font-size: 14px;
     padding: 10px;
     border-radius: 5px;
@@ -104,22 +104,22 @@
 }
 
 /* Tombol modal */
-.table .modal-footer .btn-secondary {
+.modal-footer .btn-secondary {
     background-color: #6c757d;
     border: none;
 }
 
-.table .modal-footer .btn-secondary:hover {
+.modal-footer .btn-secondary:hover {
     background-color: #5a6268;
 }
 
-.table .modal-footer .btn-primary {
+.modal-footer .btn-primary {
     background-color: #80f4ac;
     border: none;
     color: white;
 }
 
-.table .modal-footer .btn-primary:hover {
+.modal-footer .btn-primary:hover {
     background-color: #4fd894;
 }
 

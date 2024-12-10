@@ -8,6 +8,7 @@ use App\Models\Pricing;
 use App\Models\Supplier;
 use App\Models\SupplyInvoice;
 use App\Models\SupplyInvoiceDetail;
+use App\Models\PricingLog;
 use Illuminate\Support\Facades\DB;
 
 class StockController extends Controller
@@ -26,6 +27,33 @@ class StockController extends Controller
 
         return view('owner.produk', compact('products', 'query'));
     }
+
+    public function getProductPricingHistory($id)
+    {
+        try {
+            $price = PricingLog::where('ProductID', $id)->orderBy('timeChanged', 'desc')->get();
+    
+            // Map the price details
+            $details = $price->map(function ($detail) {
+                return [
+                    'price' => $detail->OldPrice,
+                    'timeChanged' => $detail->TimeChanged,
+                ];
+            });
+    
+            \Log::info(['details' => $details]);
+    
+            return response()->json([
+                'details' => $details,
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error fetching product price history: ' . $e->getMessage());
+            return response()->json([
+                'error' => 'Terjadi kesalahan saat mengambil data harga.',
+            ], 500);
+        }
+    }
+    
 
 
     public function store(Request $request)
@@ -163,7 +191,7 @@ class StockController extends Controller
         }
     
         // Ambil data suppliers dengan atau tanpa pencarian
-        $suppliers = $suppliers->paginate(1);
+        $suppliers = $suppliers->paginate(10);
     
         // Mengirim data suppliers ke view
         return view('owner.supplier', compact('suppliers', 'query'));
@@ -304,13 +332,12 @@ class StockController extends Controller
 
     public function getSupplyInvoiceDetails($id)
     {
-        $invoice = supplyInvoice::with(['supplyInvoiceDetail'])
-            ->findOrFail($id);
-        
-        // Hitung totalAmount
-        $totalAmount = $invoice->supplyInvoiceDetail->reduce(function ($carry, $detail) {
-            return $carry + ($detail->Quantity * $detail->FinalPrice);
-        }, 0);
+         // Query untuk mendapatkan invoice dengan detail dan totalAmount menggunakan fungsi SQL
+        $invoice = SupplyInvoice::selectRaw(
+            'supply_invoices.*, CalculateTotalAmount(supply_invoices.SupplyInvoiceId) as totalAmount'
+        )
+        ->with(['supplyInvoiceDetail']) // Mengambil relasi detail
+        ->findOrFail($id);
     
         // Map the invoice details
         $details = $invoice->supplyInvoiceDetail->map(function ($detail) {
@@ -325,13 +352,14 @@ class StockController extends Controller
         });
     
         // Log data for debugging
-        \Log::info(['details' => $details, 'totalAmount' => $totalAmount]);
+        \Log::info(['details' => $details, 'totalAmount' => $invoice->totalAmount]);
 
         return response()->json([
             'details' => $details,
-            'totalAmount' => $totalAmount, // Menyertakan totalAmount ke dalam respons
+            'totalAmount' => $invoice->totalAmount, // Menyertakan totalAmount ke dalam respons
         ]);
     }
+
     public function daftarSupply(Request $request)
     {
         // Ambil data filter dari request
@@ -356,17 +384,11 @@ class StockController extends Controller
         }
     
         // Ambil data dengan detail dan urutkan
-        $invoices = $query->with(['supplyInvoiceDetail'])
-            ->orderBy('SupplyDate', 'desc')
-            ->paginate(10); // Tampilkan 10 data per halaman
-    
-        // Hitung `totalAmount` untuk setiap invoice
-        $invoices->getCollection()->transform(function ($invoice) {
-            $invoice->totalAmount = $invoice->supplyInvoiceDetail->reduce(function ($carry, $detail) {
-                return $carry + ($detail->Quantity * $detail->FinalPrice);
-            }, 0);
-            return $invoice;
-        });
+        $invoices = SupplyInvoice::selectRaw(
+            '*, CalculateTotalAmount(SupplyInvoiceId) as totalAmount'
+        )
+        ->orderBy('SupplyDate', 'desc')
+        ->paginate(10);
     
         // Tampilkan view dengan data invoice
         return view('owner.daftar_pembelian', compact('invoices'));

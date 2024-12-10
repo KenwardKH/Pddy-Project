@@ -123,6 +123,7 @@ Route::middleware(['auth', RoleMiddleware::class . ':pemilik'])->group(function 
     Route::get('/owner/produk/{id}/edit', [StockController::class, 'edit'])->name('owner.edit-product');
     Route::post('/owner/produk/{id}', [StockController::class, 'update'])->name('owner.update-product');
     Route::delete('/owner/produk/{id}', [StockController::class, 'destroyProduct'])->name('owner.product.destroy');
+    Route::get('/api/productPrice/{id}', [StockController::class, 'getProductPricingHistory']);
     Route::get('/owner/produk', [StockController::class, 'product'])->name('owner.product');
     Route::get('/owner/daftar-supplier', [StockController::class, 'supplier'])->name('owner.daftar-supplier');
     Route::post('/owner/supplier/store', [StockController::class, 'storeSupplier'])->name('owner.store-supplier');

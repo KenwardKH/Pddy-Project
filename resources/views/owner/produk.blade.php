@@ -153,6 +153,7 @@
                             <th>Stock</th>
                             <th>Satuan</th>
                             <th class="deskripsi">Deskripsi</th>
+                            <th>History Harga</th>
                             <th class="edit">Edit</th>
                             <th class="hapus">Hapus</th>
                         </tr>
@@ -176,7 +177,12 @@
                                 <td>{{ $product->CurrentStock }}</td>
                                 <td>{{ $product->ProductUnit }}</td>
                                 <td class="deskripsi">{{ $product->Description }}</td>
-                                <td class="edit">
+
+                                <td>
+                                    <button class="detail-button btn btn-info btn-sm"
+                                        data-id="{{ $product->ProductID }}">Riwayat Harga</button>
+                                </td>
+                                <td>
                                     <button class="btn btn-warning btn-sm" data-bs-toggle="modal"
                                         data-bs-target="#editProductModal{{ $product->ProductID }}">
                                         <i class="bi bi-pencil btn-edit"></i>
@@ -265,9 +271,41 @@
                 </table>
             </div>
         </div>
+
+        <!-- Modal untuk history harga -->
+        <div class="modal fade" id="order-modal" tabindex="-1" aria-labelledby="order-modal-label"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="order-modal-label">Riwayat Harga</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Waktu Diubah</th>
+                                    <th>Harga</th>
+                                </tr>
+                            </thead>
+                            <tbody id="modal-content">
+                                <!-- Data dari API akan dimasukkan di sini -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div style="margin-top: 20px; text-align: center;">
             {{ $products->appends(request()->query())->links('vendor.pagination.custom') }}
         </div>
+
     </div>
     <script>
         function img_pathUrl(input) {
@@ -282,15 +320,53 @@
             });
         });
 
-        // Menutup modal
-        const closeButtons = document.querySelectorAll('[data-modal-close]');
+        // Menutup modal menggunakan tombol close
+        const closeButtons = document.querySelectorAll('.close-button');
         closeButtons.forEach(button => {
             button.addEventListener('click', () => {
-                const modalId = button.getAttribute('data-modal-close');
-                document.querySelector(modalId).style.display = 'none';
+                document.getElementById('order-modal').style.display = 'none';
+                document.querySelector('.overlay').style.display = 'none';
             });
         });
 
+
+        // Membuka modal riwayat harga
+        document.querySelectorAll('.detail-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const productID = this.dataset.id; // Mengambil ProductID dari data-id
+
+                // Fetch data dari server
+                fetch(`/api/productPrice/${productID}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const modalContent = document.getElementById('modal-content');
+                        modalContent.innerHTML = ''; // Hapus isi modal sebelumnya
+
+                        if (data.details && data.details.length > 0) {
+                            // Looping data dari API dan masukkan ke dalam tabel
+                            data.details.forEach(detail => {
+                                modalContent.innerHTML += `
+                            <tr>
+                                <td>${detail.timeChanged}</td>
+                                <td>${detail.price}</td>
+                            </tr>
+                        `;
+                            });
+                        } else {
+                            modalContent.innerHTML =
+                                `<tr><td colspan="2" class="text-center">Tidak ada data harga</td></tr>`;
+                        }
+
+                        // Buka modal menggunakan Bootstrap
+                        const orderModal = new bootstrap.Modal(document.getElementById(
+                            'order-modal'), {});
+                        orderModal.show();
+                    })
+                    .catch(error => {
+                        console.error('Terjadi kesalahan saat mengambil data riwayat harga:', error);
+                    });
+            });
+        });
         // Menutup modal jika klik di luar modal
         window.addEventListener('click', (event) => {
             const modals = document.querySelectorAll('.modal');
