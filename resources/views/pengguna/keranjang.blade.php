@@ -85,6 +85,7 @@
                 <div id="pengambilan" class="form-group" style="display: none;">
                     <label for="alamat">Alamat Pengiriman:</label>
                     <input type="text" id="alamat" name="alamat">
+                    <p class="note">Biaya belum termasuk biaya pengiriman</p>
                 </div>
                 <p>Pembayaran: Transfer</p>
                 <div class="footer">

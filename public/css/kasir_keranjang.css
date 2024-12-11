@@ -316,3 +316,9 @@ h1.header-title {
     border-radius: 5px;
     margin-top: 5px;
 }
+
+.note {
+    font-size: 0.9rem;
+    color: #ff4500; /* Oranye terang */
+    margin-top: 8px;
+}

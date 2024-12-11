@@ -24,10 +24,9 @@ class PenggunaController extends Controller
 
     public function printInvoice($id)
     {
-        $invoice = Invoice::with(['deliveryStatus', 'pickupStatus', 'invoiceDetails'])->findOrFail($id);
-        $invoice->totalAmount = $invoice->invoiceDetails->reduce(function ($carry, $detail) {
-            return $carry + ($detail->Quantity * $detail->price);
-        }, 0);
+        $invoice = Invoice::with(['deliveryStatus', 'pickupStatus', 'invoiceDetails'])
+            ->select('*', DB::raw('InvoiceTotalAmount(InvoiceID) as totalAmount'))
+            ->findOrFail($id);
 
         $pdf = PDF::loadView('invoices.print', compact('invoice'));
 
@@ -49,6 +48,7 @@ class PenggunaController extends Controller
 
         // Ambil semua invoice yang terkait dengan CustomerID
         $invoices = Invoice::with(['invoiceDetails', 'deliveryStatus', 'pickupStatus'])
+            ->select('*', DB::raw('InvoiceTotalAmount(InvoiceID) as totalAmount'))
             ->where('CustomerID', $customerId) // Filter berdasarkan CustomerID
             ->where(function ($query) {
                 // Kondisi status "belum selesai" baik untuk deliveryStatus atau pickupStatus
@@ -65,66 +65,54 @@ class PenggunaController extends Controller
             ->orderBy('InvoiceId', 'desc')
             ->get();
         
-        // Add totalAmount calculation for each invoice
-        $invoices = $invoices->map(function ($invoice) {
-            $invoice->totalAmount = $invoice->invoiceDetails->reduce(function ($carry, $detail) {
-                return $carry + ($detail->Quantity * $detail->price);
-            }, 0);
-            return $invoice;
-        });
-
-
         return view('pengguna.pengguna_status', compact('invoices'));
     }
 
     public function pembayaran()
-{
-    $userId = Auth::id();
+    {
+        $userId = Auth::id();
 
-    // Ambil CustomerID berdasarkan user_id
-    $customerId = DB::table('customers')
-        ->where('user_id', $userId)
-        ->value('CustomerID');
+        // Ambil CustomerID berdasarkan user_id
+        $customerId = DB::table('customers')
+            ->where('user_id', $userId)
+            ->value('CustomerID');
 
-    if (!$customerId) {
-        // Jika tidak ada CustomerID, tampilkan pesan error atau halaman kosong
-        return view('pengguna.pengguna_status', ['invoices' => []]);
-    }
-
-    // Ambil semua invoice yang terkait dengan CustomerID
-    $invoices = Invoice::with(['invoiceDetails', 'deliveryStatus', 'pickupStatus','payment'])
-        ->where('CustomerID', $customerId) // Filter berdasarkan CustomerID
-        ->where(function ($query) {
-            // Kondisi status "belum selesai" baik untuk deliveryStatus atau pickupStatus
-            $query->whereHas('deliveryStatus', function ($q) {
-                $q->where('status', 'menunggu pembayaran');
-            })->orWhereHas('pickupStatus', function ($q) {
-                $q->where('status', 'menunggu pembayaran');
-            });
-        })
-        ->orderBy('InvoiceID', 'asc')
-        ->get();
-    
-    // Add totalAmount calculation for each invoice
-    $invoices = $invoices->map(function ($invoice) {
-        $invoice->totalAmount = $invoice->invoiceDetails->reduce(function ($carry, $detail) {
-            return $carry + ($detail->Quantity * $detail->price);
-        }, 0);
-
-        $createdAt = $invoice->deliveryStatus->created_at ?? $invoice->pickupStatus->created_at;
-
-        // Hitung lastPay (2 hari setelah created_at)
-        if ($createdAt) {
-            $invoice->lastPay = \Carbon\Carbon::parse($createdAt)->addDays(2);
-        } else {
-            $invoice->lastPay = null; // Fallback jika created_at tidak tersedia
+        if (!$customerId) {
+            // Jika tidak ada CustomerID, tampilkan pesan error atau halaman kosong
+            return view('pengguna.pengguna_status', ['invoices' => []]);
         }
 
-        return $invoice;
-    });
+        // Ambil semua invoice yang terkait dengan CustomerID
+        $invoices = Invoice::with(['invoiceDetails', 'deliveryStatus', 'pickupStatus','payment'])
+            ->select('*', DB::raw('InvoiceTotalAmount(InvoiceID) as totalAmount'))
+            ->where('CustomerID', $customerId) // Filter berdasarkan CustomerID
+            ->where(function ($query) {
+                // Kondisi status "belum selesai" baik untuk deliveryStatus atau pickupStatus
+                $query->whereHas('deliveryStatus', function ($q) {
+                    $q->where('status', 'menunggu pembayaran');
+                })->orWhereHas('pickupStatus', function ($q) {
+                    $q->where('status', 'menunggu pembayaran');
+                });
+            })
+            ->orderBy('InvoiceID', 'asc')
+            ->get();
+        
+        // Add totalAmount calculation for each invoice
+        $invoices = $invoices->map(function ($invoice) {
+            $createdAt = $invoice->deliveryStatus->created_at ?? $invoice->pickupStatus->created_at;
 
-    return view('pengguna.pengguna_pembayaran', compact('invoices'));
-}
+            // Hitung lastPay (2 hari setelah created_at)
+            if ($createdAt) {
+                $invoice->lastPay = \Carbon\Carbon::parse($createdAt)->addDays(2);
+            } else {
+                $invoice->lastPay = null; // Fallback jika created_at tidak tersedia
+            }
+
+            return $invoice;
+        });
+
+        return view('pengguna.pengguna_pembayaran', compact('invoices'));
+    }
 
     public function bukti_transfer(Request $request)
     {
@@ -176,6 +164,7 @@ public function riwayat()
 
     // Ambil semua invoice yang sudah selesai
     $invoices = Invoice::with(['invoiceDetails', 'deliveryStatus', 'pickupStatus', 'cancelledTransaction'])
+        ->select('*', DB::raw('InvoiceTotalAmount(InvoiceID) as totalAmount'))
         ->where('CustomerID', $customerId) // Filter berdasarkan CustomerID
         ->where(function ($query) {
             // Kondisi status "Selesai" atau "dibatalkan" untuk deliveryStatus atau pickupStatus
@@ -187,13 +176,6 @@ public function riwayat()
         })
         ->orderBy('InvoiceID', 'asc')
         ->paginate(10);
-    // Add totalAmount calculation for each invoice
-    $invoices->getCollection()->transform(function ($invoice){
-        $invoice->totalAmount = $invoice->invoiceDetails->reduce(function ($carry, $detail) {
-            return $carry + ($detail->Quantity * $detail->price);
-        }, 0);
-        return $invoice;
-    });
 
     return view('pengguna.pengguna_riwayat', compact('invoices'));
 }
@@ -214,6 +196,7 @@ public function riwayatBatal()
 
     // Ambil semua invoice yang sudah selesai
     $invoices = Invoice::with(['invoiceDetails', 'deliveryStatus', 'pickupStatus', 'cancelledTransaction'])
+        ->select('*', DB::raw('InvoiceTotalAmount(InvoiceID) as totalAmount'))
         ->where('CustomerID', $customerId) // Filter berdasarkan CustomerID
         ->where(function ($query) {
             // Kondisi status "Selesai" atau "dibatalkan" untuk deliveryStatus atau pickupStatus
@@ -225,14 +208,6 @@ public function riwayatBatal()
         })
         ->orderBy('InvoiceID', 'asc')
         ->paginate(10);
-    
-    // Add totalAmount calculation for each invoice
-    $invoices->getCollection()->transform(function($invoice){
-        $invoice->totalAmount = $invoice->invoiceDetails->reduce(function ($carry, $detail) {
-            return $carry + ($detail->Quantity * $detail->price);
-        }, 0);
-        return $invoice;
-    });
 
     return view('pengguna.pengguna_riwayat_batal', compact('invoices'));
 }
@@ -240,12 +215,8 @@ public function riwayatBatal()
     public function getInvoiceDetails($id)
     {
         $invoice = Invoice::with(['invoiceDetails'])
-            ->findOrFail($id);
-        
-        // Hitung totalAmount
-        $totalAmount = $invoice->invoiceDetails->reduce(function ($carry, $detail) {
-            return $carry + ($detail->Quantity * $detail->price);
-        }, 0);
+            ->select('*', DB::raw('InvoiceTotalAmount(InvoiceID) as totalAmount'))
+            ->findOrFail($id);        
     
         // Map the invoice details
         $details = $invoice->invoiceDetails->map(function ($detail) {
@@ -260,13 +231,13 @@ public function riwayatBatal()
         });
     
         // Log data for debugging
-        \Log::info(['details' => $details, 'totalAmount' => $totalAmount]);
+        \Log::info(['details' => $details, 'totalAmount' => $invoice->totalAmount]);
 
         return response()->json([
             'customerName' => $invoice->customerName,     // Nama pelanggan
             'customerContact' => $invoice->customerContact,
             'details' => $details,
-            'totalAmount' => $totalAmount, // Menyertakan totalAmount ke dalam respons
+            'totalAmount' => $invoice->totalAmount, // Menyertakan totalAmount ke dalam respons
         ]);
     }
 

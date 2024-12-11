@@ -75,7 +75,6 @@ body {
     font-weight: bold;
 }
 
-
 /* Title and underline styling */
 h1.header-title {
     text-align: center;
@@ -84,7 +83,7 @@ h1.header-title {
 }
 
 h1.header-title::after {
-    content: '';
+    content: "";
     position: absolute;
     bottom: -5px;
     left: 0;
@@ -112,15 +111,15 @@ h1.header-title {
     /* border-radius: 5px; */
     background-color: #fff;
     margin-bottom: 15px; /* Menambah jarak antar item */
-    width: calc(100% - 20px); /* Memungkinkan lebar penuh dikurangi padding kiri dan kanan */
+    width: calc(
+        100% - 20px
+    ); /* Memungkinkan lebar penuh dikurangi padding kiri dan kanan */
     max-width: 100%;
     justify-content: space-between; /* Menjaga jarak antar elemen di dalam item */
-    
 }
 .cart-items {
     margin-bottom: 60px; /* Sesuaikan nilai margin-bottom sesuai kebutuhan */
-    }
-
+}
 
 /* Subtotal dan Delete Button */
 .subtotal {
@@ -129,9 +128,6 @@ h1.header-title {
     color: #333;
     text-align: center;
 }
-
-
-
 
 /* Product Image */
 .item-image {
@@ -159,7 +155,7 @@ h1.header-title {
 .item-details p {
     margin-bottom: 5px;
     font-size: 15px;
-    color: #FFA500;
+    color: #ffa500;
 }
 
 /* Quantity Control */
@@ -172,7 +168,7 @@ h1.header-title {
     justify-content: center;
     
 } */
- /* Kontrol Kuantitas */
+/* Kontrol Kuantitas */
 .quantity-control {
     display: flex;
     align-items: center;
@@ -203,11 +199,10 @@ h1.header-title {
 .subtotal {
     flex: 2; /* Membuat subtotal lebih lebar */
     font-weight: bold;
-    color: #FFA500;
+    color: #ffa500;
     text-align: center;
     font-size: 15px;
 }
-
 
 .delete {
     flex: 1;
@@ -226,20 +221,20 @@ h1.header-title {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    }
-    
-    .footer-left {
+}
+
+.footer-left {
     display: flex;
     flex-direction: column;
     margin-right: 20px;
-    }
-    
-    .footer-right {
+}
+
+.footer-right {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    }
-    /* Shipping and Payment Sections */
+}
+/* Shipping and Payment Sections */
 .shipping-method,
 .payment-method {
     display: flex;
@@ -265,20 +260,19 @@ h1.header-title {
     width: 100%;
 }
 
-    
-    .total-order {
+.total-order {
     display: flex;
     align-items: center;
     margin-right: 20px;
-    }
-    
-    .total-order .total-price {
+}
+
+.total-order .total-price {
     font-size: 18px;
     font-weight: bold;
     margin-right: 10px;
-    }
-    
-    .checkout-btn {
+}
+
+.checkout-btn {
     display: block;
     width: 200px;
     padding: 10px;
@@ -290,44 +284,50 @@ h1.header-title {
     font-weight: bold;
     text-align: center;
     transition: background-color 0.3s;
-    }
-    
-    .checkout-btn:hover {
-    background-color: #218838;
-    }
+}
 
-    .back-button-container {
-        margin-top: 20px;
-        text-align: center;
-    }
-    
-    .back-btn {
-        padding: 10px 20px;
-        background-color: #007bff;
-        color: white;
-        font-size: 16px;
-        border-radius: 5px;
-        text-decoration: none;
-    }
-    
-    .back-btn:hover {
-        background-color: #0056b3;
-    }
-    
-    .form-group {
-        margin-bottom: 15px;
-    }
-    
-    .form-group label {
-        font-size: 16px;
-        color: #333;
-    }
-    
-    .form-group select,
-    .form-group input {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        margin-top: 5px;
-    }
+.checkout-btn:hover {
+    background-color: #218838;
+}
+
+.back-button-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.back-btn {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.back-btn:hover {
+    background-color: #0056b3;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    font-size: 16px;
+    color: #333;
+}
+
+.form-group select,
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+.note {
+    font-size: 0.9rem;
+    color: #ff4500; /* Oranye terang */
+    margin-top: 8px;
+}

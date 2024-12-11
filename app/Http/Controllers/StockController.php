@@ -334,7 +334,7 @@ class StockController extends Controller
     {
          // Query untuk mendapatkan invoice dengan detail dan totalAmount menggunakan fungsi SQL
         $invoice = SupplyInvoice::selectRaw(
-            'supply_invoices.*, CalculateTotalAmount(supply_invoices.SupplyInvoiceId) as totalAmount'
+            'supply_invoices.*, SupplyInvoiceTotalAmount(supply_invoices.SupplyInvoiceId) as totalAmount'
         )
         ->with(['supplyInvoiceDetail']) // Mengambil relasi detail
         ->findOrFail($id);
@@ -385,7 +385,7 @@ class StockController extends Controller
     
         // Ambil data dengan detail dan urutkan
         $invoices = SupplyInvoice::selectRaw(
-            '*, CalculateTotalAmount(SupplyInvoiceId) as totalAmount'
+            '*, SupplyInvoiceTotalAmount(SupplyInvoiceId) as totalAmount'
         )
         ->orderBy('SupplyDate', 'desc')
         ->paginate(10);

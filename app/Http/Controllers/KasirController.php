@@ -11,6 +11,7 @@ use App\Models\PickupOrderStatus;
 use App\Models\CancelledTransaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class KasirController extends Controller
 {
@@ -20,6 +21,7 @@ class KasirController extends Controller
     public function status($type = 'delivery')
 {
     $invoices = Invoice::with(['invoiceDetails', 'deliveryStatus', 'pickupStatus'])
+        ->select('*', DB::raw('InvoiceTotalAmount(InvoiceID) as totalAmount'))// Menghitung totalAmount menggunakan stored function
         ->where(function ($query) {
             // Kondisi status "belum selesai" baik untuk deliveryStatus atau pickupStatus
             $query->whereHas('deliveryStatus', function ($q) {
@@ -41,16 +43,6 @@ class KasirController extends Controller
     }
 
     $invoices = $invoices->orderBy('InvoiceID', 'asc')->get();
-
-    // Hitung `totalAmount` untuk setiap invoice
-    $invoices->map(function ($invoice) {
-        $invoice->totalAmount = $invoice->invoiceDetails->reduce(function ($carry, $detail) {
-            $quantity = (int) $detail->Quantity; 
-            $price = (float) $detail->price;
-            return $carry + ($quantity * $price);
-        }, 0);
-        return $invoice;
-    });
 
     return view('kasir.kasir_status', ['type' => $type, 'invoices' => $invoices]);
 }
@@ -157,37 +149,6 @@ class KasirController extends Controller
         return view('kasir.kasir_profile');
     }
 
-    public function getInvoiceDetails($id)
-    {
-        $invoice = Invoice::with(['invoiceDetails'])
-            ->findOrFail($id);
-        
-        // Hitung totalAmount
-        $totalAmount = $invoice->invoiceDetails->reduce(function ($carry, $detail) {
-            return $carry + ($detail->Quantity * $detail->price);
-        }, 0);
-    
-        // Map the invoice details
-        $details = $invoice->invoiceDetails->map(function ($detail) {
-            return [
-                'product' => $detail->productName, // Mengambil langsung nama produk dari InvoiceDetail
-                'price' => $detail->price,        // Mengambil harga dari InvoiceDetail
-                'Quantity' => $detail->Quantity, // Mengambil jumlah dari InvoiceDetail
-                'productImage' => $detail->productImage, // Mengambil gambar dari InvoiceDetail
-                'productUnit' => $detail->productUnit, // Mengambil satuan dari InvoiceDetail
-                'total' => $detail->Quantity * $detail->price, // Menghitung total
-            ];
-        });
-    
-        // Log data for debugging
-        \Log::info(['details' => $details, 'totalAmount' => $totalAmount]);
-
-        return response()->json([
-            'details' => $details,
-            'totalAmount' => $totalAmount, // Menyertakan totalAmount ke dalam respons
-        ]);
-    }
-
     public function riwayat(Request $request)
     {
         // Ambil parameter filter dari request
@@ -197,6 +158,7 @@ class KasirController extends Controller
         
         // Query dasar
         $query = Invoice::with(['invoiceDetails', 'deliveryStatus', 'pickupStatus', 'cancelledTransaction'])
+            ->select('*', DB::raw('InvoiceTotalAmount(InvoiceID) as totalAmount'))// Menghitung totalAmount menggunakan stored function
             ->where(function ($query) {
                 $query->whereHas('deliveryStatus', function ($q) {
                     $q->whereIn('status', ['Selesai']);
@@ -220,17 +182,8 @@ class KasirController extends Controller
         }
     
         // Dapatkan hasil query dan paginate
-        $invoices = $query->orderBy('InvoiceID', 'asc')->paginate(10);
-    
-        // Hitung totalAmount untuk setiap invoice
-        $invoices->getCollection()->transform(function ($invoice) {
-            $invoice->totalAmount = $invoice->invoiceDetails->reduce(function ($carry, $detail) {
-                $quantity = (int) $detail->Quantity; 
-                $price = (float) $detail->price;
-                return $carry + ($quantity * $price);
-            }, 0);
-            return $invoice;
-        });
+        $invoices = $query->orderBy('InvoiceID', 'desc')->paginate(10);
+
     
         // Mengembalikan view dengan hasil pagination yang terappends
         return view('kasir.kasir_riwayat', compact('invoices'));
@@ -248,6 +201,7 @@ class KasirController extends Controller
     
         // Query dasar untuk pesanan dibatalkan
         $query = Invoice::with(['invoiceDetails', 'deliveryStatus', 'pickupStatus', 'cancelledTransaction'])
+            ->select('*', DB::raw('InvoiceTotalAmount(InvoiceID) as totalAmount'))
             ->where(function ($query) {
                 $query->whereHas('deliveryStatus', function ($q) {
                     $q->whereIn('status', ['dibatalkan']);
@@ -271,61 +225,43 @@ class KasirController extends Controller
         }
     
         // Ambil hasil query dengan pagination
-        $invoices = $query->orderBy('InvoiceID', 'asc')->paginate(10);
-    
-        // Hitung totalAmount untuk setiap invoice
-        $invoices->getCollection()->transform(function ($invoice) {
-            $invoice->totalAmount = $invoice->invoiceDetails->reduce(function ($carry, $detail) {
-                $quantity = (int) $detail->Quantity; 
-                $price = (float) $detail->price;
-                return $carry + ($quantity * $price);
-            }, 0);
-            return $invoice;
-        });
+        $invoices = $query->orderBy('InvoiceID', 'desc')->paginate(10);
     
         // Return ke view dengan data
         return view('kasir.kasir_riwayat_batal', compact('invoices'));
     }
     
+    public function pembayaran()
+    {
+        // Ambil semua invoice yang terkait dengan CustomerID
+        $invoices = Invoice::with(['invoiceDetails', 'deliveryStatus', 'pickupStatus','payment'])
+            ->select('*', DB::raw('InvoiceTotalAmount(InvoiceID) as totalAmount'))
+            ->where(function ($query) {
+                // Kondisi status "belum selesai" baik untuk deliveryStatus atau pickupStatus
+                $query->whereHas('deliveryStatus', function ($q) {
+                    $q->where('status', 'menunggu pembayaran');
+                })->orWhereHas('pickupStatus', function ($q) {
+                    $q->where('status', 'menunggu pembayaran');
+                });
+            })
+            ->orderBy('InvoiceID', 'asc')
+            ->get();
 
+        $invoices = $invoices->map(function ($invoice) {
+            // Ambil created_at dari deliveryStatus atau pickupStatus
+            $createdAt = $invoice->deliveryStatus->created_at ?? $invoice->pickupStatus->created_at;
 
-public function pembayaran()
-{
-    // Ambil semua invoice yang terkait dengan CustomerID
-    $invoices = Invoice::with(['invoiceDetails', 'deliveryStatus', 'pickupStatus','payment'])
-        ->where(function ($query) {
-            // Kondisi status "belum selesai" baik untuk deliveryStatus atau pickupStatus
-            $query->whereHas('deliveryStatus', function ($q) {
-                $q->where('status', 'menunggu pembayaran');
-            })->orWhereHas('pickupStatus', function ($q) {
-                $q->where('status', 'menunggu pembayaran');
-            });
-        })
-        ->orderBy('InvoiceID', 'asc')
-        ->get();
-    
-    // Add totalAmount calculation for each invoice
-    $invoices = $invoices->map(function ($invoice) {
-        $invoice->totalAmount = $invoice->invoiceDetails->reduce(function ($carry, $detail) {
-            $quantity = (int) $detail->Quantity; 
-            $price = (float) $detail->price;
-            return $carry + ($quantity * $price);
-        }, 0);
+            // Hitung lastPay (2 hari setelah created_at)
+            if ($createdAt) {
+                $invoice->lastPay = \Carbon\Carbon::parse($createdAt)->addDays(2);
+            } else {
+                $invoice->lastPay = null; // Fallback jika created_at tidak tersedia
+            }
+            return $invoice;
+        });
 
-        // Ambil created_at dari deliveryStatus atau pickupStatus
-        $createdAt = $invoice->deliveryStatus->created_at ?? $invoice->pickupStatus->created_at;
-
-        // Hitung lastPay (2 hari setelah created_at)
-        if ($createdAt) {
-            $invoice->lastPay = \Carbon\Carbon::parse($createdAt)->addDays(2);
-        } else {
-            $invoice->lastPay = null; // Fallback jika created_at tidak tersedia
-        }
-        return $invoice;
-    });
-
-    return view('kasir.kasir_pembayaran', compact('invoices'));
-}
+        return view('kasir.kasir_pembayaran', compact('invoices'));
+    }
 
     public function konfirmasi($id, Request $request)
     {
