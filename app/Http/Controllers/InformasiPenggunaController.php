@@ -59,7 +59,7 @@ class InformasiPenggunaController extends Controller
             ]);
         }
 
-        return redirect()->route('kasir.profile.show')->with('info', 'Informasi diri Anda berhasil diperbarui.');
+        return redirect()->route('profile.show')->with('info', 'Informasi diri Anda berhasil diperbarui.');
     }
 
     public function updateKasir(Request $request)
