@@ -70,7 +70,7 @@ Route::middleware(['auth', RoleMiddleware::class . ':pelanggan'])->group(functio
     Route::post('/pengguna/{id}/batal', [PenggunaController::class, 'batal'])->name('pengguna.batal');
     Route::get('/keranjang', [CartController::class, 'index'])->name('customer.cart');
     Route::post('/keranjang/update', [CartController::class, 'updateCart'])->name('customer.updateCart');
-    Route::get('/keranjang/remove/{productName}', [CartController::class, 'removeItem'])->name('cart.remove');
+    Route::get('/keranjang/remove/{productId}', [CartController::class, 'removeItem'])->name('cart.remove');
     Route::post('/checkout', [CartController::class, 'checkout'])->name('checkout');
     Route::get('/api/invoice/{id}', [PenggunaController::class, 'getInvoiceDetails']);
 });
@@ -97,7 +97,7 @@ Route::middleware(['auth', RoleMiddleware::class . ':kasir'])->group(function ()
     Route::delete('kasir/profile', [InformasiPenggunaController::class, 'destroy'])->name('kasir.profile.destroy');
     Route::get('/kasir/keranjang', [CartKasirController::class, 'index'])->name('kasir.cart');
     Route::post('/kasir/keranjang-update', [CartKasirController::class, 'updateCart'])->name('kasir.updateCart');
-    Route::get('/keranjang/hapus/{productName}', [CartKasirController::class, 'removeItem'])->name('kasir.cart.remove');
+    Route::get('/keranjang/hapus/{productId}', [CartKasirController::class, 'removeItem'])->name('kasir.cart.remove');
     Route::post('/kasir/checkout', [CartKasirController::class, 'checkout'])->name('kasir.checkout');
 
 });

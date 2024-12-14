@@ -126,7 +126,7 @@ class InformasiPenggunaController extends Controller
     {
         $user = Auth::user();
 
-        // Validasi password sebelum menghapus akun (opsional)
+        // Validasi password sebelum menghapus akun
         $request->validate([
             'password' => 'required',
         ]);
@@ -135,9 +135,9 @@ class InformasiPenggunaController extends Controller
             return back()->withErrors(['password' => 'Password yang Anda masukkan salah.']);
         }
 
-        // Hapus relasi terkait, jika ada
+        // Hapus relasi terkait
         $user->customer()->delete(); // Hapus data di tabel customers
-        $user->kasir()->delete();    // Hapus data di tabel kasir (jika ada)
+        $user->kasir()->delete();    // Hapus data di tabel kasir 
 
         // Hapus akun pengguna
         $user->delete();

@@ -23,12 +23,12 @@ class CartKasirController extends Controller
         ->where('user_id', $userId)
         ->value('id_kasir');
 
-        // Get cart items for the customer with associated product data
+        // Mengambil data dari table cart kasir
         $cartItems = CashierCart::with('product')
             ->where('CashierID', $kasirId)
             ->get();
 
-        // Calculate total price
+        // hitung total harga
         $total = $cartItems->sum(function ($item) {
             return $item->product->pricing->UnitPrice * $item->Quantity;
         });
@@ -48,7 +48,7 @@ class CartKasirController extends Controller
         ->where('user_id', $userId)
         ->value('id_kasir');
 
-        // Get quantities from the form input
+        // // Mengambil quantities dari halaman input
         $quantities = $request->input('quantity', []);
 
         foreach ($quantities as $productId => $quantity) {
@@ -57,17 +57,17 @@ class CartKasirController extends Controller
                 $product = Product::find($productId);
 
                 if ($product) {
-                    // Find the cart item associated with the customer and product
+                    // Memastikan memilih produk yang benar dengan ProductID
                     $cartItem = CashierCart::where('CashierID', $kasirId)
                                             ->where('ProductID', $productId)
                                             ->first();
 
                     if ($cartItem) {
-                        // Update the quantity if the product exists in the cart
+                        // Jika produk ada dalam keranjang, perbarui jumlah itemnya
                         $cartItem->Quantity = $quantity;
                         $cartItem->save();
                     } else {
-                        // If product is not in the cart, create a new cart item
+                        // Jika kosong, tambah item baru
                         CashierCart::create([
                             'CashierID' => $kasirId,
                             'ProductID' => $productId,
@@ -76,7 +76,7 @@ class CartKasirController extends Controller
                     }
                 }
             } else {
-                // If quantity is 0, remove the item from the cart
+                // Jika quantity 0, hapus item dari keranjang
                 CashierCart::where('CashierID', $kasirId)
                     ->where('ProductID', $productId)
                     ->delete();
@@ -87,7 +87,7 @@ class CartKasirController extends Controller
     }
 
     // Menghapus item dari keranjang
-    public function removeItem($productName)
+    public function removeItem($productId)
     {
         $userId = Auth::id();
 
@@ -96,15 +96,10 @@ class CartKasirController extends Controller
         ->where('user_id', $userId)
         ->value('id_kasir');
 
-        // Find the product by its name
-        $product = Product::where('ProductName', $productName)->first();
-
-        if ($product) {
-            // Find the cart item associated with the customer and product
-            CashierCart::where('CashierID', $kasirId)
-                ->where('ProductID', $product->ProductID)
-                ->delete(); // Delete the cart item
-        }
+        // cari item keranjang sesuai dengan customer dan product untuk dihapus
+        CashierCart::where('CashierID', $kasirId)
+            ->where('ProductID', $productId)
+            ->delete(); 
 
         return redirect()->route('kasir.cart')->with('success', 'Barang berhasil dihapus dari keranjang!');
     }
@@ -136,7 +131,7 @@ class CartKasirController extends Controller
             return redirect()->route('buat-pesanan');
         }
         
-        // Get the authenticated user's CustomerID
+        // mendapat id kasir yang login
         $userId = Auth::id();
         $kasir = DB::table('kasir')
             ->where('user_id', $userId)
@@ -150,11 +145,11 @@ class CartKasirController extends Controller
         $cashierId = $kasir->id_kasir;
         $shippingOption = $request->input('shipping_option');
         $paymentOption = $request->input('payment_option');
-        $alamat = $request->input('alamat', null);  // Address if delivery option selected
-        $total = $request->input('total'); // Ambil total dari hidden input atau request
+        $alamat = $request->input('alamat', null); 
+        $total = $request->input('total'); // Ambil total dari hidden input
 
         try {
-            // Call the stored procedure with additional parameters
+            // panggil procedure
             DB::statement('CALL CheckoutCashierCart(?, ?, ?, ?, ?, ?, ?)', [
                 $cashierId,
                 $customerId,
@@ -165,10 +160,10 @@ class CartKasirController extends Controller
                 $alamat
             ]);
 
-             // Assume we get InvoiceID after the stored procedure execution
+             // mengambil invoiceid dari invoice terbaru
             $invoiceId = DB::table('invoices')->latest('InvoiceID')->value('InvoiceID'); 
 
-            // Insert payment data
+            // Masukkan data payment
             $payment = Payment::create([
                 'InvoiceID' => $invoiceId,
                 'PaymentDate' => now(),

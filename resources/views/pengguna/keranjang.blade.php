@@ -66,7 +66,7 @@
                                 Subtotal:
                                 Rp{{ number_format($item->product->pricing->UnitPrice * $item->Quantity, 0, ',', '.') }}
                             </div>
-                            <a href="{{ route('cart.remove', $item->product->ProductName) }}" class="delete">
+                            <a href="{{ route('cart.remove', $item->product->ProductID) }}" class="delete">
                                 <i class="bi bi-trash"></i> Hapus
                             </a>
                         </div>

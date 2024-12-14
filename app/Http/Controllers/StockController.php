@@ -58,7 +58,7 @@ class StockController extends Controller
 
     public function store(Request $request)
     {
-        // Validate the incoming data
+        // Validasi data yang masuk
         $validated = $request->validate([
             'ProductName' => 'required|string|max:255',
             'UnitPrice' => 'required|numeric',
@@ -200,7 +200,7 @@ class StockController extends Controller
 
     public function storeSupplier(Request $request)
     {
-        // Validate the incoming data
+        // Validasi data
         $validated = $request->validate([
             'SupplierName' => 'required|string|max:255',
             'SupplierContact' => 'required|string|max:20',

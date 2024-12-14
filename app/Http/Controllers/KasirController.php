@@ -19,34 +19,33 @@ class KasirController extends Controller
      * Display a listing of the resource.
      */
     public function status($type = 'delivery')
-{
-    $invoices = Invoice::with(['invoiceDetails', 'deliveryStatus', 'pickupStatus'])
-        ->select('*', DB::raw('InvoiceTotalAmount(InvoiceID) as totalAmount'))// Menghitung totalAmount menggunakan stored function
-        ->where(function ($query) {
-            // Kondisi status "belum selesai" baik untuk deliveryStatus atau pickupStatus
-            $query->whereHas('deliveryStatus', function ($q) {
-                $q->where('status', '!=', 'Selesai');
-                $q->where('status', '!=', 'menunggu pembayaran');
-                $q->where('status', '!=', 'dibatalkan');
-            })->orWhereHas('pickupStatus', function ($q) {
-                $q->where('status', '!=', 'Selesai');
-                $q->where('status', '!=', 'menunggu pembayaran');
-                $q->where('status', '!=', 'dibatalkan');
+    {
+        $invoices = Invoice::with(['invoiceDetails', 'deliveryStatus', 'pickupStatus'])
+            ->select('*', DB::raw('InvoiceTotalAmount(InvoiceID) as totalAmount'))// Menghitung totalAmount menggunakan stored function
+            ->where(function ($query) {
+                // Kondisi status "belum selesai" baik untuk deliveryStatus atau pickupStatus
+                $query->whereHas('deliveryStatus', function ($q) {
+                    $q->where('status', '!=', 'Selesai');
+                    $q->where('status', '!=', 'menunggu pembayaran');
+                    $q->where('status', '!=', 'dibatalkan');
+                })->orWhereHas('pickupStatus', function ($q) {
+                    $q->where('status', '!=', 'Selesai');
+                    $q->where('status', '!=', 'menunggu pembayaran');
+                    $q->where('status', '!=', 'dibatalkan');
+                });
             });
-        });
 
-    // Filter berdasarkan 'type' jika parameter diberikan
-    if ($type === 'delivery') {
-        $invoices = $invoices->whereHas('deliveryStatus');
-    } elseif ($type === 'pickup') {
-        $invoices = $invoices->whereHas('pickupStatus');
+        // Filter berdasarkan 'type' jika parameter diberikan
+        if ($type === 'delivery') {
+            $invoices = $invoices->whereHas('deliveryStatus');
+        } elseif ($type === 'pickup') {
+            $invoices = $invoices->whereHas('pickupStatus');
+        }
+
+        $invoices = $invoices->orderBy('InvoiceID', 'asc')->get();
+
+        return view('kasir.kasir_status', ['type' => $type, 'invoices' => $invoices]);
     }
-
-    $invoices = $invoices->orderBy('InvoiceID', 'asc')->get();
-
-    return view('kasir.kasir_status', ['type' => $type, 'invoices' => $invoices]);
-}
-
 
     public function nextStatus($id, Request $request)
     {
@@ -309,66 +308,66 @@ class KasirController extends Controller
     }
 
     public function batal($id, Request $request)
-{
-    // Validasi alasan pembatalan
-    $request->validate([
-        'reason' => 'required|string|max:255',
-    ]);
+    {
+        // Validasi alasan pembatalan
+        $request->validate([
+            'reason' => 'required|string|max:255',
+        ]);
 
-    $invoice = Invoice::find($id);
+        $invoice = Invoice::find($id);
 
-    if (!$invoice) {
-        return redirect()->back()->with('error', 'Invoice tidak ditemukan.');
-    }
-
-    // Ambil data kasir yang sedang login
-    $kasir = Auth::user()->kasir; // Menggunakan relasi 'kasir'
-    if (!$kasir) {
-        return redirect()->back()->with('error', 'Kasir belum login atau data kasir tidak ditemukan.');
-    }
-
-    // Ambil informasi kasir
-    $cashierId = $kasir->id_kasir ?? null; // ID dari tabel kasir
-    $cashierName = $kasir->nama_kasir ?? null;
-
-    if (!$cashierId || !$cashierName) {
-        return redirect()->back()->with('error', 'Data kasir tidak valid.');
-    }
-
-    // Ambil alasan pembatalan
-    $reason = $request->input('reason');
-
-    // Perbarui status sesuai dengan jenis pengantaran
-    if ($invoice->type === 'delivery') {
-        $deliveryStatus = $invoice->deliveryStatus;
-        if ($deliveryStatus) {
-            $deliveryStatus->status = 'dibatalkan';
-            $deliveryStatus->updated_by = $cashierId;
-            $deliveryStatus->save();
-        } else {
-            return redirect()->back()->with('error', 'Status pengantaran tidak ditemukan.');
+        if (!$invoice) {
+            return redirect()->back()->with('error', 'Invoice tidak ditemukan.');
         }
-    } elseif ($invoice->type === 'pickup') {
-        $pickupStatus = $invoice->pickupStatus;
-        if ($pickupStatus) {
-            $pickupStatus->status = 'dibatalkan';
-            $pickupStatus->updated_by = $cashierId;
-            $pickupStatus->save();
-        } else {
-            return redirect()->back()->with('error', 'Status pengambilan tidak ditemukan.');
+
+        // Ambil data kasir yang sedang login
+        $kasir = Auth::user()->kasir; // Menggunakan relasi 'kasir'
+        if (!$kasir) {
+            return redirect()->back()->with('error', 'Kasir belum login atau data kasir tidak ditemukan.');
         }
+
+        // Ambil informasi kasir
+        $cashierId = $kasir->id_kasir ?? null; // ID dari tabel kasir
+        $cashierName = $kasir->nama_kasir ?? null;
+
+        if (!$cashierId || !$cashierName) {
+            return redirect()->back()->with('error', 'Data kasir tidak valid.');
+        }
+
+        // Ambil alasan pembatalan
+        $reason = $request->input('reason');
+
+        // Perbarui status sesuai dengan jenis pengantaran
+        if ($invoice->type === 'delivery') {
+            $deliveryStatus = $invoice->deliveryStatus;
+            if ($deliveryStatus) {
+                $deliveryStatus->status = 'dibatalkan';
+                $deliveryStatus->updated_by = $cashierId;
+                $deliveryStatus->save();
+            } else {
+                return redirect()->back()->with('error', 'Status pengantaran tidak ditemukan.');
+            }
+        } elseif ($invoice->type === 'pickup') {
+            $pickupStatus = $invoice->pickupStatus;
+            if ($pickupStatus) {
+                $pickupStatus->status = 'dibatalkan';
+                $pickupStatus->updated_by = $cashierId;
+                $pickupStatus->save();
+            } else {
+                return redirect()->back()->with('error', 'Status pengambilan tidak ditemukan.');
+            }
+        }
+
+        // Catat pembatalan di tabel CancelledTransaction
+        CancelledTransaction::create([
+            'InvoiceId' => $invoice->InvoiceID,
+            'cancellation_reason' => $reason,
+            'cancelled_by' => 'cashier', // Pembatalan dilakukan oleh kasir
+            'cancellation_date' => now()->timezone('Asia/Jakarta')->format('Y-m-d H:i:s'), // Tanggal pembatalan
+        ]);
+
+        return redirect()->back()->with('success', 'Pesanan berhasil dibatalkan.');
     }
-
-    // Catat pembatalan di tabel CancelledTransaction
-    CancelledTransaction::create([
-        'InvoiceId' => $invoice->InvoiceID,
-        'cancellation_reason' => $reason,
-        'cancelled_by' => 'cashier', // Pembatalan dilakukan oleh kasir
-        'cancellation_date' => now()->timezone('Asia/Jakarta')->format('Y-m-d H:i:s'), // Tanggal pembatalan
-    ]);
-
-    return redirect()->back()->with('success', 'Pesanan berhasil dibatalkan.');
-}
 
 
 

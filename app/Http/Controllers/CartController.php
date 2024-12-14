@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\DB;
 
 class CartController extends Controller
 {
-    // Menampilkan keranjang
+    // Menampilkan halaman keranjang pengguna
     public function index()
     {
         $userId = Auth::id();
@@ -25,12 +25,12 @@ class CartController extends Controller
         ->where('user_id', $userId)
         ->value('CustomerID');
 
-        // Get cart items for the customer with associated product data
+        // Mengambil data dari table customer cart
         $cartItems = CustomerCart::with('product')
             ->where('CustomerID', $customerId)
             ->get();
 
-        // Calculate total price
+        // Menghitung total harga
         $total = $cartItems->sum(function ($item) {
             return $item->product->pricing->UnitPrice * $item->Quantity;
         });
@@ -50,26 +50,26 @@ class CartController extends Controller
         ->where('user_id', $userId)
         ->value('CustomerID');
 
-        // Get quantities from the form input
+        // Mengambil quantities dari halaman input
         $quantities = $request->input('quantity', []);
 
         foreach ($quantities as $productId => $quantity) {
             if ($quantity > 0) {
-                // Ensure the correct product is found by its ProductID
+                // Memastikan memilih produk yang benar dengan ProductID
                 $product = Product::find($productId);
 
                 if ($product) {
-                    // Find the cart item associated with the customer and product
+                    // mencari item di keranjang sesuai dengan customer dan product
                     $cartItem = CustomerCart::where('CustomerID', $customerId)
                                             ->where('ProductID', $productId)
                                             ->first();
 
                     if ($cartItem) {
-                        // Update the quantity if the product exists in the cart
+                        // Jika produk ada dalam keranjang, perbarui jumlah itemnya
                         $cartItem->Quantity = $quantity;
                         $cartItem->save();
                     } else {
-                        // If product is not in the cart, create a new cart item
+                        // Jika kosong, tambah item baru
                         CustomerCart::create([
                             'CustomerID' => $customerId,
                             'ProductID' => $productId,
@@ -78,7 +78,7 @@ class CartController extends Controller
                     }
                 }
             } else {
-                // If quantity is 0, remove the item from the cart
+                // Jika quantity 0, hapus item dari keranjang
                 CustomerCart::where('CustomerID', $customerId)
                     ->where('ProductID', $productId)
                     ->delete();
@@ -89,7 +89,7 @@ class CartController extends Controller
     }
 
     // Menghapus item dari keranjang
-    public function removeItem($productName)
+    public function removeItem($productId)
     {
         $userId = Auth::id();
 
@@ -98,25 +98,20 @@ class CartController extends Controller
             ->where('user_id', $userId)
             ->value('CustomerID');
 
-        // Find the product by its name
-        $product = Product::where('ProductName', $productName)->first();
-
-        if ($product) {
-            // Find the cart item associated with the customer and product
-            CustomerCart::where('CustomerID', $customerId)
-                ->where('ProductID', $product->ProductID)
-                ->delete(); // Delete the cart item
-        }
+        // Hapus item keranjang langsung berdasarkan CustomerID dan ProductID
+        CustomerCart::where('CustomerID', $customerId)
+            ->where('ProductID', $productId)
+            ->delete();
 
         return redirect()->route('customer.cart')->with('success', 'Barang berhasil dihapus dari keranjang!');
     }
     
     public function getCustomerId()
     {
-        // Get the authenticated user's id
+        // mendapat id user yang login
         $userId = Auth::id();
 
-        // Fetch the CustomerID from the customers table
+        // Mengambil CustomerID dari tabel customers berdasarkan user_id
         $customer = DB::table('customers')
             ->where('user_id', $userId)
             ->select('CustomerID')
@@ -129,37 +124,37 @@ class CartController extends Controller
         // Return the CustomerID
         return $customer->CustomerID;
     }
+
     public function checkout(Request $request)
-{
-    // Get the authenticated user's CustomerID
-    $userId = Auth::id();
-    $customer = DB::table('customers')
-        ->where('user_id', $userId)
-        ->select('CustomerID')
-        ->first();
+    {
+        $userId = Auth::id();
+        $customer = DB::table('customers')
+            ->where('user_id', $userId)
+            ->select('CustomerID')
+            ->first();
 
-    if (!$customer) {
-        return response()->json(['error' => 'Customer not found'], 404);
+        if (!$customer) {
+            return response()->json(['error' => 'Customer not found'], 404);
+        }
+
+        $customerId = $customer->CustomerID;
+        $shippingOption = $request->input('shipping_option');
+        $paymentOption = 'transfer';
+        $alamat = $request->input('alamat', null);  // input alamat jika opsi diantar dipilih
+
+        try {
+            // memanggil prosedur CheckoutCart
+            DB::statement('CALL CheckoutCart(?, ?, ?, ?)', [
+                $customerId,
+                $shippingOption,
+                $paymentOption,
+                $alamat
+            ]);
+
+            return redirect()->route('pengguna.pembayaran');
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
-
-    $customerId = $customer->CustomerID;
-    $shippingOption = $request->input('shipping_option');
-    $paymentOption = 'transfer';
-    $alamat = $request->input('alamat', null);  // Address if delivery option selected
-
-    try {
-        // Call the stored procedure with additional parameters
-        DB::statement('CALL CheckoutCart(?, ?, ?, ?)', [
-            $customerId,
-            $shippingOption,
-            $paymentOption,
-            $alamat
-        ]);
-
-        return redirect()->route('pengguna.pembayaran');
-    } catch (\Exception $e) {
-        return response()->json(['error' => $e->getMessage()], 500);
-    }
-}
 
 }

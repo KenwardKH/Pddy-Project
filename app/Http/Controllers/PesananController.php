@@ -17,7 +17,6 @@ class PesananController extends Controller
     {
         $userId = Auth::id();
 
-        // Find the Customer associated with this UserID
         $kasir = Kasir::where('User_ID', $userId)->first();
         
         if (!$kasir) {
@@ -32,11 +31,10 @@ class PesananController extends Controller
         })
         ->get();
 
-        // Retrieve the cart items for the current customer
         $cartItems = CashierCart::where('CashierID', $kasir->id_kasir)
-                    ->with('product.pricing') // Include product and pricing details for each cart item
+                    ->with('product.pricing') 
                     ->get()
-                    ->keyBy('ProductID'); // Index by ProductID for easier access
+                    ->keyBy('ProductID'); 
 
         return view('kasir.kasir_buat_pesanan', compact('products', 'cartItems', 'search'));
     }
