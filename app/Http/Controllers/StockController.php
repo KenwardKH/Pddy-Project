@@ -386,7 +386,8 @@ class StockController extends Controller
         $invoices = SupplyInvoice::selectRaw(
             '*, SupplyInvoiceTotalAmount(SupplyInvoiceId) as totalAmount'
         )
-        ->orderBy('SupplyDate', 'desc')
+        ->orderBy('SupplyDate', 'desc') // Urutkan dari tanggal terbaru
+        ->orderBy('SupplyInvoiceId', 'desc') // Urutkan dari invoice terbaru jika tanggalnya sama
         ->paginate(10);
     
         // Tampilkan view dengan data invoice
