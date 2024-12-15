@@ -104,6 +104,7 @@ class OwnerController extends Controller
             'email' => $validated['email'],
             'password' => Hash::make($request->password), 
             'role' => 'kasir',
+            'email_verified_at' => now(),
         ]);
         
         // Simpan data kasir ke database

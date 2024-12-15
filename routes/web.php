@@ -52,7 +52,7 @@ Route::get('auth/google/call-back', [GoogleAuthController::class, 'callbackGoogl
   Route::get('/invoices/{id}/print', [PenggunaController::class, 'printInvoice']);
 
 
-Route::middleware(['auth', RoleMiddleware::class . ':pelanggan'])->group(function () {
+Route::middleware(['auth', RoleMiddleware::class . ':pelanggan', 'verified'])->group(function () {
     // Pengguna routes
     Route::get('/pengguna/home', [PenggunaController::class, 'home'])->name('pengguna.home');
     Route::get('/pengguna/pembayaran', [PenggunaController::class, 'pembayaran'])->name('pengguna.pembayaran');

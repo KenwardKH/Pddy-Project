@@ -56,6 +56,9 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+        
+        // Kirim email verifikasi setelah user dibuat
+        $user->sendEmailVerificationNotification();
 
         // Create the associated Customer record with name, nomor_telepon, and address
         Customer::create([
