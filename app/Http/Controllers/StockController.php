@@ -269,18 +269,18 @@ class StockController extends Controller
             'SupplierID' => 'required|exists:suppliers,SupplierID',
             'SupplyDate' => 'required|date',
             'SupplyInvoiceNumber' => 'nullable|string',
-            'SupplyInvoiceImage' => 'nullable|required|image|mimes:jpeg,png,jpg,gif',
+            'SupplyInvoiceImage' => 'nullable|image|mimes:jpeg,png,jpg,gif', // Perubahan ada di sini
             'ProductID' => 'required|array',
             'Quantity' => 'required|array',
             'SupplyPrice' => 'required|array',
             'Discount' => 'required|array',
         ]);
-
+    
         $imageName = null;
         if ($request->hasFile('SupplyInvoiceImage')) {
             $image = $request->file('SupplyInvoiceImage');
             $imageName = time() . '_' . $image->getClientOriginalName();
-
+    
             // Tentukan path untuk menyimpan file
             $destinationPath = public_path('images/supply_invoice_image');
             // Pindahkan file ke folder tujuan
@@ -319,9 +319,8 @@ class StockController extends Controller
             return redirect()->back()->withInput()->withErrors(['error' => 'Gagal menyimpan data: ' . $e->getMessage()]);
         }
         
-    
         return redirect()->route('supplyInvoice.create')->with('success', 'Supply berhasil ditambahkan.');
-    }
+    }    
     
     // Fungsi untuk menghitung diskon (di Controller)
     function parseDiscount($discountStr)

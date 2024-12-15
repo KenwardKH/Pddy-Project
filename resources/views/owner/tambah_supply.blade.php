@@ -81,7 +81,7 @@
                 </div>
                 <div class="form-group">
                     <label for="SupplyInvoiceImage">Unggah Gambar Invoice</label>
-                    <input type="file" name="SupplyInvoiceImage" id="SupplyInvoiceImage" class="form-control" required accept="image/jpeg, image/png, image/jpg">
+                    <input type="file" name="SupplyInvoiceImage" id="SupplyInvoiceImage" class="form-control" accept="image/jpeg, image/png, image/jpg">
                 </div>
                 <h4>Produk</h4>
                 <table class="table">
@@ -89,7 +89,7 @@
                         <tr>
                             <th>Produk</th>
                             <th>Jumlah</th>
-                            <th>Harga Beli</th>
+                            <th>Harga Beli (per satuan)</th>
                             <th>Subtotal</th> <!-- Tambahkan kolom untuk subtotal -->
                             <th>Diskon</th>
                             <th>Total (setelah diskon)</th>
@@ -144,6 +144,10 @@
 
     </div>
     <script>
+        function formatCurrency(amount) {
+            return amount.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
         function parseDiscount(discountStr) {
             // Split berdasarkan tanda '+' untuk mendapatkan beberapa diskon
             const discounts = discountStr.split('+').map(val => parseFloat(val.trim()) || 0);
@@ -163,17 +167,17 @@
             const supplyPrice = parseFloat(row.querySelector('.supply-price').value) || 0;
             const subtotal = quantity * supplyPrice;
 
-            row.querySelector('.subtotal').textContent = subtotal.toFixed(2); // Harga sebelum diskon
+            row.querySelector('.subtotal').textContent = formatCurrency(subtotal); // Harga sebelum diskon
             return subtotal;
         }
 
         // Fungsi untuk menghitung harga setelah diskon
         function calculateFinalPrice(row) {
-            const subtotal = parseFloat(row.querySelector('.subtotal').textContent) || 0;
+            const subtotal = parseFloat(row.querySelector('.subtotal').textContent.replace(/\./g, '').replace(',', '.')) || 0;
             const discountFactor = parseDiscount(row.querySelector('.discount').value || '0'); // Faktor diskon bertahap
             const finalPrice = subtotal * discountFactor; // Harga setelah diskon bertahap
 
-            row.querySelector('.final-price').textContent = finalPrice.toFixed(2); // Harga setelah diskon
+            row.querySelector('.final-price').textContent = formatCurrency(finalPrice); // Harga setelah diskon
             return finalPrice;
         }
 
@@ -184,7 +188,7 @@
                 calculateSubtotal(row); // Pastikan subtotal dihitung sebelum final price
                 total += calculateFinalPrice(row); // Hitung total berdasarkan harga setelah diskon
             });
-            document.getElementById('total-amount').textContent = total.toFixed(2); // Perbarui total
+            document.getElementById('total-amount').textContent = formatCurrency(total) // Perbarui total
         }
 
         // Tambahkan event listener untuk perubahan jumlah atau harga beli
