@@ -115,6 +115,7 @@
                 <thead>
                     <tr>
                         <th>Invoice ID</th>
+                        <th>Nama Pemesan</th>
                         <th>Detail</th>
                         <th>Opsi Pengantaran</th>
                         <th>Alamat</th>
@@ -130,6 +131,7 @@
                     @foreach ($invoices as $invoice)
                         <tr>
                             <td>{{ $invoice->InvoiceID }}</td>
+                            <td>{{ $invoice->customerName }}</td>
                             <td><button class="detail-button" data-id="{{ $invoice->InvoiceID }}">Detail</button></td>
                             <td>{{ $invoice->type == 'delivery' ? 'Diantar' : ($invoice->type == 'pickup' ? 'Ambil Sendiri' : 'N/A') }}
                             </td>
