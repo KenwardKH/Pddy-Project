@@ -55,7 +55,7 @@ class OwnerController extends Controller
     public function customer()
     {
         // Mengambil semua data customer
-        $customers = Customer::orderBy('CustomerName','asc')
+        $customers = Customer::with('user')->orderBy('CustomerName','asc')
         ->get();
 
         // Mengirim data customers ke view

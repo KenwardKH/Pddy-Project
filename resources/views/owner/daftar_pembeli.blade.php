@@ -64,6 +64,7 @@
                     <th>Email</th>
                     <th>No HP</th>
                     <th>Alamat</th>
+                    <th>Verifikasi</th>
                     <th>Hapus</th>
                 </tr>
             </thead>
@@ -75,6 +76,7 @@
                         <td>{{ $customer->user->email ?? 'Tidak ada email' }}</td>
                         <td>{{ $customer->CustomerContact }}</td>
                         <td>{{ $customer->CustomerAddress }}</td>
+                        <td>{{ $customer->user && $customer->user->email_verified_at ? 'Sudah' : 'Belum' }}</td>
                         <td class="hapus">
                             <button type="button" class="btn btn-danger delete-btn"
                                 data-id="{{ $customer->CustomerID }}">
