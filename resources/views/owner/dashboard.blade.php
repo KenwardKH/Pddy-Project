@@ -146,6 +146,31 @@
             </div>
         </div>
 
+        {{-- Laporan keuangan --}}
+        <div class="produk-populer">
+            <h2>Laporan Finansial</h2>
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <td>Bulan</td>
+                        <td>Total Penjualan</td>
+                        <td>Total Pengeluaran</td>
+                        <td>Keuntungan / Kerugian</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($reports as $report)
+                        <tr>
+                            <td>{{$report->ReportMonth}}</td>
+                            <td>{{number_format($report->TotalRevenue ?? 0, 0, ',', '.')}}</td>
+                            <td>{{number_format($report->TotalSpending ?? 0, 0, ',', '.')}}</td>
+                            <td>{{number_format($report->ProfitLoss ?? 0, 0, ',', '.')}}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+
         <!-- Laporan Penjualan -->
         <div class="laporan">
             <h2>Transaksi Bulanan</h2>

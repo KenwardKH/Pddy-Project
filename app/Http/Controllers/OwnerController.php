@@ -25,7 +25,6 @@ class OwnerController extends Controller
         // Mengambil produk populer (misalnya berdasarkan jumlah stok)
         $produkPopuler = Product::orderBy('CurrentStock', 'desc')->take(5)->get();
         $reports = DB::table('financial_report')
-            ->select('ReportMonth', 'TotalTransactions')
             ->orderBy('ReportMonth', 'asc')
             ->get();
         $popular_products = DB::table('popular_products')
