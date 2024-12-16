@@ -256,7 +256,7 @@
                             <td>{{ $invoice->SupplyInvoiceNumber }}</td>
                             <td>{{ $invoice->SupplierName }}</td>
                             <td>{{ $invoice->supplyInvoiceDetail->count('Quantity') }}</td>
-                            <td>{{ $invoice->totalAmount ?? 'N/A' }}</td>
+                            <td>{{ number_format($invoice->totalAmount ?? 0, 0, ',', '.') }}</td>
                             <td><button class="detail-button" data-id="{{ $invoice->SupplyInvoiceId }}">Detail</button>
                             </td>
                             <td>{{ $invoice->SupplyDate }}</td>

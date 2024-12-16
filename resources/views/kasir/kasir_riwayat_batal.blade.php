@@ -159,7 +159,7 @@
                             <td>{{ $invoice->InvoiceID }}</td>
                             <td>{{ $invoice->customerName }}</td>
                             <td>{{ $invoice->customerContact }}</td>
-                            <td>{{ $invoice->totalAmount ?? 'N/A' }}</td>
+                            <td>{{ number_format($invoice->totalAmount ?? 0, 0, ',', '.') }}</td>
                             <td>
                                 @if ($invoice->type == 'delivery')
                                     Diantar

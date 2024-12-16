@@ -174,7 +174,7 @@ class PenggunaController extends Controller
                     $q->whereIn('status', ['Selesai']);
                 });
             })
-            ->orderBy('InvoiceID', 'asc')
+            ->orderBy('InvoiceDate', 'desc')
             ->paginate(10);
 
         return view('pengguna.pengguna_riwayat', compact('invoices'));
@@ -206,7 +206,10 @@ class PenggunaController extends Controller
                     $q->whereIn('status', ['dibatalkan']);
                 });
             })
-            ->orderBy('InvoiceID', 'asc')
+            ->orderBy(
+            DB::raw('(SELECT cancellation_date FROM cancelled_transaction WHERE cancelled_transaction.InvoiceID = invoices.InvoiceID)'), 
+            'desc' // Urutkan berdasarkan cancelation_date secara descending
+        )
             ->paginate(10);
 
         return view('pengguna.pengguna_riwayat_batal', compact('invoices'));

@@ -190,7 +190,7 @@
                             <td>{{ $invoice->type == 'delivery' ? 'Diantar' : ($invoice->type == 'pickup' ? 'Ambil Sendiri' : 'N/A') }}
                             </td>
                             <td>{{ $invoice->deliveryStatus->alamat ?? 'N/A' }}</td>
-                            <td>{{ $invoice->totalAmount ?? 'N/A' }}</td>
+                            <td>{{ number_format($invoice->totalAmount ?? 0, 0, ',', '.') }}</td>
                             <td>
                                 @if ($invoice->payment && $invoice->payment->PaymentImage)
                                     <img class="bukti_tf"

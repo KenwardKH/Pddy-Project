@@ -45,6 +45,11 @@
     <div class="container">
         <h1 class="header-title">Keranjang Belanja</h1>
         <div class="header-line"></div>
+        @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
 
         @if (!empty($cart) && count($cart) > 0)
             <form action="{{ route('customer.updateCart') }}" method="POST">

@@ -322,3 +322,24 @@ h1.header-title {
     color: #ff4500; /* Oranye terang */
     margin-top: 8px;
 }
+
+.alert-success {
+    background-color: #d4edda;
+    /* Light green background */
+    color: #155724;
+    /* Dark green text */
+    border: 1px solid #c3e6cb;
+    /* Light green border */
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.alert-success i {
+    margin-right: 10px;
+}

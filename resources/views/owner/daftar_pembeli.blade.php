@@ -23,13 +23,11 @@
             <div class="right">
                 <a href="{{ route('owner.product') }}">Produk <i class="bi bi-box-seam"></i></a>
                 <a href="{{ route('owner.daftar-supplier') }}">Supplier<i class="bi bi-shop"></i></a>
-                <a href="{{ route('owner.daftarSupply') }}">Riwayat Pembelian Supply <i
-                        class="bi bi-bag-plus"></i></a>
+                <a href="{{ route('owner.daftarSupply') }}">Riwayat Pembelian Supply <i class="bi bi-bag-plus"></i></a>
                 <a href="{{ route('owner.daftar-costumer') }}">User<i class="bi bi-person"></i></a>
                 <a href="{{ route('owner.riwayatTransaksi') }}">Riwayat Transaksi <i
                         class="bi bi-receipt-cutoff"></i></a>
-                <a href="{{ route('owner.laporanPenjualan') }}">Laporan Penjualan<i
-                        class="bi bi-journal-text"></i></a>
+                <a href="{{ route('owner.laporanPenjualan') }}">Laporan Penjualan<i class="bi bi-journal-text"></i></a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" class="btn-link"
@@ -40,60 +38,64 @@
             </div>
         </div>
     </div>
-        <div class="button-container">
-            <a href="{{ route('owner.daftar-costumer') }}"
-                class="toggle-button {{ request()->routeIs('owner.daftar-costumer') ? 'active' : '' }}">
-                Daftar Pelanggan
-            </a>
-            <a href="{{ route('owner.daftar-kasir') }}"
-                class="toggle-button {{ request()->routeIs('owner.daftar-kasir') ? 'active' : '' }}">
-                Daftar Kasir
-            </a>
+    <div class="button-container">
+        <a href="{{ route('owner.daftar-costumer') }}"
+            class="toggle-button {{ request()->routeIs('owner.daftar-costumer') ? 'active' : '' }}">
+            Daftar Pelanggan
+        </a>
+        <a href="{{ route('owner.daftar-kasir') }}"
+            class="toggle-button {{ request()->routeIs('owner.daftar-kasir') ? 'active' : '' }}">
+            Daftar Kasir
+        </a>
+    </div>
+
+
+    <!-- Judul Daftar Kasir -->
+    <div class="table-title">Daftar Pelanggan</div>
+    @if (session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
         </div>
+    @endif
 
-
-        <!-- Judul Daftar Kasir -->
-        <div class="table-title">Daftar Pelanggan</div>
-
-        <!-- Tabel -->
-        <table>
-            <thead>
+    <!-- Tabel -->
+    <table>
+        <thead>
+            <tr>
+                <th>NO</th>
+                <th>Nama</th>
+                <th>Email</th>
+                <th>No HP</th>
+                <th>Alamat</th>
+                <th>Verifikasi</th>
+                <th>Hapus</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($customers as $index => $customer)
                 <tr>
-                    <th>NO</th>
-                    <th>Nama</th>
-                    <th>Email</th>
-                    <th>No HP</th>
-                    <th>Alamat</th>
-                    <th>Verifikasi</th>
-                    <th>Hapus</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($customers as $index => $customer)
-                    <tr>
-                        <td>{{ $index + 1 }}</td>
-                        <td>{{ $customer->CustomerName }}</td>
-                        <td>{{ $customer->user->email ?? 'Tidak ada email' }}</td>
-                        <td>{{ $customer->CustomerContact }}</td>
-                        <td>{{ $customer->CustomerAddress }}</td>
-                        <td>{{ $customer->user && $customer->user->email_verified_at ? 'Sudah' : 'Belum' }}</td>
-                        <td class="hapus">
-                            <button type="button" class="btn btn-danger delete-btn"
-                                data-id="{{ $customer->CustomerID }}">
-                                <i class="bi bi-trash btn-danger"></i>
-                            </button>
-                            <form id="delete-form-{{ $customer->CustomerID }}"
-                                action="{{ route('owner.customer.destroy', $customer->CustomerID) }}" method="POST"
-                                style="display: none;">
-                                @csrf
-                                @method('DELETE')
-                            </form>
-                        </td>
+                    <td>{{ $index + 1 }}</td>
+                    <td>{{ $customer->CustomerName }}</td>
+                    <td>{{ $customer->user->email ?? 'Tidak ada email' }}</td>
+                    <td>{{ $customer->CustomerContact }}</td>
+                    <td>{{ $customer->CustomerAddress }}</td>
+                    <td>{{ $customer->user && $customer->user->email_verified_at ? 'Sudah' : 'Belum' }}</td>
+                    <td class="hapus">
+                        <button type="button" class="btn btn-danger delete-btn" data-id="{{ $customer->CustomerID }}">
+                            <i class="bi bi-trash btn-danger"></i>
+                        </button>
+                        <form id="delete-form-{{ $customer->CustomerID }}"
+                            action="{{ route('owner.customer.destroy', $customer->CustomerID) }}" method="POST"
+                            style="display: none;">
+                            @csrf
+                            @method('DELETE')
+                        </form>
+                    </td>
 
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
     </div>
 
     <script>

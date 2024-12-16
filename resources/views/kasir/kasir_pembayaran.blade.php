@@ -79,6 +79,26 @@
         table.details-table th {
             background-color: #f4f4f4;
         }
+        .alert-success {
+            background-color: #d4edda;
+            /* Light green background */
+            color: #155724;
+            /* Dark green text */
+            border: 1px solid #c3e6cb;
+            /* Light green border */
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .alert-success i {
+            margin-right: 10px;
+        }
     </style>
 </head>
 
@@ -110,6 +130,11 @@
         </div>
         <h1 class="dashboard">Pesanan Online</h1>
         <!-- Your existing table -->
+        @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
         <div class="table">
             <table class="order-table">
                 <thead>
@@ -138,7 +163,7 @@
                             <td>{{ $invoice->type == 'delivery' ? 'Diantar' : ($invoice->type == 'pickup' ? 'Ambil Sendiri' : 'N/A') }}
                             </td>
                             <td>{{ $invoice->deliveryStatus->alamat ?? 'N/A' }}</td>
-                            <td>{{ $invoice->totalAmount ?? 'N/A' }}</td>
+                            <td>{{ number_format($invoice->totalAmount ?? 0, 0, ',', '.') }}</td>
                             <td>
                                 @if ($invoice->payment && $invoice->payment->PaymentImage)
                                     <img class="bukti_tf"

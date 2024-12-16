@@ -171,7 +171,7 @@ class CartKasirController extends Controller
                 'PaymentImage' => null // Jika bukti pembayaran tidak diperlukan
             ]);
 
-            return redirect()->route('kasir.cart');
+            return redirect()->route('kasir.cart')->with('success', 'Pesanan berhasil dibuat.');;
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }

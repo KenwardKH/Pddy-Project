@@ -151,7 +151,7 @@ class CartController extends Controller
                 $alamat
             ]);
 
-            return redirect()->route('pengguna.pembayaran');
+            return redirect()->route('pengguna.pembayaran')->with('success', 'Pesanan Berhasil Dibuat');
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }

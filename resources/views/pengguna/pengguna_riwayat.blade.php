@@ -146,7 +146,7 @@
                             </td>
                             <td>{{ $invoice->deliveryStatus->alamat ?? 'N/A' }}</td>
                             <td>{{ $invoice->invoiceDetails->sum('Quantity') }}</td>
-                            <td>{{ $invoice->totalAmount ?? 'N/A' }}</td>
+                            <td>{{ number_format($invoice->totalAmount ?? 0, 0, ',', '.') }}</td>
                             <td>{{ $invoice->payment_option ?? 'N/A' }}</td>
                             <td>
                                 @if ($invoice->deliveryStatus)

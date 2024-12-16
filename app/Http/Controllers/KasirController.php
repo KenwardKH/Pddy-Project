@@ -304,7 +304,7 @@ class KasirController extends Controller
             }
         }
 
-        return redirect()->back()->with('success', 'Status berhasil diperbarui.');
+        return redirect()->back()->with('success', 'Pesanan berhasil dikonfirmasi.');
     }
 
     public function batal($id, Request $request)

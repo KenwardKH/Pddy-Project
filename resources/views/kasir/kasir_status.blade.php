@@ -31,6 +31,28 @@
             font-size: 1.2rem;
             cursor: pointer;
         }
+
+        .alert-success {
+            background-color: #d4edda;
+            /* Light green background */
+            color: #155724;
+            /* Dark green text */
+            border: 1px solid #c3e6cb;
+            /* Light green border */
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 40px
+        }
+
+        .alert-success i {
+            margin-right: 10px;
+        }
     </style>
 </head>
 
@@ -70,6 +92,11 @@
                 <a href="{{ route('status', 'pickup') }}"
                     class="toggle-button  {{ $type === 'pickup' ? 'active' : '' }}">Ambil Sendiri</a>
             </div>
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
             <div class="table">
                 <table class="order-table">
                     <thead>
@@ -105,7 +132,7 @@
                                     <td>{{ $invoice->customerName }}</td>
                                     <td>{{ $invoice->customerContact }}</td>
                                     <td>{{ $invoice->invoiceDetails->sum('Quantity') }}</td>
-                                    <td>{{ $invoice->totalAmount ?? 'N/A' }}</td>
+                                    <td>{{ number_format($invoice->totalAmount ?? 0, 0, ',', '.') }}</td>
                                     <td>{{ $invoice->deliveryStatus->alamat ?? 'N/A' }}</td>
                                     <td>{{ $invoice->payment_option ?? 'N/A' }}</td>
                                     <td>
@@ -141,7 +168,7 @@
                                     <td>{{ $invoice->customerName }}</td>
                                     <td>{{ $invoice->customerContact }}</td>
                                     <td>{{ $invoice->invoiceDetails->sum('Quantity') }}</td>
-                                    <td>{{ $invoice->totalAmount ?? 'N/A' }}</td>
+                                    <td>Rp {{ number_format($invoice->totalAmount ?? 0, 0, ',', '.') }}</td>
                                     <td>{{ $invoice->payment_option ?? 'N/A' }}</td>
                                     <td>
                                         <button class="detail-button"
@@ -350,7 +377,6 @@
                 this.classList.remove('show'); // Hapus class "show" pada overlay
             });
         });
-
     </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
