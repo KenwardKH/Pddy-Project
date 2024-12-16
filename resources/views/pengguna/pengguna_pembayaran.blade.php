@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kasir Home</title>
+    <title>Pembayaran</title>
     <link rel="stylesheet" href="{{ asset('css/pengguna_pembayaran.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
@@ -396,8 +396,7 @@
                 document.querySelector('#payment-form input[name="InvoiceID"]').value = invoiceID;
 
                 // Optionally, set the amount if needed
-                const amountPaid = this.closest('tr').querySelector('td:nth-child(5)').textContent
-                    .trim(); // Assuming total price is in the 5th column
+                const amountPaid = this.closest('tr').querySelector('td:nth-child(5)').textContent.trim().replace(/\./g, ''); // Assuming total price is in the 5th column
                 document.querySelector('#payment-form input[name="AmountPaid"]').value = amountPaid;
 
                 // Show payment modal

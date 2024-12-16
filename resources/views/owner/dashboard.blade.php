@@ -147,7 +147,7 @@
         </div>
 
         {{-- Laporan keuangan --}}
-        <div class="produk-populer">
+        <div class="produk-populer" style="margin-top: 120px;">
             <h2>Laporan Finansial</h2>
             <table class="styled-table">
                 <thead>

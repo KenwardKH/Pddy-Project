@@ -209,7 +209,7 @@ class PenggunaController extends Controller
             ->orderBy(
             DB::raw('(SELECT cancellation_date FROM cancelled_transaction WHERE cancelled_transaction.InvoiceID = invoices.InvoiceID)'), 
             'desc' // Urutkan berdasarkan cancelation_date secara descending
-        )
+            )
             ->paginate(10);
 
         return view('pengguna.pengguna_riwayat_batal', compact('invoices'));

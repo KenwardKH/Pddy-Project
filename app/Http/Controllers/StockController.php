@@ -162,11 +162,6 @@ class StockController extends Controller
         // Cari data produk berdasarkan ID
         $product = Product::findOrFail($id);
 
-         // Hapus gambar produk dari folder jika ada
-        if ($product->image && file_exists(public_path('images/produk/' . $product->image))) {
-            unlink(public_path('images/produk/' . $product->image));
-        }
-
         // Hapus data kasir
         $product->delete();
         $product->pricing()->delete();

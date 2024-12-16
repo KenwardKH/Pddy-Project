@@ -64,6 +64,11 @@
         </div>
         <div class="dashboard">
             <h1 style="font-weight: bold">Daftar Supplier</h1>
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
 
             <!-- Search Bar -->
             <div class="search-container">
