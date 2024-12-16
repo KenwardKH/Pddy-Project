@@ -168,7 +168,7 @@
                                     <td>{{ $invoice->customerName }}</td>
                                     <td>{{ $invoice->customerContact }}</td>
                                     <td>{{ $invoice->invoiceDetails->sum('Quantity') }}</td>
-                                    <td>Rp {{ number_format($invoice->totalAmount ?? 0, 0, ',', '.') }}</td>
+                                    <td>{{ number_format($invoice->totalAmount ?? 0, 0, ',', '.') }}</td>
                                     <td>{{ $invoice->payment_option ?? 'N/A' }}</td>
                                     <td>
                                         <button class="detail-button"

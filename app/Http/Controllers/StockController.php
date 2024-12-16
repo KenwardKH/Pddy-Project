@@ -36,7 +36,7 @@ class StockController extends Controller
             // Map the price details
             $details = $price->map(function ($detail) {
                 return [
-                    'price' => $detail->OldPrice,
+                    'price' => $detail->NewPrice,
                     'timeChanged' => $detail->TimeChanged,
                 ];
             });

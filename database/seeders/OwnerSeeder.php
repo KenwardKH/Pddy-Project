@@ -19,6 +19,7 @@ class OwnerSeeder extends Seeder
             'password' => Hash::make('rahasia123'), // Ganti dengan password yang aman
             'google_id' => null, // null jika tidak menggunakan Google Login
             'role' => 'pemilik', // Peran pemilik
+            'email_verified_at' => now(),
         ]);
     }
 }

@@ -224,10 +224,7 @@ class KasirController extends Controller
         }
     
         // Ambil hasil query dengan pagination
-        $invoices = $query->orderBy(
-            DB::raw('(SELECT cancellation_date FROM cancelled_transaction WHERE cancelled_transaction.InvoiceID = invoices.InvoiceID)'), 
-            'desc' // Urutkan berdasarkan cancelation_date secara descending
-            )->paginate(10);
+        $invoices = $query->orderBy('InvoiceID', 'desc')->paginate(10);
     
         // Return ke view dengan data
         return view('kasir.kasir_riwayat_batal', compact('invoices'));

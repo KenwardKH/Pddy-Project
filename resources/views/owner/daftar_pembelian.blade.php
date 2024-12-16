@@ -279,7 +279,7 @@
                 <button class="close-button">&times;</button>
             </div>
             <div class="modal-body">
-                <img id="modal-image" src="" alt="Preview Gambar" style="max-width: 100%; max-height: 100%;">
+                <img id="modal-image" src="" alt="Preview Gambar" style="max-width: 100%; max-height: 100%; min-width:600px">
             </div>
         </div>
 
