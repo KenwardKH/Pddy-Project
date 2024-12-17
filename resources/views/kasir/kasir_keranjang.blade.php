@@ -146,7 +146,7 @@
                     $('#pengambilan').show();
                 } else {
                     $('#pengambilan').hide();
-                    $('#opsi').find("input[type=text], textarea").val("");
+                    $('#alamat').val(""); // Hanya hapus nilai dari input alamat pengiriman
                 }
             });
 
